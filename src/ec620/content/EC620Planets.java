@@ -6,6 +6,7 @@ import arc.math.Rand;
 import arc.math.geom.*;
 import arc.struct.GridBits;
 import arc.struct.Seq;
+import arc.util.Log;
 import arc.util.Structs;
 import arc.util.Time;
 import arc.util.Tmp;
@@ -23,9 +24,7 @@ import mindustry.graphics.Pal;
 import mindustry.graphics.Shaders;
 import mindustry.graphics.g3d.*;
 import mindustry.maps.generators.PlanetGenerator;
-import mindustry.type.Planet;
-import mindustry.type.Sector;
-import mindustry.type.Weather;
+import mindustry.type.*;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.TileGen;
@@ -47,16 +46,29 @@ import static mindustry.Vars.state;
 public class EC620Planets {
 	public static Planet ec620;
 
-	public static void load(){
-		ec620 = new EC620Planet("ec620", Planets.sun, 1, 4){{
+	public static void load()
+	{
+		ec620 = new EC620Planet("ec620", Planets.sun, 1, 3){{
 			bloom = true;
 			visible = true;
 			accessible = true;
 			hasAtmosphere = true;
 			alwaysUnlocked = true;
-			meshLoader = () -> {
-				return new NoiseMesh(ec620,262436, 5,Color.cyan,.9f,4,1,.75f,1.2f);
-			};
+			meshLoader = () -> new EC620ModMesh(
+					this, 5,
+					5, 0.3, 1.7, 1.2, 1.4,
+					1.1f,
+					randomColor(),
+					randomColor(),
+					randomColor(),
+					randomColor(),
+//					Pal.gray.cpy().lerp(Pal.metalGrayDark, 0.25f).lerp(NHColor.darkEnr, 0.02f),
+//					Pal.gray,
+					randomColor(),
+					randomColor(),
+					randomColor(),
+					randomColor()
+			);
 
 			clearSectorOnLose = true;
 			allowWaveSimulation = true;
@@ -70,7 +82,7 @@ public class EC620Planets {
 				r.showSpawns = true;
 				r.waveSpacing = 80 * Time.toSeconds;
 				r.initialWaveSpacing = 8f * Time.toMinutes;
-				if(r.sector.preset == null)r.winWave = 150;
+				if(r.sector.preset == null)r.winWave = (int)(r.sector.threat*200);
 				//r.bannedUnits.add(NHUnitTypes.guardian);
 				r.coreDestroyClear = true;
 
@@ -94,29 +106,32 @@ public class EC620Planets {
 
 			generator = new EC620PlanetGenerator();
 
-			cloudMeshLoader = () -> {
+			/*cloudMeshLoader = () -> {
 				return new MultiMesh(
 					new HexSkyMesh(this, 2, 0.15F, 0.14F, 5, Pal.darkerMetal.cpy().lerp(randomColor(), 0.35f).a(0.55F), 2, 0.42F, 1.0F, 0.43F),
 					new HexSkyMesh(this, 3, 1.26F, 0.155F, 4, Pal.darkestGray.cpy().lerp(randomColor(), 0.105f).a(0.75F), 6, 0.42F, 1.32F, 0.4F));
-			};
+			};*/
 
-			defaultEnv = Env.any;
+			defaultEnv = Env.terrestrial|Env.groundWater|Env.groundOil|Env.oxygen|Env.space|Env.spores;
 			defaultCore=Blocks.coreShard;
-			techTree=(TechTree.TechNode)TechTree.all.find((t) -> {
+			/*techTree=(TechTree.TechNode)TechTree.all.find((t) -> {
 				return t.content == Blocks.coreShard;
-			});
+			});*/
 //			icon = "ec620";
 			iconColor = Color.cyan;
 
-			landCloudColor = atmosphereColor = Color.valueOf("3c1b8f");
+			//landCloudColor = atmosphereColor = Color.valueOf("3c1b8f");
 			atmosphereRadIn = 0.1f;
 			atmosphereRadOut = 0.3f;
 			startSector = 0;
 		}
-			public void updateBaseCoverage(){
-				for(Sector sector : sectors){
+			public void updateBaseCoverage()
+			{
+				for(Sector sector : sectors)
+				{
 					float sum = 1.25f;
-					for(Sector other : sector.near()){
+					for(Sector other : sector.near())
+					{
 						if(other.generateEnemyBase){
 							sum += 0.9f;
 						}
@@ -128,28 +143,33 @@ public class EC620Planets {
 
 					Rand rand = new Rand();
 					rand.setSeed(sector.id);
-					sector.threat = sector.preset == null ? rand.random(0.65f, 1f) : Mathf.clamp(sector.preset.difficulty / 10f);
+					//if(sector.id==0) sector.threat=.9f;
+					sector.threat = sector.preset == null ? rand.random(0, 1) : Mathf.clamp(sector.preset.difficulty / 10f);
+
 				}
 			}
 		};
 
 	}
 	private static int seed=0;
-	private static Color randomColor()
+	public static Color randomColor()
 	{
 
 		return Color.rgb(new Rand(256).nextInt(),new Rand(seed++).nextInt(256),new Rand(seed++).nextInt(256));
 	}
 	public static class EC620Planet extends Planet{
-		public EC620Planet(String name, Planet parent, float radius, int sectorSize){
+		public EC620Planet(String name, Planet parent, float radius, int sectorSize)
+		{
 			super(name, parent, radius, sectorSize);
+			if(orbitRadius==0) orbitRadius=1000*radius;
 		}
 
-		public EC620Planet(String name, Planet parent, float radius){
+		public EC620Planet(String name, Planet parent, float radius)
+		{
 			super(name, parent, radius);
+			if(orbitRadius==0) orbitRadius=1000*radius;
 		}
 	}
-	/*
 	public static class EC620ModMesh extends HexMesh{
 		public static float waterOffset = 0.05f;
 
@@ -170,9 +190,9 @@ public class EC620Planets {
 
 			}, divisions, Shaders.unlit);
 		}
-	}*/
+	}
 
-	public static class EC620PlanetGenerator extends PlanetGenerator{
+	/*public static class EC620PlanetGenerator extends PlanetGenerator{
 		public float heightScl = 0.9f, octaves = 8, persistence = 0.7f, heightPow = 3f, heightMult = 1.6f;
 
 		//TODO inline/remove
@@ -194,7 +214,8 @@ public class EC620Planets {
 		}
 
 		public boolean allowLanding(Sector sector){
-			return (sector.hasBase() || sector.near().contains(s -> s.hasBase() && s.isCaptured()));
+			//return (sector.hasBase() || sector.near().contains(s -> s.hasBase() && s.isCaptured()));
+			return true;
 		}
 
 		@Override
@@ -324,13 +345,13 @@ public class EC620Planets {
 			brush(path, 8);
 			erase(endX, endY, 15);
 
-			/*median(12, 0.6, NHBlocks.quantumField);
+			*//*median(12, 0.6, NHBlocks.quantumField);
 
 			blend(NHBlocks.quantumFieldDeep, NHBlocks.quantumField, 7);
 
 			//TODO may overwrite floor blocks under walls and look bad
 
-			scatter(NHBlocks.metalGround, NHBlocks.metalGroundQuantum, 0.075f);*/
+			scatter(NHBlocks.metalGround, NHBlocks.metalGroundQuantum, 0.075f);*//*
 
 			pass((x, y) -> {
 				if(floor.asFloor().isDeep()){
@@ -411,7 +432,7 @@ public class EC620Planets {
 					}
 				}
 
-				/*if((x % 50 == 0 || y % 50 == 0) && !floor.asFloor().isLiquid){
+				*//*if((x % 50 == 0 || y % 50 == 0) && !floor.asFloor().isLiquid){
 					if(noise(x, y, 5, 0.7f, 75f, 3f) > 0.8125f || Mathf.chance(0.075)){
 						floor = NHBlocks.quantumFieldDisturbing;
 					}
@@ -419,7 +440,7 @@ public class EC620Planets {
 
 				if((nearWall(x, y) || floor == Blocks.metalFloor2) && Mathf.chance(0.015)){
 					block = NHBlocks.metalTower;
-				}*/
+				}*//*
 			});
 
 			//remove props near ores, they're too annoying
@@ -440,7 +461,7 @@ public class EC620Planets {
 
 			path = pathfind(spawnX, spawnY, endX, endY, tile -> (tile.solid() ? 50f : 0f), Astar.manhattan);
 
-			/*Geometry.circle(endX, endY, 12, ((x, y) -> {
+			*//*Geometry.circle(endX, endY, 12, ((x, y) -> {
 				Tile tile = tiles.get(x, y);
 				if(tile != null && tile.floor().isLiquid){
 					tile.setFloor(NHBlocks.quantumField.asFloor());
@@ -469,7 +490,7 @@ public class EC620Planets {
 				}
 
 				return b;
-			}));*/
+			}));*//*
 
 			tiles.getn(endX, endY).setOverlay(Blocks.spawn);
 
@@ -483,7 +504,7 @@ public class EC620Planets {
 			int ventCount = 0;
 
 			//vents
-			/*over: while(ventCount < minVents){
+			*//*over: while(ventCount < minVents){
 				outer:
 				for(Tile tile : tiles){
 					Floor floor = tile.floor();
@@ -507,7 +528,7 @@ public class EC620Planets {
 						if(ventCount >= minVents)break over;
 					}
 				}
-			}*/
+			}*//*
 
 			state.rules.env = sector.planet.defaultEnv;
 
@@ -562,7 +583,7 @@ public class EC620Planets {
 				}
 			}
 		}
-	}
+	}*/
 
 	public interface DrawBoolf{
 		boolean get(int x, int y);

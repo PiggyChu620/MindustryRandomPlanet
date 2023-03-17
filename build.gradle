@@ -37,6 +37,8 @@ dependencies{
     compileOnly "com.github.Anuken.MindustryJitpack:core:$mindustryVersion"
 
     annotationProcessor "com.github.Anuken:jabel:$jabelVersion"
+
+    implementation "com.github.liplum:MultiCrafterLib:v1.7"
 }
 
 //force arc version

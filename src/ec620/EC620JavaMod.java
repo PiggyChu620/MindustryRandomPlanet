@@ -1,10 +1,12 @@
 package ec620;
 
 import arc.*;
+import arc.struct.Seq;
 import arc.util.*;
 import ec620.content.*;
 import mindustry.*;
 import mindustry.content.*;
+import mindustry.game.EventType;
 import mindustry.game.EventType.*;
 import mindustry.gen.*;
 import mindustry.mod.*;
@@ -15,15 +17,9 @@ import mindustry.ui.dialogs.*;
 public class EC620JavaMod extends Mod
 {
 
-    public EC620JavaMod(){
-        Log.info("Loaded EC620JavaMod constructor.");
+    public EC620JavaMod()
+    {
 
-        EC620Items.load();
-        EC620Blocks.load();
-//        EC620Planets.load();
-//        EC620SectorPresents.load();
-//        EC620TechTree.load();
-        Log.info("All contents loaded.");
         //listen for game load event
         Events.on(ClientLoadEvent.class, e -> {
             //show dialog upon startup
@@ -36,11 +32,22 @@ public class EC620JavaMod extends Mod
                 dialog.show();
             });
         });
+
+        Log.info("Loaded EC620JavaMod constructor.");
     }
 
     @Override
-    public void loadContent(){
+    public void loadContent()
+    {
         Log.info("Loading some example content.");
+
+
+        EC620Items.load();
+        EC620Blocks.load();
+        EC620Planets.load();
+        //EC620SectorPresents.load();
+        EC620TechTree.load();
+        Log.info("All contents loaded.");
     }
 
 }

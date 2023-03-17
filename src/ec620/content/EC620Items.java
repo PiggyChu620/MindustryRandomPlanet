@@ -11,14 +11,28 @@ import mindustry.world.blocks.storage.CoreBlock;
 public class EC620Items {
 	
 	//Load Mod Items
-	
-	public static Item iron;
+
+	//Raw Materials
+	public static Item iron,aluminum;
+
+	//Alloys/Intermetallic
+	public static Item duralumin;
 	public static void load(){
-		iron = new Item("iron",Color.valueOf("A19D94")){{
+		iron = new Item("iron",Color.valueOf("A19D94"))
+		{{
 			hardness=3;
 			localizedName="Iron";
 		}};
-
+		aluminum=new Item("aluminum",Color.valueOf("ADB2BD"))
+		{{
+				hardness=2;
+				localizedName="Aluminum";
+		}};
+		duralumin=new Item("duralumin",Color.valueOf("ADB2BD"))
+		{{
+			hardness=2;
+			localizedName="Duralumin";
+		}};
 	}
 	
 }
