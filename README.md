@@ -40,3 +40,4 @@ Only use `implementation` if you want to package another Java library *with your
 "# MindustryJavaModTest" 
 "# MindustryJavaModTest0.1" 
 "# MindustryJavaModTest001" 
+"# MindustryJavaModTest" 
