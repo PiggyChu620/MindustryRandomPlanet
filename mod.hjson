@@ -1,20 +1,20 @@
 #the mod name as displayed in-game
-displayName: "Java Mod Template"
+displayName: "EC620 Java Mod Testing"
 
 #the internal name of your mod
-name: "example-java-mod"
+name: "ec620"
 
 #your name
-author: "You"
+author: "PiggyChu620"
 
 #the fully qualified main class of the mod
-main: "example.ExampleJavaMod"
+main: "ec620.EC620JavaMod"
 
 #the mod description as seen in the mod dialog
 description: "A Mindustry Java mod template."
 
 #the mod version
-version: 1.0
+version: 0.1
 
 #the minimum game build required to run this mod
 minGameVersion: 140
