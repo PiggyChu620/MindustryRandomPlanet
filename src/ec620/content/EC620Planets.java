@@ -46,85 +46,90 @@ import static mindustry.Vars.state;
 public class EC620Planets {
 	public static Planet ec620;
 
+	public static String planetName;
 	public static void load()
 	{
-		ec620 = new EC620Planet("ec620", Planets.sun, 1, 3){{
-			bloom = true;
-			visible = true;
-			accessible = true;
-			hasAtmosphere = true;
-			alwaysUnlocked = true;
-			meshLoader = () -> new EC620ModMesh(
-					this, 5,
-					5, 0.3, 1.7, 1.2, 1.4,
-					1.1f,
-					randomColor(),
-					randomColor(),
-					randomColor(),
-					randomColor(),
-//					Pal.gray.cpy().lerp(Pal.metalGrayDark, 0.25f).lerp(NHColor.darkEnr, 0.02f),
-//					Pal.gray,
-					randomColor(),
-					randomColor(),
-					randomColor(),
-					randomColor()
-			);
+		ec620 = new EC620Planet("ec620", Planets.sun, 1, 3)
+		{
+			{
+				planetName=EC620Name.generate();
+				localizedName=planetName;
+				bloom = true;
+				visible = true;
+				accessible = true;
+				hasAtmosphere = true;
+				alwaysUnlocked = true;
+				meshLoader = () -> new EC620ModMesh(
+						this, 5,
+						5, 0.3, 1.7, 1.2, 1.4,
+						1.1f,
+						randomColor(),
+						randomColor(),
+						randomColor(),
+						randomColor(),
+	//					Pal.gray.cpy().lerp(Pal.metalGrayDark, 0.25f).lerp(NHColor.darkEnr, 0.02f),
+	//					Pal.gray,
+						randomColor(),
+						randomColor(),
+						randomColor(),
+						randomColor()
+				);
 
-			clearSectorOnLose = true;
-			allowWaveSimulation = true;
-			allowLaunchSchematics = true;
-			allowLaunchLoadout = true;
+				clearSectorOnLose = true;
+				allowWaveSimulation = true;
+				allowLaunchSchematics = true;
+				allowLaunchLoadout = true;
 
-			ruleSetter = r -> {
-				r.hideBannedBlocks = true;
-				r.waveTeam = Team.malis;
-				r.placeRangeCheck = false;
-				r.showSpawns = true;
-				r.waveSpacing = 80 * Time.toSeconds;
-				r.initialWaveSpacing = 8f * Time.toMinutes;
-				if(r.sector.preset == null)r.winWave = (int)(r.sector.threat*200);
-				//r.bannedUnits.add(NHUnitTypes.guardian);
-				r.coreDestroyClear = true;
+				ruleSetter = r -> {
+					r.hideBannedBlocks = true;
+					r.waveTeam = Team.malis;
+					r.placeRangeCheck = false;
+					r.showSpawns = true;
+					r.waveSpacing = 80 * Time.toSeconds;
+					r.initialWaveSpacing = 8f * Time.toMinutes;
+					if(r.sector.preset == null)r.winWave = (int)(r.sector.threat*200);
+					//r.bannedUnits.add(NHUnitTypes.guardian);
+					r.coreDestroyClear = true;
 
-				/*r.bannedBlocks.addAll(Vars.content.blocks().copy().filter(b -> {
-					if(b instanceof SolidPump){
-						SolidPump pump = (SolidPump)b;
-						return pump.result == Liquids.water && pump.attribute == Attribute.water;
-					}else return false;
-				}));*/
+					/*r.bannedBlocks.addAll(Vars.content.blocks().copy().filter(b -> {
+						if(b instanceof SolidPump){
+							SolidPump pump = (SolidPump)b;
+							return pump.result == Liquids.water && pump.attribute == Attribute.water;
+						}else return false;
+					}));*/
 
-				Rules.TeamRule teamRule = r.teams.get(r.defaultTeam);
-				teamRule.rtsAi = false;
-				teamRule.unitBuildSpeedMultiplier = 5f;
-				teamRule.blockDamageMultiplier = 1.25f;
-				teamRule.buildSpeedMultiplier = 3f;
-				teamRule.blockHealthMultiplier = 1.25f;
+					Rules.TeamRule teamRule = r.teams.get(r.defaultTeam);
+					teamRule.rtsAi = false;
+					teamRule.unitBuildSpeedMultiplier = 5f;
+					teamRule.blockDamageMultiplier = 1.25f;
+					teamRule.buildSpeedMultiplier = 3f;
+					teamRule.blockHealthMultiplier = 1.25f;
 
-				teamRule = r.teams.get(r.waveTeam);
-				teamRule.infiniteAmmo = teamRule.infiniteResources = true;
-			};
+					teamRule = r.teams.get(r.waveTeam);
+					teamRule.infiniteAmmo = teamRule.infiniteResources = true;
+				};
 
-			generator = new EC620PlanetGenerator();
+				generator = new EC620PlanetGenerator();
 
-			/*cloudMeshLoader = () -> {
-				return new MultiMesh(
-					new HexSkyMesh(this, 2, 0.15F, 0.14F, 5, Pal.darkerMetal.cpy().lerp(randomColor(), 0.35f).a(0.55F), 2, 0.42F, 1.0F, 0.43F),
-					new HexSkyMesh(this, 3, 1.26F, 0.155F, 4, Pal.darkestGray.cpy().lerp(randomColor(), 0.105f).a(0.75F), 6, 0.42F, 1.32F, 0.4F));
-			};*/
+				/*cloudMeshLoader = () -> {
+					return new MultiMesh(
+						new HexSkyMesh(this, 2, 0.15F, 0.14F, 5, Pal.darkerMetal.cpy().lerp(randomColor(), 0.35f).a(0.55F), 2, 0.42F, 1.0F, 0.43F),
+						new HexSkyMesh(this, 3, 1.26F, 0.155F, 4, Pal.darkestGray.cpy().lerp(randomColor(), 0.105f).a(0.75F), 6, 0.42F, 1.32F, 0.4F));
+				};*/
 
-			defaultEnv = Env.terrestrial|Env.groundWater|Env.groundOil|Env.oxygen|Env.space|Env.spores;
-			defaultCore=Blocks.coreShard;
-			/*techTree=(TechTree.TechNode)TechTree.all.find((t) -> {
-				return t.content == Blocks.coreShard;
-			});*/
-//			icon = "ec620";
-			iconColor = Color.cyan;
+				defaultEnv = Env.terrestrial|Env.groundWater|Env.groundOil|Env.oxygen|Env.space|Env.spores;
+				defaultCore=Blocks.coreShard;
+				/*techTree=(TechTree.TechNode)TechTree.all.find((t) -> {
+					return t.content == Blocks.coreShard;
+				});*/
+	//			icon = "ec620";
+				iconColor = Color.cyan;
 
-			//landCloudColor = atmosphereColor = Color.valueOf("3c1b8f");
-			atmosphereRadIn = 0.1f;
-			atmosphereRadOut = 0.3f;
-			startSector = 0;
-		}
+				//landCloudColor = atmosphereColor = Color.valueOf("3c1b8f");
+				atmosphereRadIn = 0.1f;
+				atmosphereRadOut = 0.3f;
+				startSector = 0;
+			}
 			public void updateBaseCoverage()
 			{
 				for(Sector sector : sectors)

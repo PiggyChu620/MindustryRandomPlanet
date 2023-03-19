@@ -30,7 +30,7 @@ public class EC620TechTree {
 
     public static void load()
     {
-        TechNode root=nodeRoot("EC-620", coreShard, () -> {
+        TechNode root=nodeRoot(EC620Planets.planetName, coreShard, () -> {
 
 
             node(conveyor, () -> {

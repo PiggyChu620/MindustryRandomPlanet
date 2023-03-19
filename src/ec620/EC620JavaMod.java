@@ -12,11 +12,11 @@ import mindustry.gen.*;
 import mindustry.mod.*;
 import mindustry.ui.dialogs.*;
 
+import java.io.IOException;
 
 
 public class EC620JavaMod extends Mod
 {
-
     public EC620JavaMod()
     {
 
@@ -40,7 +40,6 @@ public class EC620JavaMod extends Mod
     public void loadContent()
     {
         Log.info("Loading some example content.");
-
 
         EC620Items.load();
         EC620Blocks.load();

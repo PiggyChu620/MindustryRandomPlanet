@@ -107,13 +107,17 @@ public class EC620PlanetGenerator extends PlanetGenerator
     public void generateSector(Sector sector){
 
         //these always have bases
-        if(sector.id == 0){
+        if(sector.id == 0)
+        {
             sector.generateEnemyBase = true;
-
-            return;
+//            ItemSeq is=new ItemSeq();
+//
+//            is.add(Items.copper,100);
+//            sector.info.items=is;
+            //return;
         }
         else sector.generateEnemyBase=rand.chance(.5);
-
+        sector.setName(EC620Name.generate()+"-"+sector.id);
         PlanetGrid.Ptile tile = sector.tile;
 
         boolean any = false;
@@ -403,6 +407,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
         float radius = width / 2f / Mathf.sqrt3;
         int rooms = rand.random(2, 5);
         Seq<Room> roomseq = new Seq<>();
+
 
         for(int i = 0; i < rooms; i++)
         {
