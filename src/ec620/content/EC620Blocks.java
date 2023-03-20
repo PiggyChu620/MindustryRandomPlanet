@@ -10,6 +10,7 @@ import arc.math.Angles;
 import arc.math.Interp;
 import arc.math.Mathf;
 import arc.math.Rand;
+import arc.struct.Seq;
 import arc.util.Eachable;
 import arc.util.Time;
 import arc.util.Tmp;
@@ -60,6 +61,9 @@ import mindustry.world.consumers.ConsumeCoolant;
 import mindustry.world.consumers.ConsumeLiquid;
 import mindustry.world.draw.*;
 import mindustry.world.meta.*;
+import multicraft.IOEntry;
+import multicraft.MultiCrafter;
+import multicraft.Recipe;
 
 import static arc.graphics.g2d.Draw.color;
 import static arc.graphics.g2d.Lines.lineAngle;
@@ -75,11 +79,12 @@ public class EC620Blocks {
 	//Ores
 	//public static Block oreIron,oreAluminum,oreZinc;
 
-	//Crafters
-	public static Block duraluminFactory;
 
 	//Walls
 	//public static Block copperWallHuge;
+
+	//Craftings
+	public static Block pyratiteSmelter,cryogenicFreezer;
 
 	public static void load()
 	{
@@ -142,6 +147,39 @@ public class EC620Blocks {
 //			envDisabled |= Env.scorching;
 //			localizedName="Huge Copper Wall";
 //		}};
+		//endregion
+
+		//region Craftings
+		pyratiteSmelter = new GenericCrafter("pyratite-smelter")
+		{{
+			localizedName="Pyratite Smelter";
+			requirements(Category.crafting, with(Items.copper, 50, Items.lead, 25));
+			craftEffect = Fx.smeltsmoke;
+			outputItem = new ItemStack(Items.pyratite, 1);
+			size = 2;
+			hasPower = true;
+			hasItems=true;
+			hasLiquids = false;
+			drawer = new DrawMulti(new DrawDefault(), new DrawFlame(Color.valueOf("ffef99")));
+			ambientSound = Sounds.smelter;
+			ambientSoundVolume = 0.07f;
+
+			consumeItems(with(Items.silicon, 1, Items.lead, 2));
+			consumePower(0.50f);
+		}};
+
+		cryogenicFreezer=new MultiCrafter("cryogenic-freezer")
+		{{
+			localizedName="Cryogenic Freezer";
+			IOEntry water=new IOEntry();
+			water.fluids=LiquidStack.list(Liquids.water,10);
+			IOEntry ice=new IOEntry();
+			ice.items=ItemStack.list(EC620Items.ice,1);
+			resolvedRecipes=new Seq<>();
+			resolvedRecipes.add(new Recipe(water,ice,.5f));
+			resolvedRecipes.add(new Recipe(ice,water,.5f));
+			init();
+		}};
 		//endregion
 	}
 

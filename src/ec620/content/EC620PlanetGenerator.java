@@ -80,7 +80,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
             starrySandWater, starryMossWater, starryBorudaliteWater
     );*/
 
-    float water = 2f / arr[0].length;
+    float water = 2f; // / arr[0].length;
 
     Vec3[] craters = new Vec3[4];
     float[] craterSize = new float[craters.length];

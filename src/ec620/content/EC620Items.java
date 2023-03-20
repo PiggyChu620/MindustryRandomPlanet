@@ -17,6 +17,7 @@ public class EC620Items {
 
 	//Alloys/Intermetallic
 	//public static Item duralumin,brass;
+	public static Item ice,slagIce,cryofluidIce,arkyciteIce,neoplasmIce,oxygenIce,wax,galliumIce,hydrogenIce,nitrogenIce,cyanogenIce;
 	public static Item cupb;
 	public static void load()
 	{
@@ -45,11 +46,42 @@ public class EC620Items {
 //			hardness=3;
 //			localizedName="Brass";
 //		}};
-		cupb = new Item("cupb",Color.valueOf("B87333"))
-		{{	//4 Coppers + 1 Lead
-			hardness=3;
-			localizedName="CuPb";
+//		cupb = new Item("cupb",Color.valueOf("B87333"))
+//		{{	//4 Coppers + 1 Lead
+//			hardness=3;
+//			localizedName="CuPb";
+//		}};
+		ice=new Item("ice",Color.valueOf("368BC1"))
+		{{
+			localizedName="Ice";
+
 		}};
+		slagIce=new Item("slag-ice",Color.valueOf("ffa166"))
+		{{
+			localizedName="Slag Ice";
+
+		}};
+		wax=new Item("wax",Color.valueOf("000000"))
+		{{
+			localizedName="Wax";
+			flammability = 1.2f;
+			explosiveness = 1.2f;
+		}};
+		cryofluidIce=new Item("cryofluid-ice",Color.valueOf("6ecdec"))
+		{{
+			localizedName="Cryofliud Ice";
+
+		}};
+		neoplasmIce=new Item("neoplasm-ice",Color.valueOf("c33e2b"))
+		{{
+			localizedName="Neoplasm Ice";
+		}};
+		arkyciteIce=new Item("arkycite-ice",Color.valueOf("84a94b"))
+		{{
+			localizedName="Arkycite Ice";
+			flammability = 0.4f;
+		}};
+
 	}
 	
 }
