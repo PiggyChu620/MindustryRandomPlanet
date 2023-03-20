@@ -51,7 +51,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
     //                  <- LOW                   HIGH ->
     Block[][] arr =
             {
-                    {EC620Blocks.oreIron}
+                    //{EC620Blocks.oreIron}
             };
     //v POLES
 
@@ -116,7 +116,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
 //            sector.info.items=is;
             //return;
         }
-        else sector.generateEnemyBase=rand.chance(.5);
+        //else sector.generateEnemyBase=rand.chance(.5);
         sector.setName(EC620Name.generate()+"-"+sector.id);
         PlanetGrid.Ptile tile = sector.tile;
 
@@ -143,7 +143,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
             }
         }
 
-        sector.generateEnemyBase = any;
+        sector.generateEnemyBase = sector.id==0 || any;
     }
 
     @Override
@@ -592,7 +592,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
             });
         }*/
 
-        Block[] availableOres=new Block[]{oreLead,oreCoal,oreTitanium,oreBeryllium,oreTungsten,oreThorium,oreCrystalThorium,oreScrap,wallOreBeryllium, wallOreTungsten,EC620Blocks.oreIron,EC620Blocks.oreAluminum};
+        Block[] availableOres=new Block[]{oreLead,oreCoal,oreTitanium,oreBeryllium,oreTungsten,oreThorium,oreCrystalThorium,oreScrap,wallOreBeryllium, wallOreTungsten};
         Seq<Block> ores = new Seq<Block>();
         float poles = Math.abs(sector.tile.v.y);
         float nmag = 0.5f;
@@ -967,6 +967,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
         //spawn air only when spawn is blocked
         state.rules.spawns = Waves.generate(difficulty, new Rand(sector.id), state.rules.attackMode, state.rules.attackMode && spawner.countGroundSpawns() == 0);
         //state.rules.spawns = Waves.generate(difficulty, new Rand(sector.id), state.rules.attackMode, state.rules.attackMode && spawner.countGroundSpawns() == 0, naval);
+
     }
     private void addPart(Content c, String schematic)
     {

@@ -1,5 +1,5 @@
 #the mod name as displayed in-game
-displayName: "EC620 Java Mod Testing"
+displayName: "Random Planet v0.1"
 
 #the internal name of your mod
 name: "ec620"
@@ -11,7 +11,7 @@ author: "PiggyChu620"
 main: "ec620.EC620JavaMod"
 
 #the mod description as seen in the mod dialog
-description: "A Mindustry Java mod template."
+description: "Randomly generate a planet and its sectors."
 
 #the mod version
 version: 0.1

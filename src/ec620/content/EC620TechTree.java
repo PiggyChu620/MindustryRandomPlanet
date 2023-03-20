@@ -827,13 +827,13 @@ public class EC620TechTree {
                         });
                     });
                 });
-                nodeProduce(EC620Items.iron,()->{
-                    nodeProduce(EC620Items.aluminum,()->{
-                        nodeProduce(EC620Items.duralumin,()->{
-
-                        });
-                    });
-                });
+//                nodeProduce(EC620Items.iron,()->{
+//                    nodeProduce(EC620Items.aluminum,()->{
+//                        nodeProduce(EC620Items.duralumin,()->{
+//
+//                        });
+//                    });
+//                });
 
             });
         });

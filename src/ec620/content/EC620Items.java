@@ -13,25 +13,42 @@ public class EC620Items {
 	//Load Mod Items
 
 	//Raw Materials
-	public static Item iron,aluminum;
+	//public static Item iron,aluminum,zinc;
 
 	//Alloys/Intermetallic
-	public static Item duralumin;
-	public static void load(){
-		iron = new Item("iron",Color.valueOf("A19D94"))
-		{{
+	//public static Item duralumin,brass;
+	public static Item cupb;
+	public static void load()
+	{
+//		iron = new Item("iron",Color.valueOf("A19D94"))
+//		{{
+//			hardness=3;
+//			localizedName="Iron";
+//		}};
+//		aluminum=new Item("aluminum",Color.valueOf("ADB2BD"))
+//		{{
+//				hardness=2;
+//				localizedName="Aluminum";
+//		}};
+//		zinc=new Item("zinc",Color.valueOf("92898A"))
+//		{{
+//			hardness=2;
+//			localizedName="Zinc";
+//		}};
+//		duralumin=new Item("duralumin",Color.valueOf("ADB2BD"))
+//		{{
+//			hardness=2;
+//			localizedName="Duralumin";
+//		}};
+//		brass=new Item("brass",Color.valueOf("E1C16E"))
+//		{{	//3 Coppers + 1 Zinc
+//			hardness=3;
+//			localizedName="Brass";
+//		}};
+		cupb = new Item("cupb",Color.valueOf("B87333"))
+		{{	//4 Coppers + 1 Lead
 			hardness=3;
-			localizedName="Iron";
-		}};
-		aluminum=new Item("aluminum",Color.valueOf("ADB2BD"))
-		{{
-				hardness=2;
-				localizedName="Aluminum";
-		}};
-		duralumin=new Item("duralumin",Color.valueOf("ADB2BD"))
-		{{
-			hardness=2;
-			localizedName="Duralumin";
+			localizedName="CuPb";
 		}};
 	}
 	
