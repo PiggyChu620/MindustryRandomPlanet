@@ -318,7 +318,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
                             !((Floor) fv).name.contains("panel") &&
                             !(fv instanceof OreBlock) &&
                             !(fv instanceof OverlayFloor) &&
-                                    !((Floor)fv).isLiquid) tempBlocks.add((Floor) fv);
+                            !((Floor)fv).isLiquid) tempBlocks.add((Floor) fv);
                 }
                 catch (Exception e)
                 {
@@ -337,7 +337,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
         Block res;
         if(sector.id==0)
         {
-            Seq<Block> sands=Seq.with(sandWater, sand, darksandWater, darksand, darksandTaintedWater);
+            Seq<Block> sands=Seq.with( sand, darksand);
             return sands.get((int)(tnoise*sands.size)%sands.size);
         }
         else res= availableBlocks.get((int)(tnoise*availableBlocks.size)%availableBlocks.size);
@@ -890,7 +890,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
         ints.ensureCapacity(width * height / 4);
 
         int ruinCount = pgRand.random(-2, -1); //disabled ruins
-        /*
+
         if(ruinCount > 0){
             int padding = 25;
 
@@ -965,7 +965,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
             }
         }
 
-         */
+
 
         //remove invalid ores
         for(Tile tile : tiles)
@@ -1088,13 +1088,17 @@ public class EC620PlanetGenerator extends PlanetGenerator
         }
         else
         {
-            state.rules.winWave = sector.info.winWave = 10 + 5 * (int)Math.max(difficulty * 10, 1);
+            state.rules.winWave = sector.info.winWave = (int)(20f*Mathf.pow(10,difficulty));
+//            Log.info("Difficulty: "+difficulty);
+//            Log.info("Rules Win Waves: "+state.rules.winWave);
+//            Log.info("Info Win Waves: "+sector.info.winWave);
         }
 
         float waveTimeDec = 0.4f;
 
         state.rules.waveSpacing = Mathf.lerp(60 * 65 * 2, 60f * 60f * 1f, Math.max(difficulty - waveTimeDec, 0f));
         state.rules.waves = sector.info.waves = true;
+        state.rules.env = EC620Planets.ec620.defaultEnv;
         state.rules.enemyCoreBuildRadius = 600f;
 
         //spawn air only when spawn is blocked

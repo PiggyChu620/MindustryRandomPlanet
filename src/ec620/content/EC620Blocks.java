@@ -84,7 +84,7 @@ public class EC620Blocks {
 	//public static Block copperWallHuge;
 
 	//Craftings
-	public static Block pyratiteSmelter,cryogenicFreezer;
+	public static Block pyratiteSmelter,cryogenicFreezer,magneticSeparator;
 
 	public static void load()
 	{
@@ -180,6 +180,12 @@ public class EC620Blocks {
 			resolvedRecipes.add(new Recipe(ice,water,.5f));
 			init();
 		}};
+		magneticSeparator=new GenericCrafter("magnetic-separator")	//Todo
+		{{	//Slag → Iron, Copper, Nickel, Zinc, Lead, Calcium, Magnesium, Potassium, Silicon, Ozone, Phosphorus
+			localizedName="Magnetic Separator";
+			size=3;	//or 4
+		}};
+
 		//endregion
 	}
 
