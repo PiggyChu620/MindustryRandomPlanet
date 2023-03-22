@@ -1,6 +1,8 @@
 # Mindustry Java Mod - Random Planet v0.1.0322.1
 A Java Mindustry mod, currently for PC only.
+
 Randomly generate a planet and its sectors, including the starting sector.
+
 I combined both technologies from Serpulo and Erekir as best as I could, including defenses, so some maps might even be unbeatable, especially Eradication maps.
 
 ## Features
