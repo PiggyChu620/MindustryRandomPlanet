@@ -20,7 +20,7 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 
 1. Different liquids might share the same lake while they obviously can not be mixed.
 2. Liquids other than slag appear in the volcanic environment while they obviously will be vaporized or set on fire (in case of oil).
-3. Chained factories (to produce higher-tier units) sometimes stuck and unable to finish production.
+3. Chained factories (to produce higher-tier units) are sometimes stuck and unable to finish production.
 
 --- 
 
