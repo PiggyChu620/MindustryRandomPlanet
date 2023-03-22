@@ -26,11 +26,11 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 ## Updates
 
 *v0.1.0322.1*
-Fix many sector generator abnormalities
+- Fix many sector generator abnormalities
 
 *v0.1.1*
-Change versioning for easier readability
-Fix starting sector got flooded by waters
+- Change versioning for easier readability
+- Fix starting sector got flooded by waters
 
 --- 
 
