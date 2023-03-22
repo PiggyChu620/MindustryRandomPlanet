@@ -1,2 +1,2 @@
-gradlew jar
-time
+git add .
+git commit

@@ -47,6 +47,8 @@ public class EC620Planets {
 	public static Planet ec620;
 
 	public static String planetName;
+	static final int seed = (int)(System.currentTimeMillis()%Integer.MAX_VALUE);
+	static Rand rand=new Rand(seed);
 	public static void load()
 	{
 		ec620 = new EC620Planet("ec620", Planets.sun, 1, 3)
@@ -87,7 +89,7 @@ public class EC620Planets {
 					r.showSpawns = true;
 					r.waveSpacing = 80 * Time.toSeconds;
 					r.initialWaveSpacing = 8f * Time.toMinutes;
-					if(r.sector.preset == null)r.winWave = (int)(r.sector.threat*200);
+					if(r.sector.preset == null) r.winWave = (int)(20f*Math.pow(10,r.sector.threat));
 					//r.bannedUnits.add(NHUnitTypes.guardian);
 					r.coreDestroyClear = true;
 
@@ -146,21 +148,19 @@ public class EC620Planets {
 						sum += 0.88f;
 					}
 
-					Rand rand = new Rand();
-					rand.setSeed(sector.id);
 					//if(sector.id==0) sector.threat=.9f;
-					sector.threat = sector.preset == null ? rand.random(0, 1) : Mathf.clamp(sector.preset.difficulty / 10f);
+					if(sector.id==0) sector.threat=0;
+					else sector.threat = rand.nextFloat();
 
 				}
 			}
 		};
 
 	}
-	private static int seed=0;
 	public static Color randomColor()
 	{
 
-		return Color.rgb(new Rand(256).nextInt(),new Rand(seed++).nextInt(256),new Rand(seed++).nextInt(256));
+		return Color.rgb(rand.nextInt(256),rand.nextInt(256),rand.nextInt(256));
 	}
 	public static class EC620Planet extends Planet{
 		public EC620Planet(String name, Planet parent, float radius, int sectorSize)
@@ -183,13 +183,13 @@ public class EC620Planets {
 				@Override
 				public float getHeight(Vec3 position){
 					position = Tmp.v33.set(position).scl(4f);
-					float height = (Mathf.pow(Simplex.noise3d(123, 7, 0.5f, 1f/3f, position.x, position.y, position.z), 2.3f) + waterOffset) / (1f + waterOffset);
+					float height = (Mathf.pow(Simplex.noise3d(seed, 7, 0.5f, 1f/3f, position.x, position.y, position.z), 2.3f) + waterOffset) / (1f + waterOffset);
 					return Math.max(height, 0.05f);
 				}
 
 				@Override
 				public Color getColor(Vec3 position){
-					double height = Math.pow(Simplex.noise3d(1, octaves, persistence, scl, position.x, position.y, position.z), pow) * mag;
+					double height = Math.pow(Simplex.noise3d(seed, octaves, persistence, scl, position.x, position.y, position.z), pow) * mag;
 					return Tmp.c1.set(colors[Mathf.clamp((int)(height * colors.length), 0, colors.length - 1)]).mul(colorScale);
 				}
 

@@ -34,7 +34,7 @@ public class EC620JavaMod extends Mod
                 dd.titleFont= Fonts.def;
                 dd.titleFontColor=new Color(1,0,0);
                 BaseDialog dialog = new BaseDialog("Random Planet", dd);
-                dialog.cont.add("Welcome to Random Planet v0.1.1",Color.green,1.2f).row();
+                dialog.cont.add("Welcome to Random Planet v0.1.2",Color.green,1.2f).row();
                 dialog.cont.add("This mod randomly generate a planet and its sectors, no presets, nothing.",Color.cyan).row();
                 dialog.cont.add("If you like some varieties and changes, then this mod is for you.",Color.cyan).row();
                 dialog.cont.add("I combined both Serpulo and Erekir techs together as best as I could,",Color.cyan).row();

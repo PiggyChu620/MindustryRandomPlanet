@@ -16,6 +16,7 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 1. Make some new resources that utilize existing resources from both planets, such as copper-beryllium alloy, I'll try to restrain it to real-life alloys/intermetallic for the simplest reason that fictional stuff is literally limitless, I could just make up an alloy and call it "A" and be done with it, that's not how I do things. I'll also restrain from making new mineable resources as they'll inevitably occupy the space and prevent you from mining the resource "you really need".
 2. Make some units and defenses that use the new resources, hopefully they could act as a "bridge" between the 2 highly unbalanced planets.
 3. Make a custom wave generator that combines both Serpulo and Erekir units, yeah, you'll die!
+4. Restore research requirements so the players couldn't use it as an easy bypass for the 2 main techtrees.
 
 ## Known Issues (Not bugs, it's just something that "make no sense")
 
@@ -30,7 +31,13 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 
 *v0.1.1*
 - Change versioning for easier readability
-- Fix starting sector got flooded by waters
+- Fix: Starting sector got flooded by waters
+
+*v0.1.2*
+- Fix: Only Low and Eradication difficulties
+- Change: Random planet color
+- Fix: Endless waves for Low difficulty
+- Fix: Sector difficulties are not really randomized
 
 --- 
 
