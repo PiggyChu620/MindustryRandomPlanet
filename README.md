@@ -1,4 +1,4 @@
-# Mindustry Java Mod - Random Planet v0.1.1
+# Mindustry Java Mod - Random Planet v0.1.2
 A Java Mindustry mod, currently for PC only.
 
 Randomly generate a planet and its sectors, including the starting sector.
