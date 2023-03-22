@@ -22,12 +22,14 @@ import java.lang.Class;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static mindustry.Vars.*;
 import static mindustry.content.Blocks.*;
 
+import static ec620.content.EC620Classes.*;
 /**
  * Planet generator thingy.
  * @author Anuke(n)
@@ -47,6 +49,9 @@ public class EC620PlanetGenerator extends PlanetGenerator
     float waterOffset = 0.07f;
     boolean genLakes = false;
     private boolean customCoreBasePartsAdded=false;
+    private Rand pgRand=new Rand(seed);
+
+    Seq<Block> liquids=Seq.with(Blocks.water,Blocks.tar,Blocks.slag, Blocks.cryofluid, Blocks.arkyciteFloor);
     //^ EQUATOR
     //                  <- LOW                   HIGH ->
     Block[][] arr =
@@ -172,6 +177,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
     @Override
     public void genTile(Vec3 position, TileGen tile){
         tile.floor = getBlock(position);
+        if(!generatedFloors.contains(tile.floor.name)) generatedFloors.add(tile.floor.name);
         try
         {
             tile.block = tile.floor.asFloor().wall;
@@ -187,7 +193,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
     }
 
     float riverNoise(Vec3 position){
-        return Simplex.noise3d(seed, 7, 0.56, 1f/15f, position.x, position.y + 999f, position.z) * 0.76f;
+        return Simplex.noise3d(seed, 7, 0.56, .1f, position.x, position.y + 999f, position.z) * 0.76f;
     }
 
     float craterNoise(Vec3 position, boolean smooth){
@@ -212,8 +218,57 @@ public class EC620PlanetGenerator extends PlanetGenerator
         //outside crater
         return (1f - Mathf.sqrt(a)) * 0.38f + 0.22f;
     }
-    ArrayList<Floor> availableBlocks=null;
-    ArrayList<SteamVent> availableVents=null;
+    /*ArrayList<Block> tempBlocks=new ArrayList<>(List.of(
+            deepwater,
+            Blocks.water,
+            taintedWater,
+            deepTaintedWater,
+            darksandTaintedWater,
+            sandWater,
+            darksandWater,
+            tar,
+            cryofluid,
+            slag,
+            basalt,
+            hotrock,
+            magmarock,
+            sand,
+            darksand,
+            dirt,
+            mud,
+            dacite,
+            rhyolite,
+            rhyoliteCrater,
+            roughRhyolite,
+            regolith,
+            yellowStone,
+            carbonStone,
+            ferricStone,
+            ferricCraters,
+            beryllicStone,
+            crystallineStone,
+            crystalFloor,
+            yellowStonePlates,
+            redStone,
+            denseRedStone,
+            redIce,
+            arkyciteFloor,
+            arkyicStone,
+            redmat,
+            bluemat,
+            grass,
+            salt,
+            snow,
+            ice,
+            iceSnow,
+            shale,
+            moss,
+            sporeMoss,
+
+            ));*/
+    Seq<Floor> availableBlocks=null;
+    Seq<SteamVent> availableVents=null;   //new ArrayList<>(List.of(rhyoliteVent,carbonVent,arkyicVent,yellowStoneVent,redStoneVent,crystallineVent,));
+    Seq<String> generatedFloors=new Seq<>();
     Block getBlock(Vec3 position)
     {
         //todo refill poles with milksand, try reviving the arr usage
@@ -236,8 +291,9 @@ public class EC620PlanetGenerator extends PlanetGenerator
         //Block res = (tnoise > 0.52f) ? (tnoise > 0.53f ? (tnoise > 0.57f ? (tnoise > 0.58f ? milksand : starrySandWater) : starryWater) : starryBorudaliteWater) : borudalite;
         if(availableBlocks==null)
         {
-            availableBlocks = new ArrayList<>();
-            availableVents=new ArrayList<>();
+            Seq<Floor> tempBlocks=new Seq();
+            availableBlocks = new Seq<>();
+            availableVents=new Seq<>();
             for (Field f : Blocks.class.getDeclaredFields())
             {
                 f.setAccessible(true);
@@ -253,26 +309,38 @@ public class EC620PlanetGenerator extends PlanetGenerator
                 try
                 {
                     if(fv instanceof SteamVent) availableVents.add((SteamVent)fv);
-                    else if (fv instanceof Floor) availableBlocks.add((Floor) fv);
+                    else if (fv instanceof Floor &&
+                            fv != air &&
+                            fv != empty &&
+                            fv != coreZone &&
+                            fv != spawn &&
+                            fv != space &&
+                            !((Floor) fv).name.contains("panel") &&
+                            !(fv instanceof OreBlock) &&
+                            !(fv instanceof OverlayFloor) &&
+                                    !((Floor)fv).isLiquid) tempBlocks.add((Floor) fv);
                 }
                 catch (Exception e)
                 {
 
                 }
             }
-            //Log.info(availableBlocks.size());
+            while(tempBlocks.size>0)
+            {
+                int c=pgRand.nextInt(tempBlocks.size);
+
+                availableBlocks.add(tempBlocks.get(c));
+                tempBlocks.remove(c);
+            }
         }
-        if(rand.chance(.01)) return randomBlock(availableVents);
-        int t=(int)(tnoise* availableBlocks.size());
-        //Log.info(t);
+        if(pgRand.chance(.01)) return availableVents.getFrac(pgRand.nextFloat());
         Block res;
-        if(t== availableBlocks.size()) res=Blocks.water;
-        else if(sector.id==0)
+        if(sector.id==0)
         {
-            Block[] sands=new Block[]{sandWater, sand, darksandWater, darksand, darksandTaintedWater};
-            return sands[(int)(tnoise*sands.length)%sands.length];
+            Seq<Block> sands=Seq.with(sandWater, sand, darksandWater, darksand, darksandTaintedWater);
+            return sands.get((int)(tnoise*sands.size)%sands.size);
         }
-        else res= availableBlocks.get(t);
+        else res= availableBlocks.get((int)(tnoise*availableBlocks.size)%availableBlocks.size);
         //res=Blocks.sand;
         float moss = Ridged.noise3d(seed, position.x, position.y, position.z, 8, 0.29f);//freq = 1 / scl?
         if(cnoise < 0f || cnoise > 0.4f) return res; //inside of crater is safe from moss
@@ -318,8 +386,8 @@ public class EC620PlanetGenerator extends PlanetGenerator
 
             void join(int x1, int y1, int x2, int y2)
             {
-                float nscl = rand.random(100f, 140f) * 6f;
-                int stroke = rand.random(3, 9);
+                float nscl = pgRand.random(100f, 140f) * 6f;
+                int stroke = pgRand.random(3, 9);
                 brush(pathfind(x1, y1, x2, y2, tile -> (tile.solid() ? 50f : 0f) + noise(tile.x, tile.y, 2, 0.4f, 1f / nscl) * 500, Astar.manhattan), stroke);
             }
 
@@ -328,7 +396,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
                 if(!connected.add(to) || to == this) return;
 
                 Vec2 midpoint = Tmp.v1.set(to.x, to.y).add(x, y).scl(0.5f);
-                rand.nextFloat();
+                pgRand.nextFloat();
 
                 if(alt)
                 {
@@ -337,7 +405,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
                 else
                 {
                     //add randomized offset to avoid straight lines
-                    midpoint.add(Tmp.v2.setToRandomDirection(rand).scl(Tmp.v1.dst(x, y)));
+                    midpoint.add(Tmp.v2.setToRandomDirection(pgRand).scl(Tmp.v1.dst(x, y)));
                 }
 
                 midpoint.sub(width/2f, height/2f).limit(width / 2f / Mathf.sqrt3).add(width/2f, height/2f);
@@ -350,8 +418,8 @@ public class EC620PlanetGenerator extends PlanetGenerator
 
             void joinLiquid(int x1, int y1, int x2, int y2)
             {
-                float nscl = rand.random(100f, 140f) * 6f;
-                int rad = rand.random(5, 10);
+                float nscl = pgRand.random(100f, 140f) * 6f;
+                int rad = pgRand.random(5, 10);
                 int avoid = 2 + rad;
                 var path = pathfind(x1, y1, x2, y2, tile -> (tile.solid() || !tile.floor().isLiquid ? 70f : 0f) + noise(tile.x, tile.y, 2, 0.4f, 1f / nscl) * 500, Astar.manhattan);
                 path.each(t -> {
@@ -387,10 +455,10 @@ public class EC620PlanetGenerator extends PlanetGenerator
                 if(to == this) return;
 
                 Vec2 midpoint = Tmp.v1.set(to.x, to.y).add(x, y).scl(0.5f);
-                rand.nextFloat();
+                pgRand.nextFloat();
 
                 //add randomized offset to avoid straight lines
-                midpoint.add(Tmp.v2.setToRandomDirection(rand).scl(Tmp.v1.dst(x, y)));
+                midpoint.add(Tmp.v2.setToRandomDirection(pgRand).scl(Tmp.v1.dst(x, y)));
                 midpoint.sub(width/2f, height/2f).limit(width / 2f / Mathf.sqrt3).add(width/2f, height/2f);
 
                 int mx = (int)midpoint.x, my = (int)midpoint.y;
@@ -405,26 +473,26 @@ public class EC620PlanetGenerator extends PlanetGenerator
 
         float constraint = 1.3f;
         float radius = width / 2f / Mathf.sqrt3;
-        int rooms = rand.random(2, 5);
+        int rooms = pgRand.random(2, 5);
         Seq<Room> roomseq = new Seq<>();
 
 
         for(int i = 0; i < rooms; i++)
         {
-            Tmp.v1.trns(rand.random(360f), rand.random(radius / constraint));
+            Tmp.v1.trns(pgRand.random(360f), pgRand.random(radius / constraint));
             float rx = (width/2f + Tmp.v1.x);
             float ry = (height/2f + Tmp.v1.y);
             float maxrad = radius - Tmp.v1.len();
-            float rrad = Math.min(rand.random(9f, maxrad / 2f), 30f);
+            float rrad = Math.min(pgRand.random(9f, maxrad / 2f), 30f);
             roomseq.add(new Room((int)rx, (int)ry, (int)rrad));
         }
 
         //check positions on the map to place the player spawn. this needs to be in the corner of the map
         Room spawn = null;
         Seq<Room> enemies = new Seq<>();
-        int enemySpawns = rand.random(1, Math.max((int)(sector.threat * 4), 1));
-        int offset = rand.nextInt(360);
-        float length = width/2.55f - rand.random(13, 23);
+        int enemySpawns = pgRand.random(1, Math.max((int)(sector.threat * 4), 1));
+        int offset = pgRand.nextInt(360);
+        float length = width/2.55f - pgRand.random(13, 23);
         int angleStep = 5;
         int waterCheckRad = 5;
         for(int i = 0; i < 360; i+= angleStep)
@@ -450,13 +518,13 @@ public class EC620PlanetGenerator extends PlanetGenerator
 
             if(waterTiles <= 4 || (i + angleStep >= 360))
             {
-                roomseq.add(spawn = new Room(cx, cy, rand.random(8, 15)));
+                roomseq.add(spawn = new Room(cx, cy, pgRand.random(8, 15)));
 
                 for(int j = 0; j < enemySpawns; j++)
                 {
-                    float enemyOffset = rand.range(60f);
+                    float enemyOffset = pgRand.range(60f);
                     Tmp.v1.set(cx - width/2, cy - height/2).rotate(180f + enemyOffset).add(width/2, height/2);
-                    Room espawn = new Room((int)Tmp.v1.x, (int)Tmp.v1.y, rand.random(8, 16));
+                    Room espawn = new Room((int)Tmp.v1.x, (int)Tmp.v1.y, pgRand.random(8, 16));
                     roomseq.add(espawn);
                     enemies.add(espawn);
                 }
@@ -472,10 +540,10 @@ public class EC620PlanetGenerator extends PlanetGenerator
         }
 
         //randomly connect rooms together
-        int connections = rand.random(Math.max(rooms - 1, 1), rooms + 3);
+        int connections = pgRand.random(Math.max(rooms - 1, 1), rooms + 3);
         for(int i = 0; i < connections; i++)
         {
-            roomseq.random(rand).connect(roomseq.random(rand));
+            roomseq.random(pgRand).connect(roomseq.random(pgRand));
         }
 
         for(Room room : roomseq)
@@ -515,46 +583,88 @@ public class EC620PlanetGenerator extends PlanetGenerator
 
         distort(10f, 6f);
 
+        boolean isWater=pgRand.chance(.5f) || sector.id==0;
+        Seq<LakeHandler> lakeSeq=new Seq<>();
         //rivers
-        pass((x, y) -> {
-            if(block.solid) return;
+        pass((x, y) ->
+        {
+            //if(block.solid) return;
 
             Vec3 v = sector.rect.project(x, y);
 
-            float rr = Simplex.noise2d(sector.id, (float)2, 0.6f, 1f / 7f, x, y) * 0.1f;
-            float value = Ridged.noise3d(2, v.x, v.y, v.z, 1, 1f / 53f) + rr - rawHeight(v) * 0f;
+            float rr = Simplex.noise2d(seed, (float)2, 0.6f, 1f / 7f, x, y) * 0.1f;
+//            float value = Ridged.noise3d(seed, v.x, v.y, v.z, 1, 1f / 53f) + rr - rawHeight(v) * 0f;
             float rrscl = rr * 44 - 2;
+            float value=noise(x,y,5,.8,80);
 
-            if(value > 0.12f && !Mathf.within(x, y, fspawn.x, fspawn.y, 12 + rrscl))
+            //Log.info(value);
+            if(value > .65f && !Mathf.within(x, y, fspawn.x, fspawn.y, 12 + rrscl))
             {
-                boolean deep = value > 0.12f + 0.1f && !Mathf.within(x, y, fspawn.x, fspawn.y, 15 + rrscl);
+                boolean deep = !Mathf.within(x, y, fspawn.x, fspawn.y, 15 + rrscl);
                 boolean spore = floor != Blocks.sand && floor != Blocks.salt;
                 //do not place rivers on ice, they're frozen
                 //ignore pre-existing liquids
+
                 if(!(floor == Blocks.ice || floor == Blocks.iceSnow || floor == Blocks.snow || floor.asFloor().isLiquid))
                 {
-                    floor = spore ?
-                            (deep ? Blocks.taintedWater : Blocks.darksandTaintedWater) :
-                            (deep ? Blocks.water :
-                                    (floor == Blocks.sand || floor == Blocks.salt ? Blocks.sandWater : Blocks.darksandWater));
+                    if(isWater)
+                    {
+                        floor = spore ?
+                                (deep ? Blocks.taintedWater : Blocks.darksandTaintedWater) :
+                                (deep ? Blocks.water :
+                                        (floor == Blocks.sand || floor == Blocks.salt ? Blocks.sandWater : Blocks.darksandWater));
+                    }
+                    else
+                    {
+                        if(lakeSeq.size==0)
+                        {
+                            floor=liquids.get(pgRand.nextInt(liquids.size));
+                            lakeSeq.add(new LakeHandler(x,y,floor));
+                            //Log.info("Initializing ("+x+", "+y+", "+floor+")");
+                        }
+                        else
+                        {
+                            floor=null;
+                            for(LakeHandler lh:lakeSeq)
+                            {
+                                if(lh.Within(x,y))
+                                {
+                                    lh.Add(x,y);
+                                    floor=lh.block;
+                                    break;
+                                }
+                            }
+                            if(floor==null)
+                            {
+                                floor=liquids.get(pgRand.nextInt(liquids.size));
+                                lakeSeq.add(new LakeHandler(x,y,floor));
+                                //Log.info("Adding ("+x+", "+y+", "+floor+")");
+                            }
+                        }
+                    }
                 }
             }
         });
 
         //shoreline setup
-        pass((x, y) -> {
+        pass((x, y) ->
+        {
             int deepRadius = 3;
 
             if(floor.asFloor().isLiquid && floor.asFloor()==Blocks.water)
             {
 
-                for(int cx = -deepRadius; cx <= deepRadius; cx++){
-                    for(int cy = -deepRadius; cy <= deepRadius; cy++){
-                        if((cx) * (cx) + (cy) * (cy) <= deepRadius * deepRadius){
+                for(int cx = -deepRadius; cx <= deepRadius; cx++)
+                {
+                    for(int cy = -deepRadius; cy <= deepRadius; cy++)
+                    {
+                        if((cx) * (cx) + (cy) * (cy) <= deepRadius * deepRadius)
+                        {
                             int wx = cx + x, wy = cy + y;
 
                             Tile tile = tiles.get(wx, wy);
-                            if(tile != null && (!tile.floor().isLiquid || tile.block() != Blocks.air)){
+                            if(tile != null && (!tile.floor().isLiquid || tile.block() != Blocks.air))
+                            {
                                 //found something solid, skip replacing anything
                                 return;
                             }
@@ -616,7 +726,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
                     ores.add(availableOres[i]);
                 }
             }
-            for(int i=ores.size;i<Math.min(new Rand(seed).nextInt(l),5);i++)
+            for(int i=ores.size;i<Math.min(pgRand.nextInt(l),5);i++)
             {
                 ores.add(randomBlock((Arrays.stream(availableOres).filter(x->!ores.contains(x)).toArray(Block[]::new))));
             }
@@ -627,7 +737,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
 
         FloatSeq frequencies = new FloatSeq();
         for(int i = 0; i < ores.size; i++){
-            frequencies.add(rand.random(-0.1f, 0.01f) - i * 0.01f + poles * 0.04f);
+            frequencies.add(pgRand.random(-0.1f, 0.01f) - i * 0.01f + poles * 0.04f);
         }
 
         pass((x, y) -> {
@@ -646,7 +756,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
                 }
             }
 
-            if(ore == Blocks.oreScrap && rand.chance(0.33)){
+            if(ore == Blocks.oreScrap && pgRand.chance(0.33)){
                 floor = Blocks.metalFloorDamaged; //todo
             }
         });
@@ -659,7 +769,8 @@ public class EC620PlanetGenerator extends PlanetGenerator
 
         tech();
 
-        pass((x, y) -> {
+        pass((x, y) ->
+        {
             //random moss
             /*if(floor == twilightMoss){
                 if(Math.abs(0.5f - noise(x - 90, y, 4, 0.8, 65)) > 0.02){
@@ -677,9 +788,10 @@ public class EC620PlanetGenerator extends PlanetGenerator
 
             //todo below
             //hotrock tweaks
-            if(floor == Blocks.hotrock)
+            if(floor == Blocks.hotrock || floor== magmarock)
             {
-                if(Math.abs(0.5f - noise(x - 90, y, 4, 0.8, 80)) > 0.035)
+                if(pgRand.chance(.1f)) floor=availableVents.getFrac(pgRand.nextFloat());
+                else if(Math.abs(0.5f - noise(x - 90, y, 4, 0.8, 80)) > 0.035)
                 {
                     floor = Blocks.basalt;
                 }
@@ -687,10 +799,31 @@ public class EC620PlanetGenerator extends PlanetGenerator
                 {
                     ore = Blocks.air;
                     boolean all = true;
-                    for(Point2 p : Geometry.d4){
-                        Tile other = tiles.get(x + p.x, y + p.y);
-                        if(other == null || (other.floor() != Blocks.hotrock && other.floor() != Blocks.magmarock)){
+                    for(Point2 p : Geometry.d4)
+                    {
+                        int px=x + p.x;
+                        int py=y + p.y;
+                        Tile other = tiles.get(px, py);
+                        if(other == null || (other.floor() != Blocks.hotrock && other.floor() != Blocks.magmarock))
+                        {
                             all = false;
+                        }
+                        else if(other.floor().isLiquid && other.floor()!= slag)
+                        {
+                            for(LakeHandler lh:lakeSeq)
+                            {
+                                if(lh.Within(px,py))
+                                {
+                                    lh.block=slag;
+                                    for(Vec2 v:lh.pos)
+                                    {
+                                        Tile t=tiles.get((int)v.x,(int)v.y);
+                                        t.setBlock(slag);
+                                    }
+                                    Log.info("Lake replaced");
+                                    break;
+                                }
+                            }
                         }
                     }
                     if(all)
@@ -715,7 +848,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
                 }
             }
 
-            if(rand.chance(0.0075))
+            if(pgRand.chance(0.0075))
             {
                 //random spore trees
                 boolean any = false;
@@ -728,9 +861,9 @@ public class EC620PlanetGenerator extends PlanetGenerator
                         all = false;
                     }
                 }
-                if(any && ((block == Blocks.snowWall || block == Blocks.iceWall) || (all && block == Blocks.air && floor == Blocks.snow && rand.chance(0.03))))
+                if(any && ((block == Blocks.snowWall || block == Blocks.iceWall) || (all && block == Blocks.air && floor == Blocks.snow && pgRand.chance(0.03))))
                 {
-                    block = rand.chance(0.5) ? Blocks.whiteTree : Blocks.whiteTreeDead;//todo starry large tree
+                    block = pgRand.chance(0.5) ? Blocks.whiteTree : Blocks.whiteTreeDead;//todo starry large tree
                 }
             }
 
@@ -756,7 +889,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
         ints.clear();
         ints.ensureCapacity(width * height / 4);
 
-        int ruinCount = rand.random(-2, -1); //disabled ruins
+        int ruinCount = pgRand.random(-2, -1); //disabled ruins
         /*
         if(ruinCount > 0){
             int padding = 25;
@@ -965,7 +1098,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
         state.rules.enemyCoreBuildRadius = 600f;
 
         //spawn air only when spawn is blocked
-        state.rules.spawns = Waves.generate(difficulty, new Rand(sector.id), state.rules.attackMode, state.rules.attackMode && spawner.countGroundSpawns() == 0);
+        state.rules.spawns = Waves.generate(difficulty, pgRand, state.rules.attackMode, state.rules.attackMode && spawner.countGroundSpawns() == 0);
         //state.rules.spawns = Waves.generate(difficulty, new Rand(sector.id), state.rules.attackMode, state.rules.attackMode && spawner.countGroundSpawns() == 0, naval);
 
     }
@@ -1009,4 +1142,14 @@ public class EC620PlanetGenerator extends PlanetGenerator
             basegen.postGenerate();
         }
     }
+
+    private Block nearLiquid(int x,int y,int r)
+    {
+        for(Block b:liquids)
+        {
+            if(near(x,y,r,b)) return b;
+        }
+        return null;
+    }
+
 }
