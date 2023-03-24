@@ -21,6 +21,7 @@ import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.LiquidTurret;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.environment.*;
+import mindustry.world.blocks.production.Drill;
 import mindustry.world.blocks.sandbox.ItemSource;
 import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.blocks.units.UnitFactory;
@@ -34,6 +35,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static ec620.EC620JavaMod.*;
 import static mindustry.Vars.*;
 import static mindustry.content.Blocks.*;
 
@@ -121,7 +123,8 @@ public class EC620PlanetGenerator extends PlanetGenerator
     }
 
     @Override
-    public void generateSector(Sector sector){
+    public void generateSector(Sector sector)
+    {
 
         //these always have bases
         if(sector.id == 0)
@@ -134,7 +137,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
             //return;
         }
         //else sector.generateEnemyBase=rand.chance(.5);
-        sector.setName(EC620Name.generate()+"-"+sector.id);
+        sector.setName(EC620NameGenerator.generate()+"-"+sector.id);
         PlanetGrid.Ptile tile = sector.tile;
 
         boolean any = false;
@@ -1157,7 +1160,17 @@ public class EC620PlanetGenerator extends PlanetGenerator
         BaseRegistry.BasePart part=new BaseRegistry.BasePart(schem);
         Seq<Content> requiredItems=new Seq<>();
         boolean isGraphite=schem.tiles.contains(s->s.block.name=="graphite-press");
+        int drillTier=0;
 
+        for(Schematic.Stile tile:schem.tiles)
+        {
+            if(tile.block instanceof Drill)
+            {
+                int tier=((Drill)tile.block).tier;
+
+                if(tier>drillTier) drillTier=tier;
+            }
+        }
         for(Schematic.Stile tile : schem.tiles)
         {
             /*if (tile.block instanceof ItemSource)
@@ -1170,6 +1183,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
                     break;
                 }
             }*/
+
             if(tile.block instanceof ItemTurret)
             {
                 if(isGraphite) requiredItems.addUnique(Items.coal);
@@ -1177,8 +1191,12 @@ public class EC620PlanetGenerator extends PlanetGenerator
                 {
                     for(Item item:((ItemTurret) tile.block).ammoTypes.keys())
                     {
-                        if(item==Items.graphite) requiredItems.addUnique(Items.coal);
-                        else if(minable.contains(item)) requiredItems.addUnique(item);
+                        if(minable.contains(item))
+                        {
+                            if(item==Items.thorium && drillTier>3) requiredItems.addUnique(item);
+                            else if(item==Items.tungsten && drillTier>4) requiredItems.addUnique(item);
+                            else requiredItems.addUnique(item);
+                        }
                     }
                 }
 

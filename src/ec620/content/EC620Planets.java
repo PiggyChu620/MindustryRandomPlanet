@@ -14,6 +14,7 @@ import arc.util.noise.Ridged;
 import arc.util.noise.Simplex;
 import arc.util.pooling.Pool;
 import arc.util.pooling.Pools;
+import ec620.EC620JavaMod;
 import mindustry.Vars;
 import mindustry.ai.Astar;
 import mindustry.content.*;
@@ -54,7 +55,7 @@ public class EC620Planets {
 		ec620 = new EC620Planet("ec620", Planets.sun, 1, 3)
 		{
 			{
-				planetName=EC620Name.generate();
+				planetName= EC620NameGenerator.generate();
 				localizedName=planetName;
 				bloom = true;
 				visible = true;

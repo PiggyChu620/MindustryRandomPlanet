@@ -2,6 +2,7 @@ package ec620.content;
 
 import arc.math.Mathf;
 import arc.math.geom.Vec2;
+import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.struct.StringMap;
 import arc.util.Log;
@@ -38,15 +39,23 @@ public class EC620Classes
         }
 
     }
-    public class NameHandler
+    public static class NameHandler
     {
         public String planetName;
-        public ArrayList<String> sectorNames;
+        public ObjectMap<Integer,String> sectorNames;
 
-        public NameHandler(){}
-        public String Get(int i)
+        public NameHandler()
+        {
+            sectorNames=new ObjectMap<>();
+        }
+        public String get(int i)
         {
             return sectorNames.get(i);
+        }
+        public boolean contains(int i){return sectorNames.containsKey(i);}
+        public void add(int i,String s)
+        {
+            sectorNames.put(i,s);
         }
     }
 }

@@ -28,7 +28,7 @@ import java.io.IOException;
 
 public class EC620JavaMod extends Mod
 {
-
+    public static EC620NameGenerator nameGenerator;
     public EC620JavaMod()
     {
 
@@ -72,6 +72,7 @@ public class EC620JavaMod extends Mod
     public void loadContent()
     {
         Log.info("Loading some example content.");
+        nameGenerator=new EC620NameGenerator();
         EC620Items.load();
         EC620Blocks.load();
         EC620Planets.load();

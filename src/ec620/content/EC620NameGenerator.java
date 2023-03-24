@@ -23,26 +23,31 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.*;
 
+import static arc.math.Mathf.absin;
 import static arc.math.Mathf.rand;
 
-public class EC620Name
+public class EC620NameGenerator
 {
     //static HashMap<Character,HashMap<Character, List<Character>>> nameMap=new HashMap();
 
+    public EC620NameGenerator()
+    {
 
+    }
     public static String generate()
     {
         class CharMap extends ObjectMap<String, Seq<String>>
         {
-
         }
-
-
-
         Mods.LoadedMod mod = Vars.mods.getMod(EC620JavaMod.class);
         Fi file = mod.root.child("NameMarkovChain.json");
 
         ObjectMap<String, CharMap> nameMap = new Json().readValue(ObjectMap.class, CharMap.class, new JsonReader().parse(file));
+
+        if(nameMap==null) throw new IllegalArgumentException("Why!?");
+
+
+
 
         //Gson gson = new Gson();
 
@@ -61,33 +66,33 @@ public class EC620Name
 
         //for(int i=0;i<10;i++)
         //{
-            List<String> name = new ArrayList<>();
-            Seq<String> chars=nameMap.keys().toSeq();
-            int c=chars.size-1;
-            String f="-";
-            String o;
+        List<String> name = new ArrayList<>();
+        Seq<String> chars=nameMap.keys().toSeq();
+        int c=chars.size-1;
+        String f="-";
+        String o;
 
-            while(Objects.equals(f, "-"))
-            {
-                f=chars.get(rand.random(c));
-            }
-            name.add(f.toUpperCase());
-            chars=nameMap.get(f).keys().toSeq();
-            c=chars.size-1;
-            String s=chars.get(rand.random(c));
-            name.add(s);
+        while(Objects.equals(f, "-"))
+        {
+            f=chars.get(rand.random(c));
+        }
+        name.add(f.toUpperCase());
+        chars=nameMap.get(f).keys().toSeq();
+        c=chars.size-1;
+        String s=chars.get(rand.random(c));
+        name.add(s);
 
-            for(int j=0;j<rand.random(10);j++)
-            {
-                if(!nameMap.get(f).containsKey(s)) break;
-                c=nameMap.get(f).get(s).size-1;
-                o=nameMap.get(f).get(s).get(rand.random(c));
-                name.add(o);
-                f=s;
-                s=o;
-            }
-            return String.join("",name);
-            //Log.info(String.join("",name));
+        for(int j=0;j<rand.random(10);j++)
+        {
+            if(!nameMap.get(f).containsKey(s)) break;
+            c=nameMap.get(f).get(s).size-1;
+            o=nameMap.get(f).get(s).get(rand.random(c));
+            name.add(o);
+            f=s;
+            s=o;
+        }
+        return String.join("",name);
+        //Log.info(String.join("",name));
         //}
     }
 }

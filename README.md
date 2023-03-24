@@ -1,4 +1,4 @@
-# Mindustry Java Mod - Random Planet v0.1.2
+# Mindustry Java Mod - Random Planet v0.1.3
 A Java Mindustry mod, currently for PC only.
 
 Randomly generate a planet and its sectors, including the starting sector.
@@ -16,6 +16,7 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 1. Make some new resources that utilize existing resources from both planets, such as copper-beryllium alloy, I'll try to restrain it to real-life alloys/intermetallic for the simplest reason that fictional stuff is literally limitless, I could just make up an alloy and call it "A" and be done with it, that's not how I do things. I'll also restrain from making new mineable resources as they'll inevitably occupy the space and prevent you from mining the resource "you really need".
 2. Make some units and defenses that use the new resources, hopefully they could act as a "bridge" between the 2 highly unbalanced planets.
 3. Make a custom wave generator that combines both Serpulo and Erekir units, yeah, you'll die!
+4. Tweak Random Name Generator so it can remember the names that have already been generated, so the planet/sectors won't "change" any time you load the game, unless, of course, you imagine it as multi-universe, then everything make sense. XP
 
 ## Known Issues (Not bugs, it's just something that "make no sense")
 
@@ -37,6 +38,9 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 - Change: Random planet color
 - Fix: Endless waves for Low difficulty
 - Fix: Sector difficulties are not really randomized
+- 
+*v0.1.3*
+- Now loading all available defensive schematics for enemy defense system
 
 --- 
 
