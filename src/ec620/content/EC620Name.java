@@ -11,7 +11,10 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import ec620.EC620JavaMod;
 import mindustry.Vars;
+import mindustry.game.Schematic;
+import mindustry.game.Schematics;
 import mindustry.io.JsonIO;
+import mindustry.mod.Mods;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -34,8 +37,10 @@ public class EC620Name
 
         }
 
-        var mod = Vars.mods.getMod(EC620JavaMod.class);
-        var file = mod.root.child("NameMarkovChain.json");
+
+
+        Mods.LoadedMod mod = Vars.mods.getMod(EC620JavaMod.class);
+        Fi file = mod.root.child("NameMarkovChain.json");
 
         ObjectMap<String, CharMap> nameMap = new Json().readValue(ObjectMap.class, CharMap.class, new JsonReader().parse(file));
 

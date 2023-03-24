@@ -1,5 +1,5 @@
 #the mod name as displayed in-game
-displayName: "Random Planet v0.1.2"
+displayName: "Random Planet v0.1.3"
 
 #the internal name of your mod
 name: "ec620"
@@ -14,7 +14,7 @@ main: "ec620.EC620JavaMod"
 description: "Randomly generate a planet and its sectors."
 
 #the mod version
-version: 0.1
+version: 0.1.3
 
 #the minimum game build required to run this mod
 minGameVersion: 140

@@ -83,7 +83,7 @@ public class EC620Planets {
 				allowLaunchLoadout = true;
 
 				ruleSetter = r -> {
-					r.hideBannedBlocks = true;
+					r.hideBannedBlocks = false;
 					r.waveTeam = Team.malis;
 					r.placeRangeCheck = false;
 					r.showSpawns = true;

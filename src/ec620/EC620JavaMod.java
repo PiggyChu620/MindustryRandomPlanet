@@ -1,6 +1,7 @@
 package ec620;
 
 import arc.*;
+import arc.files.Fi;
 import arc.graphics.Color;
 import arc.graphics.g2d.Font;
 import arc.scene.ui.Dialog;
@@ -11,17 +12,23 @@ import mindustry.*;
 import mindustry.content.*;
 import mindustry.game.EventType;
 import mindustry.game.EventType.*;
+import mindustry.game.Schematic;
+import mindustry.game.Schematics;
 import mindustry.gen.*;
 import mindustry.mod.*;
 import mindustry.type.ItemStack;
 import mindustry.ui.Fonts;
 import mindustry.ui.dialogs.*;
+import mindustry.world.blocks.defense.turrets.Turret;
+import mindustry.world.blocks.storage.CoreBlock;
+import mindustry.world.blocks.units.UnitFactory;
 
 import java.io.IOException;
 
 
 public class EC620JavaMod extends Mod
 {
+
     public EC620JavaMod()
     {
 
@@ -34,7 +41,7 @@ public class EC620JavaMod extends Mod
                 dd.titleFont= Fonts.def;
                 dd.titleFontColor=new Color(1,0,0);
                 BaseDialog dialog = new BaseDialog("Random Planet", dd);
-                dialog.cont.add("Welcome to Random Planet v0.1.2",Color.green,1.2f).row();
+                dialog.cont.add("Welcome to Random Planet v0.1.3",Color.green,1.2f).row();
                 dialog.cont.add("This mod randomly generate a planet and its sectors, no presets, nothing.",Color.cyan).row();
                 dialog.cont.add("If you like some varieties and changes, then this mod is for you.",Color.cyan).row();
                 dialog.cont.add("I combined both Serpulo and Erekir techs together as best as I could,",Color.cyan).row();
@@ -65,7 +72,6 @@ public class EC620JavaMod extends Mod
     public void loadContent()
     {
         Log.info("Loading some example content.");
-
         EC620Items.load();
         EC620Blocks.load();
         EC620Planets.load();
@@ -73,5 +79,4 @@ public class EC620JavaMod extends Mod
         EC620TechTree.load();
         Log.info("All contents loaded.");
     }
-
 }

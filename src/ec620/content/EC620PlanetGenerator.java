@@ -6,6 +6,8 @@ import arc.math.geom.*;
 import arc.struct.*;
 import arc.util.*;
 import arc.util.noise.*;
+import ec620.EC620JavaMod;
+import mindustry.Vars;
 import mindustry.ai.*;
 import mindustry.content.*;
 import mindustry.ctype.Content;
@@ -14,8 +16,14 @@ import mindustry.graphics.g3d.*;
 import mindustry.maps.generators.*;
 import mindustry.type.*;
 import mindustry.world.*;
+import mindustry.world.blocks.defense.Wall;
+import mindustry.world.blocks.defense.turrets.ItemTurret;
+import mindustry.world.blocks.defense.turrets.LiquidTurret;
+import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.environment.*;
+import mindustry.world.blocks.sandbox.ItemSource;
 import mindustry.world.blocks.storage.CoreBlock;
+import mindustry.world.blocks.units.UnitFactory;
 
 import java.lang.reflect.Field;
 import java.lang.Class;
@@ -44,12 +52,16 @@ public class EC620PlanetGenerator extends PlanetGenerator
     static final int seed = (int)(System.currentTimeMillis()%Integer.MAX_VALUE);
     final Color borudaMidColor = new Color();
 
-    BaseGenerator basegen = new BaseGenerator();
+    //BaseGenerator basegen = new BaseGenerator();
+    EC620BaseGenerator basegen=new EC620BaseGenerator();
     float scl = 2.7f;
     float waterOffset = 0.07f;
     boolean genLakes = false;
     private boolean customCoreBasePartsAdded=false;
     private Rand pgRand=new Rand(seed);
+    private Seq<Schematic> coreSchematics=new Seq<>();
+    private Seq<Schematic> defensiveSchematics=new Seq<>();
+    private Seq<Schematic> factorySchematics=new Seq<>();
 
     Seq<Block> liquids=Seq.with(Blocks.water,Blocks.tar,Blocks.slag, Blocks.cryofluid, Blocks.arkyciteFloor);
     //^ EQUATOR
@@ -989,7 +1001,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
             {
                 customCoreBasePartsAdded=true;
 
-                addCorePart(3,"bXNjaAF4nC2QzW6EMAyEB8KGn5D90R77DBx67LmPUVUVZbMVEgtVWLrq23fs9EA+x3bGZnDG2aCY+1uAfV1i+HiGu4R1iOP3fVxmAHbqP8O0In97t3iKYZyvSxzCpVu3+BW6Rz9N3dQzRHHd1oByffTxFiJO9/Hez+N264Zl/gm/S0S1zdPSX1hsBw7r5m2YwrZyygs/VMgFjSCDRZ7BoJZbDpfgBUZqQMFDwSDn4VggvNx2bDGGqNKtlpq84s2yyRREtQNKjRyjvZFSmxr3omxxFJTcKS8Iq10iVsuCokm5ivIUqdCqnGHkkUn5IK8rnAS1iOREK3s16U2jkqWRf9YuR1mFKrvU5VRZ1nNUNlI+yEItyv98yylGEo3KSULN8Mkan8zwnAJJqoleRDIeavA+GXxQUwk1+JiSJ/66gp1/ctIv+A==");
+                /*addCorePart(3,"bXNjaAF4nC2QzW6EMAyEB8KGn5D90R77DBx67LmPUVUVZbMVEgtVWLrq23fs9EA+x3bGZnDG2aCY+1uAfV1i+HiGu4R1iOP3fVxmAHbqP8O0In97t3iKYZyvSxzCpVu3+BW6Rz9N3dQzRHHd1oByffTxFiJO9/Hez+N264Zl/gm/S0S1zdPSX1hsBw7r5m2YwrZyygs/VMgFjSCDRZ7BoJZbDpfgBUZqQMFDwSDn4VggvNx2bDGGqNKtlpq84s2yyRREtQNKjRyjvZFSmxr3omxxFJTcKS8Iq10iVsuCokm5ivIUqdCqnGHkkUn5IK8rnAS1iOREK3s16U2jkqWRf9YuR1mFKrvU5VRZ1nNUNlI+yEItyv98yylGEo3KSULN8Mkan8zwnAJJqoleRDIeavA+GXxQUwk1+JiSJ/66gp1/ctIv+A==");
                 addCorePart(-1,"bXNjaAF4nF1W224bRwzlzkp7v18k25tfEIp+T9EH1d62LhTJkGL4uwv0oY5jbUie6WRqB6vD5XLIQw6HGfpEn0JaHfefZwp+pvxhvtyfH5++PJ6ORBQd9r/NhwuZX37NqHg6vczn3eX0fL6faTrPj8ffTyw+7C7P5z/m3cv+cNgd9ixSrR92T+fTX/P9l9OZqs/z8cF7j+R9PlMDn8fTw2yXZrx0vvy5fzi9UPbjKyXPx8NpL2uqe7bY7e/Pp6fT4fFCFPxE8pcEtKKVETFIVEOGdfyrcmh1K9EtV5XXVhd5drHVJZ5danWZZ5dbXeHZld73yn6vE2O/Q99Yfeut66yu99YPVjd+WL+x+q23/sbqbhMKBe8sTqpnu0R+5Z+Rn5ACgTUgBqSAHFACakAL6AEjYAu4Ff8BhwopXL7Rmh+zvIKuhjeWRijvgUYnY2SvRBdSRIFAAsgABaACNIAOMFAgy7ekqdzCN8dgHittA0OQJyevbey1xF4xcFCBGJAAUkAGyAEFoARUgBrQAFpAB+gBA2BEWGW5tiwjZmP+29JAKhAKq0hoyltERhgmSb1cuZy0vFPAj+En5Ge1vC8Lf9E/1iysWYTb8sbSG9u98bsxEaeXk0INj5145C1alm/8+F6MeJLTQXKKpLyh7hAXdPmbLf/h56sRcgOobkB1q8eH8/qRDx8hW+0Y1Y4lL4ENabtpLWJbi0R2TNYG0gJah0TsI96NWMinXFBVasQEERPZW13Fh9NGSxEtRbQU0VJES220zPWHdJpGy8Q+ZsiShGJb4gBlZFnwVfqZf688VzLK2b5QqXBS6aTKSbWTGpUkRptoVD18hp+QN+OVS/vKe/BKklGk9TQUBUJNc86Qc+b1c25zzpFzjgbPKZNIJuVuLaFoRUFioeXIUY7clqP40IgFSlJgA0rZgITf4FUkuJNPPQyVYAGCxYc2KC3JEiRLkCydu9KxK8GuBLvSsqu81qjArIKPyvmonI8KXCpwqbwGqd2m60ATPzX81M5P7fzU4FKDSy05Yaipr4YwqBrwaVCpFpVqnLvGVapFpRqwa8CusRm2LkOdsWLYoh1bbUeJ/M6n+SonmlsxYtsAzSJNw83Voh1DkQonlU6qnFQ7SdsxlBhtEi//6lxZYy5IPI6yyHzUFmxRjRbVaL2qdrYSHSrRoRI9Jk4vE0eUmnWHrDubde/tR4+sexzaHtF6ROu9hh9stAHRBozKAaNykFGp//sYPVcywOSUGR1r3JJcrHf95aHnxinmrgw6oz468aHr/7dWy2N4YMrgveqoXblBGao1U1muRugMILcBOc16sFmP3l6PyHpE1iOyHpH16NV4o1kbdrQSw40wFogBCSAFZIAcUABKQAWoAQ2gBXSAHjAARgolrGawsRlsvX3bSgYhAzMSSAAZoABUgAbQATiALNdct94O32iugoh269VL7hihQAhYA2JACsgBJaAGtIAeMAK2AKVw65X7zlK4sxQmeTeCuFBO3oVyshfKybtQTvZCOXkXysleKCfvQjnZC+XkXSgne6Gc+EIp3fbV2ZaeTWVt9FJJxtk0Vt96MTqr6731g9WNH9ZvrH7rrb+xOlwqJ75UhnIKhJuMH9VxncLvFrFk0w==");
 
                 addPart(Liquids.cryofluid,"bXNjaAF4nCWOW27DIBBFL8PDTpqfLCBL8EfXU/WDOqiyhA3CsbL6yp0ZZJkzcB+ACy4WbotrgvnExzPtc1vqaykbgJDjT8o76Ovb4z6XWlOb3jHnKcf2m3Ct5c0nW3km2Nhm3Ja1HnlPUz3WiluX93K0OXHdg38QjMB1BIFMZFih8cprd5FOlj8xOA2QkvjMGVIqXIeHEUsY2X6eRkoGaAePYmaT1QYruwCNkmhOdvIoDfge8F3zohleaDTnH+SuIO8SuA4PKw1hlLtCLxk4YwW2gz3/X54lVA==");
@@ -1079,6 +1091,29 @@ public class EC620PlanetGenerator extends PlanetGenerator
 
                 bases.cores.sort(b -> b.tier);
                 bases.parts.sort();
+                bases.reqParts.each((key, arr) -> arr.sort());*/
+                for(Schematic sch: Vars.schematics.all())
+                {
+                    if(sch.hasCore()) coreSchematics.add(sch);
+                    else if(sch.tiles.contains(s -> s.block instanceof Turret)) defensiveSchematics.add(sch);
+                    else if(sch.tiles.contains(s->s.block instanceof UnitFactory)) factorySchematics.add(sch);
+
+                }
+
+                for(Schematic s: coreSchematics)
+                {
+                    addCorePart(s);
+                }
+                for(Schematic s: defensiveSchematics)
+                {
+                    addReqPart(s);
+                }
+                for(Schematic s:factorySchematics)
+                {
+                    addPart(s);
+                }
+                bases.cores.sort(b -> b.tier);
+                bases.parts.sort();
                 bases.reqParts.each((key, arr) -> arr.sort());
             }
             basegen.generate(tiles, enemies.map(r -> tiles.getn(r.x, r.y)), tiles.get(spawn.x, spawn.y), state.rules.waveTeam, sector, difficulty);
@@ -1106,25 +1141,72 @@ public class EC620PlanetGenerator extends PlanetGenerator
         //state.rules.spawns = Waves.generate(difficulty, new Rand(sector.id), state.rules.attackMode, state.rules.attackMode && spawner.countGroundSpawns() == 0, naval);
 
     }
-    private void addPart(Content c, String schematic)
+    //private void addPart(Content c, String schematic)
+    private void addPart(Schematic schem)
     {
-        Schematic schem=Schematics.readBase64(schematic);
+        //Schematic schem=Schematics.readBase64(schematic);
         BaseRegistry.BasePart part=new BaseRegistry.BasePart(schem);
 
         part.tier = schem.tiles.sumf(s -> Mathf.pow(s.block.buildCost / s.block.buildCostMultiplier, 1.4f));
-        if(c==null)
+
+        bases.parts.add(part);
+    }
+    private Seq<Item> minable=Seq.with(Items.copper,Items.lead,Items.coal,Items.sand,Items.titanium,Items.thorium,Items.beryllium,Items.tungsten,Items.scrap);
+    private void addReqPart(Schematic schem)
+    {
+        BaseRegistry.BasePart part=new BaseRegistry.BasePart(schem);
+        Seq<Content> requiredItems=new Seq<>();
+        boolean isGraphite=schem.tiles.contains(s->s.block.name=="graphite-press");
+
+        for(Schematic.Stile tile : schem.tiles)
         {
-            bases.parts.add(part);
+            /*if (tile.block instanceof ItemSource)
+            {
+                Item config = (Item) tile.config;
+                if (config != null)
+                {
+                    part.required = config;
+                    bases.reqParts.get(config, Seq::new).add(part);
+                    break;
+                }
+            }*/
+            if(tile.block instanceof ItemTurret)
+            {
+                if(isGraphite) requiredItems.addUnique(Items.coal);
+                else
+                {
+                    for(Item item:((ItemTurret) tile.block).ammoTypes.keys())
+                    {
+                        if(item==Items.graphite) requiredItems.addUnique(Items.coal);
+                        else if(minable.contains(item)) requiredItems.addUnique(item);
+                    }
+                }
+
+            }
+            else if(tile.block instanceof LiquidTurret)
+            {
+                for(Liquid liquid:((LiquidTurret)tile.block).ammoTypes.keys())
+                {
+                    requiredItems.addUnique(liquid);
+                }
+            }
+//            else if(tile.block instanceof Wall)
+//            {
+//                tile.block.alwaysReplace=true;
+//            }
         }
-        else
+        for(Content c: requiredItems)
         {
+            part=new BaseRegistry.BasePart(schem);
+            part.tier = schem.tiles.sumf(s -> Mathf.pow(s.block.buildCost / s.block.buildCostMultiplier, 1.4f));
             part.required=c;
-            bases.reqParts.get(c, Seq::new).add(part);
+            bases.reqParts.get(c,Seq::new).add(part);
         }
     }
-    private void addCorePart(int index,String schematic)
+    //private void addCorePart(int index,String schematic)
+    private void addCorePart(Schematic schem)
     {
-        Schematic schem=Schematics.readBase64(schematic);
+        //Schematic schem=Schematics.readBase64(schematic);
         BaseRegistry.BasePart part=new BaseRegistry.BasePart(schem);
 
         for(Schematic.Stile tile:schem.tiles)
@@ -1137,8 +1219,8 @@ public class EC620PlanetGenerator extends PlanetGenerator
         }
         if(part.core==null) throw new IllegalArgumentException("There is no core in the schematic!");
         part.tier = schem.tiles.sumf(s -> Mathf.pow(s.block.buildCost / s.block.buildCostMultiplier, 1.4f));
-        if(index<0) bases.cores.add(part);
-        else bases.cores.insert(index,part);
+        bases.cores.add(part);
+        //else bases.cores.insert(index,part);
     }
     @Override
     public void postGenerate(Tiles tiles){
