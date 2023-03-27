@@ -23,6 +23,7 @@ import mindustry.entities.UnitSorts;
 import mindustry.entities.Units;
 import mindustry.entities.bullet.BasicBulletType;
 import mindustry.entities.bullet.BulletType;
+import mindustry.entities.effect.MultiEffect;
 import mindustry.entities.part.DrawPart;
 import mindustry.entities.part.RegionPart;
 import mindustry.entities.pattern.*;
@@ -84,7 +85,7 @@ public class EC620Blocks {
 	//public static Block copperWallHuge;
 
 	//Craftings
-	public static Block pyratiteSmelter,cryogenicFreezer,magneticSeparator;
+	public static Block pyratiteSmelter,cryogenicFreezer,hyperThawer,magneticSeparator;
 
 	public static void load()
 	{
@@ -170,15 +171,240 @@ public class EC620Blocks {
 
 		cryogenicFreezer=new MultiCrafter("cryogenic-freezer")
 		{{
+			requirements(Category.crafting,with(Items.copper,100,Items.lead,100));
 			localizedName="Cryogenic Freezer";
-			IOEntry water=new IOEntry();
-			water.fluids=LiquidStack.list(Liquids.water,10);
-			IOEntry ice=new IOEntry();
-			ice.items=ItemStack.list(EC620Items.ice,1);
-			resolvedRecipes=new Seq<>();
-			resolvedRecipes.add(new Recipe(water,ice,.5f));
-			resolvedRecipes.add(new Recipe(ice,water,.5f));
-			init();
+			description="Use Cryofliud to cryogenic freeze any liquid";
+			size=2;
+			itemCapacity=10;
+			liquidCapacity=10f;
+			hasItems=true;
+			health=300;
+			craftEffect=new MultiEffect(Fx.freezing);
+			//region Recipies
+			resolvedRecipes=Seq.with
+				(
+					new Recipe
+					(
+						new IOEntry
+						(
+							Seq.with(),
+							Seq.with(LiquidStack.with
+								(
+									Liquids.water,1,	//1 = 60
+									Liquids.cryofluid,.2f
+								)
+							),
+							2		//1 = 60 Power
+						),
+						new IOEntry
+						(
+							Seq.with(ItemStack.with(EC620Items.ice,1)),
+							Seq.with()
+						),
+						60		//60 = 1s
+					),
+					new Recipe
+					(
+						new IOEntry
+						(
+							Seq.with(),
+							Seq.with(LiquidStack.with
+							  (
+								  Liquids.slag,1,
+								  Liquids.cryofluid,.2f
+							  )),
+							2
+						),
+						new IOEntry
+						(
+							Seq.with(ItemStack.with(EC620Items.sludge,1)),
+							Seq.with()
+						),
+				60
+					),
+					new Recipe
+					(
+						new IOEntry
+						(
+							Seq.with(),
+							Seq.with(LiquidStack.with(Liquids.cryofluid,1.2f)),
+							2
+						),
+						new IOEntry
+						(
+							Seq.with(ItemStack.with(EC620Items.cryocube,1)),
+							Seq.with()
+						),
+						60
+					),
+					new Recipe
+					(
+						new IOEntry
+						(
+							Seq.with(),
+							Seq.with(LiquidStack.with
+								(
+									Liquids.oil,1,
+									Liquids.cryofluid,.2f
+								)),
+							2
+						),
+						new IOEntry
+						(
+							Seq.with(ItemStack.with(EC620Items.wax,1)),
+							Seq.with()
+						),
+						60
+					),
+					new Recipe
+					(
+						new IOEntry
+						(
+							Seq.with(),
+							Seq.with(LiquidStack.with
+								(
+									Liquids.arkycite,1,
+									Liquids.cryofluid,.2f
+								)),
+							2
+						),
+						new IOEntry
+						(
+							Seq.with(ItemStack.with(EC620Items.arkyciteIce,1)),
+							Seq.with()
+						),
+						60
+					),
+					new Recipe
+					(
+						new IOEntry
+						(
+							Seq.with(),
+							Seq.with(LiquidStack.with
+							(
+									Liquids.neoplasm,1,
+									Liquids.cryofluid,.2f
+							)),
+							2
+						),
+						new IOEntry
+						(
+							Seq.with(ItemStack.with(EC620Items.neoplasmIce,1)),
+							Seq.with()
+						),
+						60
+					)
+				);
+			//endregion
+			drawer = new DrawMulti(new DrawDefault(), new DrawFlame());
+		}};
+		hyperThawer=new MultiCrafter("hyper-thawer")
+		{{
+			requirements(Category.crafting,with(Items.copper,100,Items.lead,100));
+			localizedName="Hyper Thawer";
+			description="Use Slag to thaw most of the stuff";
+			size=2;
+			itemCapacity=10;
+			liquidCapacity=10f;
+			hasItems=true;
+			health=300;
+			craftEffect=new MultiEffect(Fx.burning);
+			//region Recipies
+			resolvedRecipes=Seq.with
+			   (
+				   new Recipe
+				   (
+					   new IOEntry
+					   (
+						   Seq.with(ItemStack.with(EC620Items.ice,1)),
+						   Seq.with(LiquidStack.with(Liquids.slag,.2f)),
+						   2		//1 = 60 Power
+					   ),
+					   new IOEntry
+					   (
+						   Seq.with(),
+						   Seq.with(LiquidStack.with(Liquids.water,1))
+					   ),
+					   60		//60 = 1s
+				   ),
+				   new Recipe
+				   (
+					   new IOEntry
+					   (
+						   Seq.with(ItemStack.with(EC620Items.sludge,1)),
+						   Seq.with(LiquidStack.with(Liquids.slag,.2f)),
+						   2
+					   ),
+					   new IOEntry
+					   (
+						   Seq.with(),
+						   Seq.with(LiquidStack.with(Liquids.slag,1))
+					   ),
+			   60
+				   ),
+				   new Recipe
+				   (
+					   new IOEntry
+					   (
+						   Seq.with(ItemStack.with(EC620Items.cryocube,1)),
+						   Seq.with(LiquidStack.with(Liquids.slag,.2f)),
+						   2
+					   ),
+					   new IOEntry
+					   (
+						   Seq.with(),
+						   Seq.with(LiquidStack.with(Liquids.cryofluid,1))
+					   ),
+			   60
+				   ),
+				   new Recipe
+				   (
+					   new IOEntry
+					   (
+						   Seq.with(ItemStack.with(EC620Items.wax,1)),
+						   Seq.with(LiquidStack.with(Liquids.slag,.2f)),
+						   2
+					   ),
+					   new IOEntry
+					   (
+						   Seq.with(),
+						   Seq.with(LiquidStack.with(Liquids.oil,1))
+					   ),
+					   60
+				   ),
+				   new Recipe
+				   (
+					   new IOEntry
+					   (
+						   Seq.with(ItemStack.with(EC620Items.arkyciteIce,1)),
+						   Seq.with(LiquidStack.with(Liquids.slag,.2f)),
+						   2
+					   ),
+					   new IOEntry
+					   (
+						   Seq.with(ItemStack.with()),
+						   Seq.with(LiquidStack.with(Liquids.arkycite,1))
+					   ),
+					   60
+				   ),
+				   new Recipe
+				   (
+					   new IOEntry
+					   (
+						   Seq.with(ItemStack.with(EC620Items.neoplasmIce,1)),
+						   Seq.with(LiquidStack.with(Liquids.slag,.2f)),
+							   2
+					   ),
+					   new IOEntry
+					   (
+						   Seq.with(ItemStack.with()),
+						   Seq.with(LiquidStack.with(Liquids.neoplasm,1))
+					   ),
+					   60
+				   )
+			   );
+			//endregion
+			drawer = new DrawMulti(new DrawDefault(), new DrawFlame());
 		}};
 		magneticSeparator=new GenericCrafter("magnetic-separator")	//Todo
 		{{	//Slag → Iron, Copper, Nickel, Zinc, Lead, Calcium, Magnesium, Potassium, Silicon, Ozone, Phosphorus

@@ -20,24 +20,33 @@ public class EC620Classes
     {
         public Seq<Vec2> pos;
         public Block block;
-        public LakeHandler(float x,float y,Block b)
+
+        public LakeHandler(Seq<Vec2> v,Block b)
         {
-            pos=Seq.with(new Vec2(x,y));
+            pos=v.copy();
             block=b;
         }
-        public void Add(float x,float y)
+    }
+    public static class LakeGroup
+    {
+        public Seq<Integer> seq;
+        public int min,max;
+        public LakeGroup(int x)
         {
-            pos.add(new Vec2(x,y));
+            seq=Seq.with(x);
+            min=x;
+            max=x;
         }
-        public boolean Within(float x,float y)
+        public boolean add(int n)
         {
-            for(Vec2 v:pos)
+            if(n<max+10)
             {
-                if(Math.pow(v.x-x,2)+Math.pow(v.y-y,2)<300) return true;
+                seq.add(n);
+                max=n;
+                return true;
             }
             return false;
         }
-
     }
     public static class NameHandler
     {

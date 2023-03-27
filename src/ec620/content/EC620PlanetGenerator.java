@@ -1,5 +1,6 @@
 package ec620.content;
 
+import arc.Core;
 import arc.graphics.*;
 import arc.math.*;
 import arc.math.geom.*;
@@ -32,6 +33,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -137,7 +139,11 @@ public class EC620PlanetGenerator extends PlanetGenerator
             //return;
         }
         //else sector.generateEnemyBase=rand.chance(.5);
-        sector.setName(EC620NameGenerator.generate()+"-"+sector.id);
+        if(Core.settings.getBool("ec620.randomName"))
+        {
+            if(Objects.equals(sector.name(), sector.id + "")) sector.setName(EC620NameGenerator.generate(sector.id));
+        }
+        else sector.setName(sector.id+"");
         PlanetGrid.Ptile tile = sector.tile;
 
         boolean any = false;
@@ -600,6 +606,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
 
         boolean isWater=pgRand.chance(.5f) || sector.id==0;
         Seq<LakeHandler> lakeSeq=new Seq<>();
+        Seq<Vec2> lakeVec=new Seq<>();
         //rivers
         pass((x, y) ->
         {
@@ -631,36 +638,71 @@ public class EC620PlanetGenerator extends PlanetGenerator
                     }
                     else
                     {
-                        if(lakeSeq.size==0)
-                        {
-                            floor=liquids.get(pgRand.nextInt(liquids.size));
-                            lakeSeq.add(new LakeHandler(x,y,floor));
-                            //Log.info("Initializing ("+x+", "+y+", "+floor+")");
-                        }
-                        else
-                        {
-                            floor=null;
-                            for(LakeHandler lh:lakeSeq)
-                            {
-                                if(lh.Within(x,y))
-                                {
-                                    lh.Add(x,y);
-                                    floor=lh.block;
-                                    break;
-                                }
-                            }
-                            if(floor==null)
-                            {
-                                floor=liquids.get(pgRand.nextInt(liquids.size));
-                                lakeSeq.add(new LakeHandler(x,y,floor));
-                                //Log.info("Adding ("+x+", "+y+", "+floor+")");
-                            }
-                        }
+                        lakeVec.add(new Vec2(x,y));
                     }
+//                    {
+//                        if(lakeSeq.size==0)
+//                        {
+//                            floor=liquids.get(pgRand.nextInt(liquids.size));
+//                            lakeSeq.add(new LakeHandler(x,y,floor));
+//                            //Log.info("Initializing ("+x+", "+y+", "+floor+")");
+//                        }
+//                        else
+//                        {
+//                            floor=null;
+//                            for(LakeHandler lh:lakeSeq)
+//                            {
+//                                if(lh.Within(x,y))
+//                                {
+//                                    lh.Add(x,y);
+//                                    floor=lh.block;
+//                                    break;
+//                                }
+//                            }
+//                            if(floor==null)
+//                            {
+//                                floor=liquids.get(pgRand.nextInt(liquids.size));
+//                                lakeSeq.add(new LakeHandler(x,y,floor));
+//                                //Log.info("Adding ("+x+", "+y+", "+floor+")");
+//                            }
+//                        }
+//                    }
                 }
             }
         });
+        Seq<Block> availableLiquids=Seq.with(Blocks.water, cryofluid, slag, tar, arkyciteFloor);
+        int n=pgRand.nextInt(5)+1;
+        Seq<Block> liquids=new Seq<>();
+        while(lakeVec.size>0)
+        {
+            Vec2 vec=lakeVec.get(0);
+            Seq<Vec2> seq=lakeVec.select(a->Mathf.within(a.x,a.y,vec.x,vec.y,10));
+            lakeVec.removeAll(seq);
+            for(int i=0;i<seq.size;i++)
+            {
+                Vec2 v=seq.get(i);
+                Seq<Vec2> s=lakeVec.select(a->Mathf.within(a.x,a.y,v.x,v.y,10));
+                lakeVec.removeAll(s);
+                seq.addAll(s);
+            }
+            Block b;
+            if(liquids.size<n)
+            {
+                b=availableLiquids.getFrac(pgRand.nextFloat());
+                liquids.addUnique(b);
+            }
+            else b=liquids.getFrac(pgRand.nextFloat());
+            lakeSeq.add(new LakeHandler(seq,b));
+        }
 
+        for(LakeHandler lh:lakeSeq)
+        {
+            for(Vec2 v:lh.pos)
+            {
+
+                tiles.getn((int) v.x, (int) v.y).setBlock(lh.block);
+            }
+        }
         //shoreline setup
         pass((x, y) ->
         {
@@ -823,23 +865,23 @@ public class EC620PlanetGenerator extends PlanetGenerator
                         {
                             all = false;
                         }
-                        else if(other.floor().isLiquid && other.floor()!= slag)
-                        {
-                            for(LakeHandler lh:lakeSeq)
-                            {
-                                if(lh.Within(px,py))
-                                {
-                                    lh.block=slag;
-                                    for(Vec2 v:lh.pos)
-                                    {
-                                        Tile t=tiles.get((int)v.x,(int)v.y);
-                                        t.setBlock(slag);
-                                    }
-                                    Log.info("Lake replaced");
-                                    break;
-                                }
-                            }
-                        }
+//                        else if(other.floor().isLiquid && other.floor()!= slag)
+//                        {
+//                            for(LakeHandler lh:lakeSeq)
+//                            {
+//                                if(lh.Within(px,py))
+//                                {
+//                                    lh.block=slag;
+//                                    for(Vec2 v:lh.pos)
+//                                    {
+//                                        Tile t=tiles.get((int)v.x,(int)v.y);
+//                                        t.setBlock(slag);
+//                                    }
+//                                    Log.info("Lake replaced");
+//                                    break;
+//                                }
+//                            }
+//                        }
                     }
                     if(all)
                     {
@@ -1097,9 +1139,13 @@ public class EC620PlanetGenerator extends PlanetGenerator
                 bases.reqParts.each((key, arr) -> arr.sort());*/
                 for(Schematic sch: Vars.schematics.all())
                 {
-                    if(sch.hasCore()) coreSchematics.add(sch);
-                    else if(sch.tiles.contains(s -> s.block instanceof Turret)) defensiveSchematics.add(sch);
-                    else if(sch.tiles.contains(s->s.block instanceof UnitFactory)) factorySchematics.add(sch);
+                    if(Core.settings.getBool("ec620.schematics") || sch.mod!=Vars.mods.getMod(EC620JavaMod.class))
+                    {
+                        if(sch.hasCore()) coreSchematics.add(sch);
+                        else if(sch.tiles.contains(s -> s.block instanceof Turret)) defensiveSchematics.add(sch);
+                        else if(sch.tiles.contains(s->s.block instanceof UnitFactory)) factorySchematics.add(sch);
+                    }
+
 
                 }
 

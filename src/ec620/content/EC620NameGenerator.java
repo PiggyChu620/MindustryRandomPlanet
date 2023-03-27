@@ -25,30 +25,37 @@ import java.util.*;
 
 import static arc.math.Mathf.absin;
 import static arc.math.Mathf.rand;
-
+class CharMap extends ObjectMap<String, Seq<String>>
+{
+}
 public class EC620NameGenerator
 {
     //static HashMap<Character,HashMap<Character, List<Character>>> nameMap=new HashMap();
-
-    public EC620NameGenerator()
-    {
-
-    }
-    public static String generate()
-    {
-        class CharMap extends ObjectMap<String, Seq<String>>
-        {
-        }
+    static ObjectMap<String, CharMap> nameMap;
+    static EC620Classes.NameHandler generatedNames=null;
+    static Json json=new Json();
+    static Fi file;
+    public EC620NameGenerator() throws IOException {
         Mods.LoadedMod mod = Vars.mods.getMod(EC620JavaMod.class);
-        Fi file = mod.root.child("NameMarkovChain.json");
 
-        ObjectMap<String, CharMap> nameMap = new Json().readValue(ObjectMap.class, CharMap.class, new JsonReader().parse(file));
+        file = mod.root.child("NameMarkovChain.json");
+        nameMap = json.readValue(ObjectMap.class, CharMap.class, new JsonReader().parse(file));
 
-        if(nameMap==null) throw new IllegalArgumentException("Why!?");
-
-
-
-
+        file=mod.root.child("GeneratedNames.json");
+        if(file.exists())
+        {
+            generatedNames=new Json().readValue(EC620Classes.NameHandler.class, (new JsonReader().parse(file)));
+            //Log.info("File existed");
+        }
+        else
+        {
+            generatedNames=new EC620Classes.NameHandler();
+            //if(file.exists()) Log.info("File finally existed");
+            //else Log.info("File not existed");
+        }
+    }
+    public static String generate(int index)
+    {
         //Gson gson = new Gson();
 
         // Define the type of the map using TypeToken
@@ -66,13 +73,32 @@ public class EC620NameGenerator
 
         //for(int i=0;i<10;i++)
         //{
+
+        //Log.info(String.join("",name));
+        //}
+        if(index<0)
+        {
+            generatedNames.planetName=generateName();
+            file.writeString(json.toJson(generatedNames));
+            return generatedNames.planetName;
+        }
+        else
+        {
+            if(generatedNames.contains(index)) return generatedNames.get(index);
+            generatedNames.add(index,generateName());
+            file.writeString(json.toJson(generatedNames));
+            return generatedNames.get(index)+"-"+index;
+        }
+    }
+    private static String generateName()
+    {
         List<String> name = new ArrayList<>();
         Seq<String> chars=nameMap.keys().toSeq();
         int c=chars.size-1;
         String f="-";
         String o;
 
-        while(Objects.equals(f, "-"))
+        while(Objects.equals(f, "-") || Objects.equals(f,"'"))
         {
             f=chars.get(rand.random(c));
         }
@@ -84,7 +110,7 @@ public class EC620NameGenerator
 
         for(int j=0;j<rand.random(10);j++)
         {
-            if(!nameMap.get(f).containsKey(s)) break;
+            if(!nameMap.containsKey(f) || !nameMap.get(f).containsKey(s)) break;
             c=nameMap.get(f).get(s).size-1;
             o=nameMap.get(f).get(s).get(rand.random(c));
             name.add(o);
@@ -92,7 +118,5 @@ public class EC620NameGenerator
             s=o;
         }
         return String.join("",name);
-        //Log.info(String.join("",name));
-        //}
     }
 }

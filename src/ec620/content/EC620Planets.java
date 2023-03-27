@@ -1,10 +1,12 @@
 package ec620.content;
 
+import arc.Core;
 import arc.graphics.Color;
 import arc.math.Mathf;
 import arc.math.Rand;
 import arc.math.geom.*;
 import arc.struct.GridBits;
+import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.util.Log;
 import arc.util.Structs;
@@ -55,7 +57,16 @@ public class EC620Planets {
 		ec620 = new EC620Planet("ec620", Planets.sun, 1, 3)
 		{
 			{
-				planetName= EC620NameGenerator.generate();
+				if(Core.settings.getBool("ec620.randomName"))
+				{
+					planetName=Core.settings.getString("ec620.planetName");
+					if(planetName==null)
+					{
+						planetName= EC620NameGenerator.generate(-1);
+						Core.settings.put("ec620.planetName",planetName);
+					}
+				}
+				else planetName="EC-620";
 				localizedName=planetName;
 				bloom = true;
 				visible = true;
@@ -78,10 +89,11 @@ public class EC620Planets {
 						randomColor()
 				);
 
-				clearSectorOnLose = true;
+				clearSectorOnLose = Core.settings.getBool("ec620.clear");
 				allowWaveSimulation = true;
 				allowLaunchSchematics = true;
-				allowLaunchLoadout = true;
+				allowLaunchLoadout = Core.settings.getBool("ec620.launch");
+				allowSectorInvasion=true;
 
 				ruleSetter = r -> {
 					r.hideBannedBlocks = false;
@@ -93,7 +105,34 @@ public class EC620Planets {
 					if(r.sector.preset == null) r.winWave = (int)(20f*Math.pow(10,r.sector.threat));
 					//r.bannedUnits.add(NHUnitTypes.guardian);
 					r.coreDestroyClear = true;
-
+					if(r.sector.id==0) r.loadout.add(ItemStack.with(Items.copper,100));
+					/*if(!allowLaunchLoadout)
+					{
+						ObjectMap<Item,Integer> temp= ObjectMap.of(Items.copper,3010.70574146f*Mathf.pow(4.28826555969f,r.sector.threat)-2910.70574146f);
+						temp.put(Items.lead, (int) (210.998591292f*Mathf.pow(48.3936813452f,r.sector.threat)-210.998591292f));
+						temp.put(Items.graphite,(int)(54.3155064343f*Mathf.pow(185.109486526f,r.sector.threat)-54.3155064343f));
+						temp.put(Items.titanium,(int)(17.4768921216f*Mathf.pow(573.18411205f,r.sector.threat)-17.4768921216f));
+						temp.put(Items.silicon,(int)(17.4768921216f*Mathf.pow(573.18411205f,r.sector.threat)-17.4768921216f));
+						temp.put(Items.metaglass,(int)(17.4768921216f*Mathf.pow(573.18411205f,r.sector.threat)-17.4768921216f));
+						temp.put(Items.pyratite,(int)(5.03598486933f*Mathf.pow(1986.7089049f,r.sector.threat)-5.03598486933f));
+						temp.put(Items.plastanium,(int)(5.03598486933f*Mathf.pow(1986.7089049f,r.sector.threat)-5.03598486933f));
+						temp.put(Items.beryllium,(int)(5.03598486933f*Mathf.pow(1986.7089049f,r.sector.threat)-5.03598486933f));
+						temp.put(Items.oxide,(int)(5.03598486933f*Mathf.pow(1986.7089049f,r.sector.threat)-5.03598486933f));
+						temp.put(Items.blastCompound,(int)(1.02040816327f*Mathf.pow(9801f,r.sector.threat)-1.02040816327f));
+						temp.put(Items.tungsten,(int)(1.02040816327f*Mathf.pow(9801f,r.sector.threat)-1.02040816327f));
+						temp.put(Items.thorium,(int)(1.02040816327f*Mathf.pow(9801f,r.sector.threat)-1.02040816327f));
+						temp.put(Items.carbide,(int)(1.02040816327f*Mathf.pow(9801f,r.sector.threat)-1.02040816327f));
+						temp.put(Items.phaseFabric,(int)(0.100249304236f*Mathf.pow(99752.3157445f,r.sector.threat)-0.100249304236f));
+						temp.put(Items.surgeAlloy,(int)(0.100249304236f*Mathf.pow(99752.3157445f,r.sector.threat)-0.100249304236f));
+						r.loadout=new Seq<>();
+						for(Item item:temp.keys())
+						{
+							if(temp.get(item)>0)
+							{
+								r.loadout.add(ItemStack.with(item,temp.get(item)));
+							}
+						}
+					}*/
 					/*r.bannedBlocks.addAll(Vars.content.blocks().copy().filter(b -> {
 						if(b instanceof SolidPump){
 							SolidPump pump = (SolidPump)b;
