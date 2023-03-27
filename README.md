@@ -51,6 +51,7 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
   - Hyper Thawer: User slag to melt most of the items created from Cryogenic Freezer
   - Solid form (ice) of Water, Cryofluid, Oil, Slag, Arkycite, Neoplasm
 - Add Discord Server<sup>2</sup>
+- Officially released, now can be installed from the Mod Browser
 
 --- 
 
