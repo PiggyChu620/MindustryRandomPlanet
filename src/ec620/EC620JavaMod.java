@@ -33,7 +33,7 @@ public class EC620JavaMod extends Mod
     {
 
         //listen for game load event
-        Events.on(ClientLoadEvent.class, e -> {
+        /*Events.on(ClientLoadEvent.class, e -> {
             //show dialog upon startup
             Time.runTask(10f, () -> {
                 Dialog.DialogStyle dd=new Dialog.DialogStyle();
@@ -54,7 +54,7 @@ public class EC620JavaMod extends Mod
                 dialog.cont.button("OK", dialog::hide).size(100f, 50f);
                 dialog.show();
             });
-        });
+        });*/
         /*Events.on(PlayEvent.class, event -> {
             //Log.info("Listening to PlayEvent: Sector "+Vars.state.rules.sector.id);
             if (Vars.state.rules.sector != null && Vars.state.rules.sector.id == 0)
@@ -65,7 +65,7 @@ public class EC620JavaMod extends Mod
 
         });*/
 
-        Log.info("Loaded EC620JavaMod constructor.");
+        //Log.info("Loaded EC620JavaMod constructor.");
     }
     @Override
     public void init()
@@ -75,7 +75,7 @@ public class EC620JavaMod extends Mod
     @Override
     public void loadContent()
     {
-        Log.info("Loading some example content.");
+        Log.info("Loading Random Planet content.");
         try {
             nameGenerator=new EC620NameGenerator();
         } catch (IOException e) {
@@ -87,6 +87,6 @@ public class EC620JavaMod extends Mod
         //EC620SectorPresents.load();
         EC620TechTree.load();
         EC620Setting.load();
-        Log.info("All contents loaded.");
+        Log.info("Random Planet loaded successfully.");
     }
 }

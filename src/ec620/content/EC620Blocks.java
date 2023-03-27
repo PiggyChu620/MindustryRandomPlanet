@@ -171,7 +171,7 @@ public class EC620Blocks {
 
 		cryogenicFreezer=new MultiCrafter("cryogenic-freezer")
 		{{
-			requirements(Category.crafting,with(Items.copper,100,Items.lead,100));
+			requirements(Category.crafting,with(Items.silicon,100,Items.plastanium,100));
 			localizedName="Cryogenic Freezer";
 			description="Use Cryofliud to cryogenic freeze any liquid";
 			size=2;
@@ -300,7 +300,7 @@ public class EC620Blocks {
 		}};
 		hyperThawer=new MultiCrafter("hyper-thawer")
 		{{
-			requirements(Category.crafting,with(Items.copper,100,Items.lead,100));
+			requirements(Category.crafting,with(Items.silicon,100,Items.plastanium,100));
 			localizedName="Hyper Thawer";
 			description="Use Slag to thaw most of the stuff";
 			size=2;

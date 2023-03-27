@@ -13,7 +13,7 @@ author: "PiggyChu620"
 main: "ec620.EC620JavaMod"
 
 #the mod description as seen in the mod dialog
-description: "Randomly generate a planet and its sectors."
+description: "Randomly generate a planet and its sectors.\nIt's a mixtech mod, I myself don't like to idea of \"Oh, you can only use these things here, and you can only use those things there, bruh, bruh, bruh!\", so I make one myself, if you don't like mixtech and think it's \"unbalanced\" and \"boring\", then please go away, much appreciated!"
 
 #the mod version
 version: 0.2
