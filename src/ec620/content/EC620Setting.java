@@ -183,7 +183,7 @@ public class EC620Setting
 				box.left();
 				
 				box.update(() -> box.setChecked(settings.getBool(key)));
-			}).tooltip(desc()).wrap().growX().fillY().margin(8f).left().row();
+			}).tooltip(desc()).growX().wrap().fillY().margin(8f).left().row();
 		}
 	}
 	
