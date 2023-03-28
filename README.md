@@ -55,6 +55,7 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 
 *v0.2.1*
 - Fix: Random Name Generator bugs
+- Mobile support, FINALLY!
 
 --- 
 
