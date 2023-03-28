@@ -67,4 +67,4 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 
 **2.** [Discord Server](https://discord.gg/WSmUApPfpj)
 
-**3.** $${\color{red}Caution: Caution: There is a reason why Anuke hide these blocks/items, most likely it's still WIP and not fully tested and might not be balanced, use it at your own risk}$$
+**3.** Caution: There is a reason why Anuke hide these blocks/items, most likely it's still WIP and not fully tested and might not be balanced, use it at your own risk
