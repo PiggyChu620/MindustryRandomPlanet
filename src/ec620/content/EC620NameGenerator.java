@@ -35,24 +35,28 @@ public class EC620NameGenerator
     //static EC620Classes.NameHandler generatedNames=null;
     static Json json=new Json();
     static Fi file;
-    public EC620NameGenerator() throws IOException {
+//    public EC620NameGenerator() throws IOException {
+//
+//        /*file=mod.root.child("GeneratedNames.json");
+//        if(file.exists())
+//        {
+//            generatedNames=new Json().readValue(EC620Classes.NameHandler.class, (new JsonReader().parse(file)));
+//            //Log.info("File existed");
+//        }
+//        else
+//        {
+//            generatedNames=new EC620Classes.NameHandler();
+//            //if(file.exists()) Log.info("File finally existed");
+//            //else Log.info("File not existed");
+//        }*/
+//    }
+    public static void load()
+    {
         Mods.LoadedMod mod = Vars.mods.getMod(EC620JavaMod.class);
 
         file = mod.root.child("NameMarkovChain.json");
         nameMap = json.readValue(ObjectMap.class, CharMap.class, new JsonReader().parse(file));
 
-        /*file=mod.root.child("GeneratedNames.json");
-        if(file.exists())
-        {
-            generatedNames=new Json().readValue(EC620Classes.NameHandler.class, (new JsonReader().parse(file)));
-            //Log.info("File existed");
-        }
-        else
-        {
-            generatedNames=new EC620Classes.NameHandler();
-            //if(file.exists()) Log.info("File finally existed");
-            //else Log.info("File not existed");
-        }*/
     }
     public static String generate(int index)
     {

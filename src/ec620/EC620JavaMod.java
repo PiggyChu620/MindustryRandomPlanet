@@ -81,6 +81,7 @@ public class EC620JavaMod extends Mod
 //        } catch (IOException e) {
 //            throw new RuntimeException(e);
 //        }
+        EC620NameGenerator.load();
         EC620Items.load();
         EC620Blocks.load();
         EC620Planets.load();
