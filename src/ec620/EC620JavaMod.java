@@ -28,7 +28,7 @@ import java.io.IOException;
 
 public class EC620JavaMod extends Mod
 {
-    public static EC620NameGenerator nameGenerator;
+    //public static EC620NameGenerator nameGenerator;
     public EC620JavaMod()
     {
 
@@ -76,11 +76,11 @@ public class EC620JavaMod extends Mod
     public void loadContent()
     {
         Log.info("Loading Random Planet content.");
-        try {
-            nameGenerator=new EC620NameGenerator();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            nameGenerator=new EC620NameGenerator();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
         EC620Items.load();
         EC620Blocks.load();
         EC620Planets.load();
