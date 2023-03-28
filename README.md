@@ -1,4 +1,4 @@
-# Mindustry Java Mod - Random Planet v0.2.1
+# Mindustry Java Mod - Random Planet v0.2.2
 A Java Mindustry mod.
 
 Randomly generate a planet and its sectors, including the starting sector.
@@ -12,6 +12,7 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 3. Load *all* defensive schematics<sup>1</sup> for enemy defenses. 
 4. Custom settings under *Settings* menu.
 5. Custom blocks and items that add a little spice to the game, it'll be constantly added.
+6. Unlock hidden items<sup>3</sup>
 
 ## Future Plans
 
@@ -38,7 +39,7 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 - Change: Random planet color
 - Fix: Endless waves for Low difficulty
 - Fix: Sector difficulties are not really randomized
-- 
+
 *v0.1.3*
 - Now loading all available defensive schematics for enemy defense system
 
@@ -57,8 +58,13 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 - Fix: Random Name Generator bugs
 - Mobile support, FINALLY!
 
+*v0.2.2*
+- Sorry I forgot to add the new contents to the tecttree and restore the initial resources for the starting sector
+
 --- 
 
 **1.** [Schematic Instruction](SchematicInstruction.md)
 
 **2.** [Discord Server](https://discord.gg/WSmUApPfpj)
+
+**3.** $${\color{red}Caution: Caution: There is a reason why Anuke hide these blocks/items, most likely it's still WIP and not fully tested and might not be balanced, use it at your own risk}$$

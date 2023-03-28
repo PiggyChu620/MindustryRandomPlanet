@@ -89,7 +89,10 @@ public class EC620Blocks {
 
 	public static void load()
 	{
-
+		//region Unlock hidden items
+		Blocks.slagCentrifuge.requirements(Category.crafting, with(Items.carbide, 70, Items.graphite, 60, Items.silicon, 40, Items.oxide, 40));
+		Blocks.heatReactor.requirements(Category.crafting, with(Items.oxide, 70, Items.graphite, 20, Items.carbide, 10, Items.thorium, 80));
+		//endregion
 		//region Ores
 //		oreIron = new OreBlock("iron-ore")
 //		{{
@@ -154,6 +157,7 @@ public class EC620Blocks {
 		pyratiteSmelter = new GenericCrafter("pyratite-smelter")
 		{{
 			localizedName="Pyratite Smelter";
+			description="Use silicon directly to create pyratites";
 			requirements(Category.crafting, with(Items.copper, 50, Items.lead, 25));
 			craftEffect = Fx.smeltsmoke;
 			outputItem = new ItemStack(Items.pyratite, 1);

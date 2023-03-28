@@ -32,8 +32,9 @@ public class EC620TechTree {
     public static void load()
     {
         TechNode root;
+        boolean bypass=Core.settings.getBool("ec620.bypass");
 
-        if(Core.settings.getBool("ec620.bypass"))
+        /*if(Core.settings.getBool("ec620.bypass"))
         {
             //No requirements
             root=nodeRoot(EC620Planets.planetName, coreShard, () -> {
@@ -845,14 +846,14 @@ public class EC620TechTree {
             });
         }
         else
-        {
+        {*/
             root=nodeRoot(EC620Planets.planetName, coreShard, () ->
             {
                 node(conveyor, () -> {
 
                     node(junction, () -> {
                         node(router, () -> {
-                            node(launchPad, Seq.with(new Objectives.SectorComplete(extractionOutpost)), () -> {
+                            node(launchPad, bypass?null:Seq.with(new Objectives.SectorComplete(extractionOutpost)), () -> {
                                 //no longer necessary to beat the campaign
                                 //node(interplanetaryAccelerator, Seq.with(new SectorComplete(planetaryTerminal)), () -> {
 
@@ -866,13 +867,13 @@ public class EC620TechTree {
                                     node(underflowGate);
                                 });
                             });
-                            node(container, Seq.with(new Objectives.SectorComplete(biomassFacility)), () -> {
+                            node(container, bypass?null:Seq.with(new Objectives.SectorComplete(biomassFacility)), () -> {
                                 node(unloader,()->{
                                     node(ductUnloader, () -> {
 
                                     });
                                 });
-                                node(vault, Seq.with(new Objectives.SectorComplete(stainedMountains)), () -> {
+                                node(vault, bypass?null:Seq.with(new Objectives.SectorComplete(stainedMountains)), () -> {
                                     node(reinforcedVault, () -> {
 
                                     });
@@ -885,7 +886,7 @@ public class EC620TechTree {
                             });
 
                             node(itemBridge, () -> {
-                                node(titaniumConveyor, Seq.with(new Objectives.SectorComplete(craters)), () -> {
+                                node(titaniumConveyor, bypass?null:Seq.with(new Objectives.SectorComplete(craters)), () -> {
                                     node(phaseConveyor, () -> {
                                         node(massDriver, () -> {
 
@@ -919,7 +920,7 @@ public class EC620TechTree {
                                                 });
                                             });
 
-                                            node(overflowDuct, Seq.with(new Objectives.OnSector(aegis)), () -> {
+                                            node(overflowDuct, bypass?null:Seq.with(new Objectives.OnSector(aegis)), () -> {
                                                 node(underflowDuct);
 
                                             });
@@ -927,9 +928,9 @@ public class EC620TechTree {
 
                                         });
 
-                                        node(reinforcedPayloadConveyor, Seq.with(new Objectives.OnSector(atlas)), () -> {
+                                        node(reinforcedPayloadConveyor, bypass?null:Seq.with(new Objectives.OnSector(atlas)), () -> {
                                             //TODO should only be unlocked in unit sector
-                                            node(payloadMassDriver, Seq.with(new Objectives.Research(siliconArcFurnace), new Objectives.OnSector(split)), () -> {
+                                            node(payloadMassDriver, bypass?null:Seq.with(new Objectives.Research(siliconArcFurnace), new Objectives.OnSector(split)), () -> {
                                                 //TODO further limitations
                                                 node(payloadLoader, () -> {
                                                     node(payloadUnloader, () -> {
@@ -939,13 +940,13 @@ public class EC620TechTree {
                                                     });
                                                 });
 
-                                                node(constructor, Seq.with(new Objectives.OnSector(split)), () -> {
-                                                    node(smallDeconstructor, Seq.with(new Objectives.OnSector(peaks)), () -> {
-                                                        node(largeConstructor, Seq.with(new Objectives.OnSector(siege)), () -> {
+                                                node(constructor, bypass?null:Seq.with(new Objectives.OnSector(split)), () -> {
+                                                    node(smallDeconstructor, bypass?null:Seq.with(new Objectives.OnSector(peaks)), () -> {
+                                                        node(largeConstructor, bypass?null:Seq.with(new Objectives.OnSector(siege)), () -> {
 
                                                         });
 
-                                                        node(deconstructor, Seq.with(new Objectives.OnSector(siege)), () -> {
+                                                        node(deconstructor, bypass?null:Seq.with(new Objectives.OnSector(siege)), () -> {
 
                                                         });
                                                     });
@@ -968,8 +969,8 @@ public class EC620TechTree {
 
                     });
                     node(coreBastion,()->{
-                        node(coreCitadel, Seq.with(new Objectives.SectorComplete(peaks)), () -> {
-                            node(coreAcropolis, Seq.with(new Objectives.SectorComplete(siege)), () -> {
+                        node(coreCitadel, bypass?null:Seq.with(new Objectives.SectorComplete(peaks)), () -> {
+                            node(coreAcropolis, bypass?null:Seq.with(new Objectives.SectorComplete(siege)), () -> {
 
                             });
                         });
@@ -988,7 +989,7 @@ public class EC620TechTree {
 
                                     node(bridgeConduit);
 
-                                    node(pulseConduit, Seq.with(new Objectives.SectorComplete(windsweptIslands)), () -> {
+                                    node(pulseConduit, bypass?null:Seq.with(new Objectives.SectorComplete(windsweptIslands)), () -> {
                                         node(phaseConduit, () -> {
 
                                         });
@@ -1005,9 +1006,9 @@ public class EC620TechTree {
                                     });
                                 });
                             });
-                            node(reinforcedConduit, Seq.with(new Objectives.OnSector(aegis)), () -> {
+                            node(reinforcedConduit, bypass?null:Seq.with(new Objectives.OnSector(aegis)), () -> {
                                 //TODO maybe should be even later
-                                node(reinforcedPump, Seq.with(new Objectives.OnSector(basin)), () -> {
+                                node(reinforcedPump, bypass?null:Seq.with(new Objectives.OnSector(basin)), () -> {
                                     //TODO T2 pump, consume cyanogen or similar
                                 });
 
@@ -1018,7 +1019,7 @@ public class EC620TechTree {
 
                                     node(reinforcedLiquidRouter, () -> {
                                         node(reinforcedLiquidContainer, () -> {
-                                            node(reinforcedLiquidTank, Seq.with(new Objectives.SectorComplete(intersect)), () -> {
+                                            node(reinforcedLiquidTank, bypass?null:Seq.with(new Objectives.SectorComplete(intersect)), () -> {
 
                                             });
                                         });
@@ -1029,26 +1030,26 @@ public class EC620TechTree {
                     });
 
                     node(graphitePress, () -> {
-                        node(pneumaticDrill, Seq.with(new Objectives.SectorComplete(frozenForest)), () -> {
-                            node(cultivator, Seq.with(new Objectives.SectorComplete(biomassFacility)), () -> {
+                        node(pneumaticDrill, bypass?null:Seq.with(new Objectives.SectorComplete(frozenForest)), () -> {
+                            node(cultivator, bypass?null:Seq.with(new Objectives.SectorComplete(biomassFacility)), () -> {
 
                             });
 
                             node(laserDrill, () -> {
-                                node(blastDrill, Seq.with(new Objectives.SectorComplete(nuclearComplex)), () -> {
+                                node(blastDrill, bypass?null:Seq.with(new Objectives.SectorComplete(nuclearComplex)), () -> {
 
                                 });
 
-                                node(waterExtractor, Seq.with(new Objectives.SectorComplete(saltFlats)), () -> {
+                                node(waterExtractor, bypass?null:Seq.with(new Objectives.SectorComplete(saltFlats)), () -> {
                                     node(oilExtractor, () -> {
 
                                     });
                                 });
                             });
                             node(plasmaBore, () -> {
-                                node(impactDrill, Seq.with(new Objectives.OnSector(aegis)), () -> {
-                                    node(largePlasmaBore, Seq.with(new Objectives.OnSector(caldera)), () -> {
-                                        node(eruptionDrill, Seq.with(new Objectives.OnSector(stronghold)), () -> {
+                                node(impactDrill, bypass?null:Seq.with(new Objectives.OnSector(aegis)), () -> {
+                                    node(largePlasmaBore, bypass?null:Seq.with(new Objectives.OnSector(caldera)), () -> {
+                                        node(eruptionDrill, bypass?null:Seq.with(new Objectives.OnSector(stronghold)), () -> {
 
                                         });
                                     });
@@ -1060,6 +1061,7 @@ public class EC620TechTree {
                             node(blastMixer, () -> {
 
                             });
+                            node(EC620Blocks.pyratiteSmelter,()->{});
                         });
 
                         node(siliconSmelter, () -> {
@@ -1073,14 +1075,14 @@ public class EC620TechTree {
                                     });
                                 });
 
-                                node(plastaniumCompressor, Seq.with(new Objectives.SectorComplete(windsweptIslands)), () -> {
-                                    node(phaseWeaver, Seq.with(new Objectives.SectorComplete(tarFields)), () -> {
+                                node(plastaniumCompressor, bypass?null:Seq.with(new Objectives.SectorComplete(windsweptIslands)), () -> {
+                                    node(phaseWeaver, bypass?null:Seq.with(new Objectives.SectorComplete(tarFields)), () -> {
 
                                     });
                                 });
                             });
 
-                            node(kiln, Seq.with(new Objectives.SectorComplete(craters)), () -> {
+                            node(kiln, bypass?null:Seq.with(new Objectives.SectorComplete(craters)), () -> {
                                 node(pulverizer, () -> {
                                     node(incinerator, () -> {
                                         node(melter, () -> {
@@ -1117,7 +1119,7 @@ public class EC620TechTree {
 
                                             });
                                         });
-                                        node(reinforcedMessage, Seq.with(new Objectives.OnSector(aegis)), () -> {
+                                        node(reinforcedMessage, bypass?null:Seq.with(new Objectives.OnSector(aegis)), () -> {
                                             node(canvas);
                                         });
                                     });
@@ -1136,27 +1138,27 @@ public class EC620TechTree {
                         });
                         node(cliffCrusher, () -> {
                             node(siliconArcFurnace, () -> {
-                                node(electrolyzer, Seq.with(new Objectives.OnSector(atlas)), () -> {
-                                    node(oxidationChamber, Seq.with(new Objectives.Research(tankRefabricator), new Objectives.OnSector(marsh)), () -> {
+                                node(electrolyzer, bypass?null:Seq.with(new Objectives.OnSector(atlas)), () -> {
+                                    node(oxidationChamber, bypass?null:Seq.with(new Objectives.Research(tankRefabricator), new Objectives.OnSector(marsh)), () -> {
 
-                                        node(surgeCrucible, Seq.with(new Objectives.OnSector(ravine)), () -> {
+                                        node(surgeCrucible, bypass?null:Seq.with(new Objectives.OnSector(ravine)), () -> {
 
                                         });
-                                        node(heatRedirector, Seq.with(new Objectives.OnSector(ravine)), () -> {
-                                            node(electricHeater, Seq.with(new Objectives.OnSector(ravine), new Objectives.Research(afflict)), () -> {
-                                                node(slagHeater, Seq.with(new Objectives.OnSector(caldera)), () -> {
+                                        node(heatRedirector, bypass?null:Seq.with(new Objectives.OnSector(ravine)), () -> {
+                                            node(electricHeater, bypass?null:Seq.with(new Objectives.OnSector(ravine), new Objectives.Research(afflict)), () -> {
+                                                node(slagHeater, bypass?null:Seq.with(new Objectives.OnSector(caldera)), () -> {
 
                                                 });
 
-                                                node(atmosphericConcentrator, Seq.with(new Objectives.OnSector(caldera)), () -> {
-                                                    node(cyanogenSynthesizer, Seq.with(new Objectives.OnSector(siege)), () -> {
+                                                node(atmosphericConcentrator, bypass?null:Seq.with(new Objectives.OnSector(caldera)), () -> {
+                                                    node(cyanogenSynthesizer, bypass?null:Seq.with(new Objectives.OnSector(siege)), () -> {
 
                                                     });
                                                 });
 
-                                                node(carbideCrucible, Seq.with(new Objectives.OnSector(crevice)), () -> {
-                                                    node(phaseSynthesizer, Seq.with(new Objectives.OnSector(karst)), () -> {
-                                                        node(phaseHeater, Seq.with(new Objectives.Research(phaseSynthesizer)), () -> {
+                                                node(carbideCrucible, bypass?null:Seq.with(new Objectives.OnSector(crevice)), () -> {
+                                                    node(phaseSynthesizer, bypass?null:Seq.with(new Objectives.OnSector(karst)), () -> {
+                                                        node(phaseHeater, bypass?null:Seq.with(new Objectives.Research(phaseSynthesizer)), () -> {
 
                                                         });
                                                     });
@@ -1169,19 +1171,23 @@ public class EC620TechTree {
                                         });
                                     });
 
-                                    node(slagIncinerator, Seq.with(new Objectives.OnSector(basin)), () -> {
+                                    node(slagIncinerator, bypass?null:Seq.with(new Objectives.OnSector(basin)), () -> {
 
                                         //TODO these are unused.
-                                        //node(slagCentrifuge, () -> {});
-                                        //node(heatReactor, () -> {});
+                                        node(slagCentrifuge, () -> {});
+                                        node(heatReactor, () -> {});
                                     });
                                 });
                             });
                         });
+                        node(EC620Blocks.cryogenicFreezer,()->
+                        {
+                            node(EC620Blocks.hyperThawer,()->{});
+                        });
                     });
 
 
-                    node(combustionGenerator, Seq.with(new Objectives.Research(Items.coal)), () -> {
+                    node(combustionGenerator, bypass?null:Seq.with(new Objectives.Research(Items.coal)), () -> {
                         node(powerNode, () -> {
                             node(powerNodeLarge, () -> {
                                 node(diode, () -> {
@@ -1199,9 +1205,9 @@ public class EC620TechTree {
 
                             node(mender, () -> {
                                 node(mendProjector, () -> {
-                                    node(forceProjector, Seq.with(new Objectives.SectorComplete(impact0078)), () -> {
-                                        node(overdriveProjector, Seq.with(new Objectives.SectorComplete(impact0078)), () -> {
-                                            node(overdriveDome, Seq.with(new Objectives.SectorComplete(impact0078)), () -> {
+                                    node(forceProjector, bypass?null:Seq.with(new Objectives.SectorComplete(impact0078)), () -> {
+                                        node(overdriveProjector, bypass?null:Seq.with(new Objectives.SectorComplete(impact0078)), () -> {
+                                            node(overdriveDome, bypass?null:Seq.with(new Objectives.SectorComplete(impact0078)), () -> {
 
                                             });
                                         });
@@ -1215,10 +1221,10 @@ public class EC620TechTree {
                                 });
                             });
 
-                            node(steamGenerator, Seq.with(new Objectives.SectorComplete(craters)), () -> {
+                            node(steamGenerator, bypass?null:Seq.with(new Objectives.SectorComplete(craters)), () -> {
                                 node(thermalGenerator, () -> {
                                     node(differentialGenerator, () -> {
-                                        node(thoriumReactor, Seq.with(new Objectives.Research(Liquids.cryofluid)), () -> {
+                                        node(thoriumReactor, bypass?null:Seq.with(new Objectives.Research(Liquids.cryofluid)), () -> {
                                             node(impactReactor, () -> {
 
                                             });
@@ -1239,11 +1245,11 @@ public class EC620TechTree {
                         });
                         node(turbineCondenser, () -> {
                             node(beamNode, () -> {
-                                node(ventCondenser, Seq.with(new Objectives.OnSector(aegis)), () -> {
-                                    node(chemicalCombustionChamber, Seq.with(new Objectives.OnSector(basin)), () -> {
-                                        node(pyrolysisGenerator, Seq.with(new Objectives.OnSector(crevice)), () -> {
-                                            node(fluxReactor, Seq.with(new Objectives.OnSector(crossroads), new Objectives.Research(cyanogenSynthesizer)), () -> {
-                                                node(neoplasiaReactor, Seq.with(new Objectives.OnSector(karst)), () -> {
+                                node(ventCondenser, bypass?null:Seq.with(new Objectives.OnSector(aegis)), () -> {
+                                    node(chemicalCombustionChamber, bypass?null:Seq.with(new Objectives.OnSector(basin)), () -> {
+                                        node(pyrolysisGenerator, bypass?null:Seq.with(new Objectives.OnSector(crevice)), () -> {
+                                            node(fluxReactor, bypass?null:Seq.with(new Objectives.OnSector(crossroads), new Objectives.Research(cyanogenSynthesizer)), () -> {
+                                                node(neoplasiaReactor, bypass?null:Seq.with(new Objectives.OnSector(karst)), () -> {
 
                                                 });
                                             });
@@ -1251,15 +1257,15 @@ public class EC620TechTree {
                                     });
                                 });
 
-                                node(beamTower, Seq.with(new Objectives.OnSector(peaks)), () -> {
+                                node(beamTower, bypass?null:Seq.with(new Objectives.OnSector(peaks)), () -> {
 
                                 });
 
 
-                                node(regenProjector, Seq.with(new Objectives.OnSector(peaks)), () -> {
+                                node(regenProjector, bypass?null:Seq.with(new Objectives.OnSector(peaks)), () -> {
                                     //TODO more tiers of build tower or "support" structures like overdrive projectors
-                                    node(buildTower, Seq.with(new Objectives.OnSector(stronghold)), () -> {
-                                        node(shockwaveTower, Seq.with(new Objectives.OnSector(siege)), () -> {
+                                    node(buildTower, bypass?null:Seq.with(new Objectives.OnSector(stronghold)), () -> {
+                                        node(shockwaveTower, bypass?null:Seq.with(new Objectives.OnSector(siege)), () -> {
 
                                         });
                                     });
@@ -1328,11 +1334,11 @@ public class EC620TechTree {
                     });
 
                     node(scatter, () -> {
-                        node(hail, Seq.with(new Objectives.SectorComplete(craters)), () -> {
+                        node(hail, bypass?null:Seq.with(new Objectives.SectorComplete(craters)), () -> {
                             node(salvo, () -> {
                                 node(swarmer, () -> {
                                     node(cyclone, () -> {
-                                        node(spectre, Seq.with(new Objectives.SectorComplete(nuclearComplex)), () -> {
+                                        node(spectre, bypass?null:Seq.with(new Objectives.SectorComplete(nuclearComplex)), () -> {
 
                                         });
                                     });
@@ -1374,15 +1380,15 @@ public class EC620TechTree {
                             });
                         });
                     });
-                    node(breach, Seq.with(new Objectives.Research(siliconArcFurnace), new Objectives.Research(tankFabricator)), () -> {
+                    node(breach, bypass?null:Seq.with(new Objectives.Research(siliconArcFurnace), new Objectives.Research(tankFabricator)), () -> {
 
 
-                        node(diffuse, Seq.with(new Objectives.OnSector(lake)), () -> {
-                            node(sublimate, Seq.with(new Objectives.OnSector(marsh)), () -> {
-                                node(afflict, Seq.with(new Objectives.OnSector(ravine)), () -> {
-                                    node(titan, Seq.with(new Objectives.OnSector(stronghold)), () -> {
-                                        node(lustre, Seq.with(new Objectives.OnSector(crevice)), () -> {
-                                            node(smite, Seq.with(new Objectives.OnSector(karst)), () -> {
+                        node(diffuse, bypass?null:Seq.with(new Objectives.OnSector(lake)), () -> {
+                            node(sublimate, bypass?null:Seq.with(new Objectives.OnSector(marsh)), () -> {
+                                node(afflict, bypass?null:Seq.with(new Objectives.OnSector(ravine)), () -> {
+                                    node(titan, bypass?null:Seq.with(new Objectives.OnSector(stronghold)), () -> {
+                                        node(lustre, bypass?null:Seq.with(new Objectives.OnSector(crevice)), () -> {
+                                            node(smite, bypass?null:Seq.with(new Objectives.OnSector(karst)), () -> {
 
                                             });
                                         });
@@ -1390,9 +1396,9 @@ public class EC620TechTree {
                                 });
                             });
 
-                            node(disperse, Seq.with(new Objectives.OnSector(stronghold)), () -> {
-                                node(scathe, Seq.with(new Objectives.OnSector(siege)), () -> {
-                                    node(malign, Seq.with(new Objectives.SectorComplete(karst)), () -> {
+                            node(disperse, bypass?null:Seq.with(new Objectives.OnSector(stronghold)), () -> {
+                                node(scathe, bypass?null:Seq.with(new Objectives.OnSector(siege)), () -> {
+                                    node(malign, bypass?null:Seq.with(new Objectives.SectorComplete(karst)), () -> {
 
                                     });
                                 });
@@ -1400,67 +1406,67 @@ public class EC620TechTree {
                         });
 
 
-                        node(radar, Seq.with(new Objectives.Research(beamNode), new Objectives.Research(turbineCondenser), new Objectives.Research(tankFabricator), new Objectives.OnSector(SectorPresets.aegis)), () -> {
+                        node(radar, bypass?null:Seq.with(new Objectives.Research(beamNode), new Objectives.Research(turbineCondenser), new Objectives.Research(tankFabricator), new Objectives.OnSector(SectorPresets.aegis)), () -> {
 
                         });
                     });
 
 
 
-                    node(tankFabricator, Seq.with(new Objectives.Research(siliconArcFurnace), new Objectives.Research(plasmaBore), new Objectives.Research(turbineCondenser)), () -> {
+                    node(tankFabricator, bypass?null:Seq.with(new Objectives.Research(siliconArcFurnace), new Objectives.Research(plasmaBore), new Objectives.Research(turbineCondenser)), () -> {
                         node(UnitTypes.stell);
 
-                        node(unitRepairTower, Seq.with(new Objectives.OnSector(ravine), new Objectives.Research(mechRefabricator)), () -> {
+                        node(unitRepairTower, bypass?null:Seq.with(new Objectives.OnSector(ravine), new Objectives.Research(mechRefabricator)), () -> {
 
                         });
 
-                        node(shipFabricator, Seq.with(new Objectives.OnSector(lake)), () -> {
+                        node(shipFabricator, bypass?null:Seq.with(new Objectives.OnSector(lake)), () -> {
                             node(UnitTypes.elude);
 
-                            node(mechFabricator, Seq.with(new Objectives.OnSector(intersect)), () -> {
+                            node(mechFabricator, bypass?null:Seq.with(new Objectives.OnSector(intersect)), () -> {
                                 node(UnitTypes.merui);
 
-                                node(tankRefabricator, Seq.with(new Objectives.OnSector(atlas)), () -> {
+                                node(tankRefabricator, bypass?null:Seq.with(new Objectives.OnSector(atlas)), () -> {
                                     node(UnitTypes.locus);
 
-                                    node(mechRefabricator, Seq.with(new Objectives.OnSector(basin)), () -> {
+                                    node(mechRefabricator, bypass?null:Seq.with(new Objectives.OnSector(basin)), () -> {
                                         node(UnitTypes.cleroi);
 
-                                        node(shipRefabricator, Seq.with(new Objectives.OnSector(peaks)), () -> {
+                                        node(shipRefabricator, bypass?null:Seq.with(new Objectives.OnSector(peaks)), () -> {
                                             node(UnitTypes.avert);
 
                                             //TODO
-                                            node(primeRefabricator, Seq.with(new Objectives.OnSector(stronghold)), () -> {
+                                            node(primeRefabricator, bypass?null:Seq.with(new Objectives.OnSector(stronghold)), () -> {
                                                 node(UnitTypes.precept);
                                                 node(UnitTypes.anthicus);
                                                 node(UnitTypes.obviate);
                                             });
 
-                                            node(tankAssembler, Seq.with(new Objectives.OnSector(siege), new Objectives.Research(constructor), new Objectives.Research(atmosphericConcentrator)), () -> {
+                                            node(tankAssembler, bypass?null:Seq.with(new Objectives.OnSector(siege), new Objectives.Research(constructor), new Objectives.Research(atmosphericConcentrator)), () -> {
 
                                                 node(UnitTypes.vanquish, () -> {
-                                                    node(UnitTypes.conquer, Seq.with(new Objectives.OnSector(karst)), () -> {
+                                                    node(UnitTypes.conquer, bypass?null:Seq.with(new Objectives.OnSector(karst)), () -> {
 
                                                     });
                                                 });
 
-                                                node(shipAssembler, Seq.with(new Objectives.OnSector(crossroads)), () -> {
+                                                node(shipAssembler, bypass?null:Seq.with(new Objectives.OnSector(crossroads)), () -> {
                                                     node(UnitTypes.quell, () -> {
-                                                        node(UnitTypes.disrupt, Seq.with(new Objectives.OnSector(karst)), () -> {
+                                                        node(UnitTypes.disrupt, bypass?null:Seq.with(new Objectives.OnSector(karst)), () -> {
 
                                                         });
                                                     });
                                                 });
 
-                                                node(mechAssembler, Seq.with(new Objectives.OnSector(crossroads)), () -> {
+                                                node(mechAssembler, bypass?null:Seq.with(new Objectives.OnSector(crossroads)), () -> {
                                                     node(UnitTypes.tecta, () -> {
-                                                        node(UnitTypes.collaris, Seq.with(new Objectives.OnSector(karst)), () -> {
+                                                        node(UnitTypes.collaris, bypass?null:Seq.with(new Objectives.OnSector(karst)), () -> {
 
                                                         });
                                                     });
                                                 });
 
-                                                node(basicAssemblerModule, Seq.with(new Objectives.SectorComplete(karst)), () -> {
+                                                node(basicAssemblerModule, bypass?null:Seq.with(new Objectives.SectorComplete(karst)), () -> {
 
                                                 });
                                             });
@@ -1471,49 +1477,8 @@ public class EC620TechTree {
                         });
                     });
 
-                    node(onset, () -> {
-                        node(aegis, Seq.with(new Objectives.SectorComplete(onset), new Objectives.Research(ductRouter), new Objectives.Research(ductBridge)), () -> {
-                            node(lake, Seq.with(new Objectives.SectorComplete(aegis)), () -> {
-
-                            });
-
-                            node(intersect, Seq.with(new Objectives.SectorComplete(aegis), new Objectives.SectorComplete(lake), new Objectives.Research(ventCondenser), new Objectives.Research(shipFabricator)), () -> {
-                                node(atlas, Seq.with(new Objectives.SectorComplete(intersect), new Objectives.Research(mechFabricator)), () -> {
-                                    node(split, Seq.with(new Objectives.SectorComplete(atlas), new Objectives.Research(reinforcedPayloadConveyor), new Objectives.Research(reinforcedContainer)), () -> {
-
-                                    });
-
-                                    node(basin, Seq.with(new Objectives.SectorComplete(atlas)), () -> {
-                                        node(marsh, Seq.with(new Objectives.SectorComplete(basin)), () -> {
-                                            node(ravine, Seq.with(new Objectives.SectorComplete(marsh), new Objectives.Research(Liquids.slag)), () -> {
-                                                node(caldera, Seq.with(new Objectives.SectorComplete(peaks), new Objectives.Research(heatRedirector)), () -> {
-                                                    node(stronghold, Seq.with(new Objectives.SectorComplete(caldera), new Objectives.Research(coreCitadel)), () -> {
-                                                        node(crevice, Seq.with(new Objectives.SectorComplete(stronghold)), () -> {
-                                                            node(siege, Seq.with(new Objectives.SectorComplete(crevice)), () -> {
-                                                                node(crossroads, Seq.with(new Objectives.SectorComplete(siege)), () -> {
-                                                                    node(karst, Seq.with(new Objectives.SectorComplete(crossroads), new Objectives.Research(coreAcropolis)), () -> {
-                                                                        node(origin, Seq.with(new Objectives.SectorComplete(karst), new Objectives.Research(coreAcropolis), new Objectives.Research(UnitTypes.vanquish), new Objectives.Research(UnitTypes.disrupt), new Objectives.Research(UnitTypes.collaris), new Objectives.Research(malign), new Objectives.Research(basicAssemblerModule), new Objectives.Research(neoplasiaReactor)), () -> {
-
-                                                                        });
-                                                                    });
-                                                                });
-                                                            });
-                                                        });
-                                                    });
-                                                });
-                                            });
-
-                                            node(peaks, Seq.with(new Objectives.SectorComplete(marsh), new Objectives.SectorComplete(split)), () -> {
-
-                                            });
-                                        });
-                                    });
-                                });
-                            });
-                        });
-                    });
                 });
-
+                //region Factories
                 node(groundFactory, () -> {
 
                     node(dagger, () -> {
@@ -1577,7 +1542,7 @@ public class EC620TechTree {
                             });
                         });
 
-                        node(navalFactory, Seq.with(new Objectives.SectorComplete(ruinousShores)), () -> {
+                        node(navalFactory, bypass?null:Seq.with(new Objectives.SectorComplete(ruinousShores)), () -> {
                             node(risso, () -> {
                                 node(minke, () -> {
                                     node(bryde, () -> {
@@ -1589,11 +1554,11 @@ public class EC620TechTree {
                                     });
                                 });
 
-                                node(retusa, Seq.with(new Objectives.SectorComplete(windsweptIslands)), () -> {
-                                    node(oxynoe, Seq.with(new Objectives.SectorComplete(coastline)), () -> {
+                                node(retusa, bypass?null:Seq.with(new Objectives.SectorComplete(windsweptIslands)), () -> {
+                                    node(oxynoe, bypass?null:Seq.with(new Objectives.SectorComplete(coastline)), () -> {
                                         node(cyerce, () -> {
                                             node(aegires, () -> {
-                                                node(navanax, Seq.with(new Objectives.SectorComplete(navalFortress)), () -> {
+                                                node(navanax, bypass?null:Seq.with(new Objectives.SectorComplete(navalFortress)), () -> {
 
                                                 });
                                             });
@@ -1604,9 +1569,9 @@ public class EC620TechTree {
                         });
                     });
 
-                    node(additiveReconstructor, Seq.with(new Objectives.SectorComplete(biomassFacility)), () -> {
+                    node(additiveReconstructor, bypass?null:Seq.with(new Objectives.SectorComplete(biomassFacility)), () -> {
                         node(multiplicativeReconstructor, () -> {
-                            node(exponentialReconstructor, Seq.with(new Objectives.SectorComplete(overgrowth)), () -> {
+                            node(exponentialReconstructor, bypass?null:Seq.with(new Objectives.SectorComplete(overgrowth)), () -> {
                                 node(tetrativeReconstructor, () -> {
 
                                 });
@@ -1614,9 +1579,9 @@ public class EC620TechTree {
                         });
                     });
                 });
+                //endregion
 
-
-
+                //region Resources
                 nodeProduce(Items.copper, () -> {
                     nodeProduce(Liquids.water, () -> {
                         nodeProduce(Liquids.ozone, () -> {
@@ -1708,9 +1673,18 @@ public class EC620TechTree {
 
                         });
                     });
+                    nodeProduce(EC620Items.ice,()->
+                    {
+                        nodeProduce(EC620Items.cryocube,()->{});
+                        nodeProduce(EC620Items.wax,()->{});
+                        nodeProduce(EC620Items.sludge,()->{});
+                        nodeProduce(EC620Items.arkyciteIce,()->{});
+                        nodeProduce(EC620Items.neoplasmIce,()->{});
+                    });
                 });
+                //endregion
             });
-        }
+        //}
         root.planet= EC620Planets.ec620;
         root.children.each(c -> c.planet =EC620Planets.ec620);
         /*mergeNode(Liquids.water, () -> {

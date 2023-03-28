@@ -21,6 +21,11 @@ public class EC620Items {
 
 	public static void load()
 	{
+		//region Unlock hidden items
+		Items.fissileMatter.hidden=false;
+		Items.dormantCyst.hidden=false;
+		Liquids.gallium.hidden=false;
+		//endregion
 		iron = new Item("iron",Color.valueOf("A19D94"))
 		{{
 			hardness=3;
@@ -49,29 +54,34 @@ public class EC620Items {
 		ice=new Item("ice",Color.valueOf("368BC1"))
 		{{
 			localizedName="Ice";
-
+			description="Solid form of water";
 		}};
 		sludge=new Item("sludge",Color.valueOf("ffa166"))
 		{{
 			localizedName="Sludge";
+			description="Solid form of slag";
 		}};
 		wax=new Item("wax",Color.valueOf("000000"))
 		{{
 			localizedName="Wax";
+			description="Solid form of oil";
 			flammability = 1.2f;
 			explosiveness = 1.2f;
 		}};
 		cryocube=new Item("cryocube",Color.valueOf("6ecdec"))
 		{{
 			localizedName="Cryocube";
+			description="Solid form of cryofluid";
 		}};
 		neoplasmIce=new Item("neoplasm-ice",Color.valueOf("c33e2b"))
 		{{
 			localizedName="Neoplasm Ice";
+			description="Solid form of neoplasm";
 		}};
 		arkyciteIce=new Item("arkycite-ice",Color.valueOf("84a94b"))
 		{{
 			localizedName="Arkycite Ice";
+			description="Solid form of arkycite";
 			flammability = 0.4f;
 		}};
 		//endregion

@@ -10,6 +10,7 @@ import arc.util.*;
 import ec620.content.*;
 import mindustry.*;
 import mindustry.content.*;
+import mindustry.core.Platform;
 import mindustry.game.EventType;
 import mindustry.game.EventType.*;
 import mindustry.game.Schematic;
@@ -45,7 +46,7 @@ public class EC620JavaMod extends Mod
                 dialog.cont.add("You need to turn the phone to landscape",Color.cyan).row();
                 dialog.cont.add("in order to see the setting info,",Color.cyan).row();
                 dialog.cont.add("I can not figure out how to make it wrap,",Color.cyan).row();
-                dialog.cont.add("sorry.",Color.cyan).row();
+                dialog.cont.add("sorry.", Color.cyan).row();
 //                dialog.cont.add("some of the sectors (especially Eradication maps) might even be unbeatable,",Color.cyan).row();
 //                dialog.cont.add("so if you're a newbie, I recommend you to play the original games",Color.cyan).row();
 //                dialog.cont.add(" and get familiar with the contents first.",Color.cyan).row();
@@ -55,7 +56,7 @@ public class EC620JavaMod extends Mod
                 dialog.show();
             });
         });
-        /*Events.on(PlayEvent.class, event -> {
+        Events.on(PlayEvent.class, event -> {
             //Log.info("Listening to PlayEvent: Sector "+Vars.state.rules.sector.id);
             if (Vars.state.rules.sector != null && Vars.state.rules.sector.id == 0)
             {
@@ -63,7 +64,7 @@ public class EC620JavaMod extends Mod
                 Vars.state.rules.loadout = ItemStack.list(Items.copper,100);
             }
 
-        });*/
+        });
 
         //Log.info("Loaded EC620JavaMod constructor.");
     }
