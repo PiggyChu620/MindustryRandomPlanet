@@ -1,4 +1,4 @@
-# Mindustry Java Mod - Random Planet v0.2
+# Mindustry Java Mod - Random Planet v0.2.1
 A Java Mindustry mod, currently for PC only.
 
 Randomly generate a planet and its sectors, including the starting sector.
@@ -52,6 +52,9 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
   - Solid form (ice) of Water, Cryofluid, Oil, Slag, Arkycite, Neoplasm
 - Add Discord Server<sup>2</sup>
 - Officially released, now can be installed from the Mod Browser
+
+*v0.2.1*
+- Fix: Random Name Generator bugs
 
 --- 
 

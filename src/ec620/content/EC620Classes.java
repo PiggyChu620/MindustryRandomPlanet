@@ -48,7 +48,7 @@ public class EC620Classes
             return false;
         }
     }
-    public static class NameHandler
+    /*public static class NameHandler
     {
         public String planetName;
         public ObjectMap<Integer,String> sectorNames;
@@ -66,5 +66,5 @@ public class EC620Classes
         {
             sectorNames.put(i,s);
         }
-    }
+    }*/
 }

@@ -32,7 +32,7 @@ public class EC620NameGenerator
 {
     //static HashMap<Character,HashMap<Character, List<Character>>> nameMap=new HashMap();
     static ObjectMap<String, CharMap> nameMap;
-    static EC620Classes.NameHandler generatedNames=null;
+    //static EC620Classes.NameHandler generatedNames=null;
     static Json json=new Json();
     static Fi file;
     public EC620NameGenerator() throws IOException {
@@ -41,7 +41,7 @@ public class EC620NameGenerator
         file = mod.root.child("NameMarkovChain.json");
         nameMap = json.readValue(ObjectMap.class, CharMap.class, new JsonReader().parse(file));
 
-        file=mod.root.child("GeneratedNames.json");
+        /*file=mod.root.child("GeneratedNames.json");
         if(file.exists())
         {
             generatedNames=new Json().readValue(EC620Classes.NameHandler.class, (new JsonReader().parse(file)));
@@ -52,7 +52,7 @@ public class EC620NameGenerator
             generatedNames=new EC620Classes.NameHandler();
             //if(file.exists()) Log.info("File finally existed");
             //else Log.info("File not existed");
-        }
+        }*/
     }
     public static String generate(int index)
     {
@@ -78,16 +78,11 @@ public class EC620NameGenerator
         //}
         if(index<0)
         {
-            generatedNames.planetName=generateName();
-            file.writeString(json.toJson(generatedNames));
-            return generatedNames.planetName;
+            return generateName();
         }
         else
         {
-            if(generatedNames.contains(index)) return generatedNames.get(index);
-            generatedNames.add(index,generateName());
-            file.writeString(json.toJson(generatedNames));
-            return generatedNames.get(index)+"-"+index;
+            return generateName()+"-"+index;
         }
     }
     private static String generateName()
