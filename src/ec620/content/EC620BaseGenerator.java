@@ -23,7 +23,8 @@ import mindustry.world.meta.*;
 
 import static mindustry.Vars.*;
 
-public class EC620BaseGenerator extends BaseGenerator {
+public class EC620BaseGenerator extends BaseGenerator
+{
     private static final Vec2 axis = new Vec2(), rotator = new Vec2();
 
     private static final int range = 160;

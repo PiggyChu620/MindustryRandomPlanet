@@ -1413,69 +1413,7 @@ public class EC620TechTree {
 
 
 
-                    node(tankFabricator, bypass?null:Seq.with(new Objectives.Research(siliconArcFurnace), new Objectives.Research(plasmaBore), new Objectives.Research(turbineCondenser)), () -> {
-                        node(UnitTypes.stell);
 
-                        node(unitRepairTower, bypass?null:Seq.with(new Objectives.OnSector(ravine), new Objectives.Research(mechRefabricator)), () -> {
-
-                        });
-
-                        node(shipFabricator, bypass?null:Seq.with(new Objectives.OnSector(lake)), () -> {
-                            node(UnitTypes.elude);
-
-                            node(mechFabricator, bypass?null:Seq.with(new Objectives.OnSector(intersect)), () -> {
-                                node(UnitTypes.merui);
-
-                                node(tankRefabricator, bypass?null:Seq.with(new Objectives.OnSector(atlas)), () -> {
-                                    node(UnitTypes.locus);
-
-                                    node(mechRefabricator, bypass?null:Seq.with(new Objectives.OnSector(basin)), () -> {
-                                        node(UnitTypes.cleroi);
-
-                                        node(shipRefabricator, bypass?null:Seq.with(new Objectives.OnSector(peaks)), () -> {
-                                            node(UnitTypes.avert);
-
-                                            //TODO
-                                            node(primeRefabricator, bypass?null:Seq.with(new Objectives.OnSector(stronghold)), () -> {
-                                                node(UnitTypes.precept);
-                                                node(UnitTypes.anthicus);
-                                                node(UnitTypes.obviate);
-                                            });
-
-                                            node(tankAssembler, bypass?null:Seq.with(new Objectives.OnSector(siege), new Objectives.Research(constructor), new Objectives.Research(atmosphericConcentrator)), () -> {
-
-                                                node(UnitTypes.vanquish, () -> {
-                                                    node(UnitTypes.conquer, bypass?null:Seq.with(new Objectives.OnSector(karst)), () -> {
-
-                                                    });
-                                                });
-
-                                                node(shipAssembler, bypass?null:Seq.with(new Objectives.OnSector(crossroads)), () -> {
-                                                    node(UnitTypes.quell, () -> {
-                                                        node(UnitTypes.disrupt, bypass?null:Seq.with(new Objectives.OnSector(karst)), () -> {
-
-                                                        });
-                                                    });
-                                                });
-
-                                                node(mechAssembler, bypass?null:Seq.with(new Objectives.OnSector(crossroads)), () -> {
-                                                    node(UnitTypes.tecta, () -> {
-                                                        node(UnitTypes.collaris, bypass?null:Seq.with(new Objectives.OnSector(karst)), () -> {
-
-                                                        });
-                                                    });
-                                                });
-
-                                                node(basicAssemblerModule, bypass?null:Seq.with(new Objectives.SectorComplete(karst)), () -> {
-
-                                                });
-                                            });
-                                        });
-                                    });
-                                });
-                            });
-                        });
-                    });
 
                 });
                 //region Factories
@@ -1574,6 +1512,69 @@ public class EC620TechTree {
                             node(exponentialReconstructor, bypass?null:Seq.with(new Objectives.SectorComplete(overgrowth)), () -> {
                                 node(tetrativeReconstructor, () -> {
 
+                                });
+                            });
+                        });
+                    });
+                    node(tankFabricator, bypass?null:Seq.with(new Objectives.Research(siliconArcFurnace), new Objectives.Research(plasmaBore), new Objectives.Research(turbineCondenser)), () -> {
+                        node(UnitTypes.stell);
+
+                        node(unitRepairTower, bypass?null:Seq.with(new Objectives.OnSector(ravine), new Objectives.Research(mechRefabricator)), () -> {
+
+                        });
+
+                        node(shipFabricator, bypass?null:Seq.with(new Objectives.OnSector(lake)), () -> {
+                            node(UnitTypes.elude);
+
+                            node(mechFabricator, bypass?null:Seq.with(new Objectives.OnSector(intersect)), () -> {
+                                node(UnitTypes.merui);
+
+                                node(tankRefabricator, bypass?null:Seq.with(new Objectives.OnSector(atlas)), () -> {
+                                    node(UnitTypes.locus);
+
+                                    node(mechRefabricator, bypass?null:Seq.with(new Objectives.OnSector(basin)), () -> {
+                                        node(UnitTypes.cleroi);
+
+                                        node(shipRefabricator, bypass?null:Seq.with(new Objectives.OnSector(peaks)), () -> {
+                                            node(UnitTypes.avert);
+
+                                            //TODO
+                                            node(primeRefabricator, bypass?null:Seq.with(new Objectives.OnSector(stronghold)), () -> {
+                                                node(UnitTypes.precept);
+                                                node(UnitTypes.anthicus);
+                                                node(UnitTypes.obviate);
+                                            });
+
+                                            node(tankAssembler, bypass?null:Seq.with(new Objectives.OnSector(siege), new Objectives.Research(constructor), new Objectives.Research(atmosphericConcentrator)), () -> {
+
+                                                node(UnitTypes.vanquish, () -> {
+                                                    node(UnitTypes.conquer, bypass?null:Seq.with(new Objectives.OnSector(karst)), () -> {
+
+                                                    });
+                                                });
+
+                                                node(shipAssembler, bypass?null:Seq.with(new Objectives.OnSector(crossroads)), () -> {
+                                                    node(UnitTypes.quell, () -> {
+                                                        node(UnitTypes.disrupt, bypass?null:Seq.with(new Objectives.OnSector(karst)), () -> {
+
+                                                        });
+                                                    });
+                                                });
+
+                                                node(mechAssembler, bypass?null:Seq.with(new Objectives.OnSector(crossroads)), () -> {
+                                                    node(UnitTypes.tecta, () -> {
+                                                        node(UnitTypes.collaris, bypass?null:Seq.with(new Objectives.OnSector(karst)), () -> {
+
+                                                        });
+                                                    });
+                                                });
+
+                                                node(basicAssemblerModule, bypass?null:Seq.with(new Objectives.SectorComplete(karst)), () -> {
+
+                                                });
+                                            });
+                                        });
+                                    });
                                 });
                             });
                         });

@@ -38,6 +38,7 @@ import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.type.Category;
+import mindustry.type.Item;
 import mindustry.type.ItemStack;
 import mindustry.type.LiquidStack;
 import mindustry.world.Block;
@@ -86,6 +87,9 @@ public class EC620Blocks {
 
 	//Craftings
 	public static Block pyratiteSmelter,cryogenicFreezer,hyperThawer,magneticSeparator;
+
+	//Sandbox
+	public static Block sourceIn,sourceOut;
 
 	public static void load()
 	{
@@ -415,9 +419,13 @@ public class EC620Blocks {
 			localizedName="Magnetic Separator";
 			size=3;	//or 4
 		}};
-
+		sourceIn=new ItemSource("source-in")
+		{{
+			requirements(Category.distribution, BuildVisibility.sandboxOnly, with());
+			alwaysUnlocked = true;
+			config(Item.class,(ItemSourceBuild tile,Item item)->tile.heal());
+			configClear((ItemSourceBuild tile) -> tile.outputItem = null);
+		}};
 		//endregion
 	}
-
-
 }
