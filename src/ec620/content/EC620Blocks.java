@@ -426,6 +426,7 @@ public class EC620Blocks {
 			config(Item.class,(ItemSourceBuild tile,Item item)->tile.heal());
 			configClear((ItemSourceBuild tile) -> tile.outputItem = null);
 		}};
+
 		//endregion
 	}
 }

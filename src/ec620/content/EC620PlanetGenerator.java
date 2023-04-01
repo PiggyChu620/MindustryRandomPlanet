@@ -760,18 +760,19 @@ public class EC620PlanetGenerator extends PlanetGenerator
             });
         }*/
 
-        Block[] availableOres=new Block[]{oreLead,oreCoal,oreTitanium,oreBeryllium,oreTungsten,oreThorium,oreCrystalThorium,oreScrap,wallOreBeryllium, wallOreTungsten};
+        Seq<Block> availableOres= content.blocks().select(b->b instanceof OreBlock && b!=oreCopper && b!=oreLead);
+        //Seq<Block> availableOres=Seq.with(oreCoal,oreTitanium,oreBeryllium,oreTungsten,oreThorium,oreCrystalThorium,oreScrap,wallOreBeryllium, wallOreTungsten);
         Seq<Block> ores = new Seq<Block>();
         float poles = Math.abs(sector.tile.v.y);
         float nmag = 0.5f;
         float scl = 1f;
         float addscl = 1.3f;
-        int l= availableOres.length;
+        int l= availableOres.size;
 
         ores.add(oreCopper);
+        ores.add(oreLead);
         if(sector.id==0)
         {
-            ores.add(oreLead);
             ores.add(oreCoal);
             ores.add(oreTitanium);
         }
@@ -781,14 +782,14 @@ public class EC620PlanetGenerator extends PlanetGenerator
             {
                 if(Simplex.noise3d(seed, 2, 0.5, scl, sector.tile.v.x+i, sector.tile.v.y, sector.tile.v.z)*nmag + poles > (i+1)*addscl/(l+1))
                 {
-                    ores.add(availableOres[i]);
+                    ores.add(availableOres.get(i));
                 }
             }
-            for(int i=ores.size;i<Math.min(pgRand.nextInt(l),5);i++)
+            while(ores.size<Math.max(pgRand.nextInt(l),5))
             {
-                ores.add(randomBlock((Arrays.stream(availableOres).filter(x->!ores.contains(x)).toArray(Block[]::new))));
+                ores.addUnique(availableOres.getFrac(pgRand.nextFloat()));
             }
-            if(ores.size==1) ores.add(randomBlock((Arrays.stream(availableOres).filter(x->!ores.contains(x)).toArray(Block[]::new))));
+
         }
 
 
@@ -1276,6 +1277,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
             //Log.info("Core size in PlanetGenerator: "+bases.cores.size);
             //Log.info("Core schematic name: "+bases.cores.getFrac(difficulty).schematic.name());
             state.rules.attackMode = sector.info.attack = true;
+            state.rules.winWave=0;
         }
         else
         {

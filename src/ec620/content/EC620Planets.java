@@ -68,10 +68,11 @@ public class EC620Planets {
 				}
 				else planetName="EC-620";
 				localizedName=planetName;
-				bloom = true;
+				generator = new EC620PlanetGenerator();
+				bloom = false;
 				visible = true;
 				accessible = true;
-				hasAtmosphere = true;
+				hasAtmosphere = false;
 				alwaysUnlocked = true;
 				meshLoader = () -> new EC620ModMesh(
 						this, 5,
@@ -102,10 +103,14 @@ public class EC620Planets {
 					r.showSpawns = true;
 					r.waveSpacing = 80 * Time.toSeconds;
 					r.initialWaveSpacing = 8f * Time.toMinutes;
-					if(r.sector.preset == null) r.winWave = (int)(20f*Math.pow(10,r.sector.threat));
+//					if(r.sector.preset == null)
+//					{
+//						if(r.sector.hasBase()) r.winWave=0;
+//						else r.winWave = (int)(20f*Math.pow(10,r.sector.threat));
+//					}
 					//r.bannedUnits.add(NHUnitTypes.guardian);
 					r.coreDestroyClear = true;
-					if(r.sector.id==0) r.loadout.add(ItemStack.with(Items.copper,100));
+					//if(r.sector.id==0) r.loadout.add(ItemStack.with(Items.copper,100));
 					/*if(!allowLaunchLoadout)
 					{
 						ObjectMap<Item,Integer> temp= ObjectMap.of(Items.copper,3010.70574146f*Mathf.pow(4.28826555969f,r.sector.threat)-2910.70574146f);
@@ -151,7 +156,6 @@ public class EC620Planets {
 					teamRule.infiniteAmmo = teamRule.infiniteResources = true;
 				};
 
-				generator = new EC620PlanetGenerator();
 
 				/*cloudMeshLoader = () -> {
 					return new MultiMesh(
@@ -207,6 +211,15 @@ public class EC620Planets {
 		{
 			super(name, parent, radius, sectorSize);
 			if(orbitRadius==0) orbitRadius=1000*radius;
+
+//			grid = PlanetGrid.create(sectorSize);
+//			sectors.ensureCapacity(grid.tiles.length);
+//			for(int i = 0; i < grid.tiles.length; i++)
+//			{
+//				sectors.set(i,new EC620Sector(this, grid.tiles[i]));
+//			}
+
+			//sectorApproxRadius = sectors.first().tile.v.dst(sectors.first().tile.corners[0].v);
 		}
 
 		public EC620Planet(String name, Planet parent, float radius)
@@ -218,6 +231,10 @@ public class EC620Planets {
 	public static class EC620ModMesh extends HexMesh{
 		public static float waterOffset = 0.05f;
 
+		public EC620ModMesh(Planet planet,int divisions)
+		{
+			super(planet,divisions);
+		}
 		public EC620ModMesh(Planet planet, int divisions, double octaves, double persistence, double scl, double pow, double mag, float colorScale, Color... colors){
 			super(planet, new HexMesher(){
 				@Override

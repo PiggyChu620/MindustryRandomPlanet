@@ -1,4 +1,4 @@
-# Mindustry Java Mod - Random Planet v0.2.3
+# Mindustry Java Mod - Random Planet v0.2.4
 A Java Mindustry mod.
 
 Randomly generate a planet and its sectors, including the starting sector.
@@ -14,6 +14,7 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 4. Custom settings under *Settings* menu.
 5. Custom blocks and items that add a little spice to the game, it'll be constantly added.
 6. Unlock hidden items<sup>3</sup> and enable all environments for all units
+7. Load all activated ores for ore placements.
 
 ## Future Plans
 
@@ -62,9 +63,14 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 *v0.2.2*
 - Sorry I forgot to add the new contents to the tecttree and restore the initial resources for the starting sector
 
-*v.0.2.3*
+*v0.2.3*
 - Move schematics I made to "buid-in", you won't see it in the schematics menu anymore, because I have to say, it's freaking annoying!
 - Remove any unit environmental restrictions, now every unit can survive in any environment
+
+*v0.2.4*
+- Load all available ores from all activated mods for ore placements in random map generations
+- Set minimum resources in any map to 5, 2 of which is Copper and Lead
+- Load my other mod (Mineable Alloys) as a dependency for a little more spice to the game, but you can deactivate it any time if you don't like it
 
 --- 
 
