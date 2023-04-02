@@ -70,7 +70,6 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 *v0.2.4*
 - Load all available ores from all activated mods for ore placements in random map generations
 - Set minimum resources in any map to 5, 2 of which is Copper and Lead
-- Load my other mod (Mineable Alloys) as a dependency for a little more spice to the game, but you can deactivate it any time if you don't like it
 
 --- 
 
