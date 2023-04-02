@@ -1,4 +1,4 @@
-# Mindustry Java Mod - Random Planet v0.2.4
+# Mindustry Java Mod - Random Planet v0.2.5
 A Java Mindustry mod.
 
 Randomly generate a planet and its sectors, including the starting sector.
@@ -70,6 +70,9 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 *v0.2.4*
 - Load all available ores from all activated mods for ore placements in random map generations
 - Set minimum resources in any map to 5, 2 of which is Copper and Lead
+
+*v0.2.5*
+- Remove factory schematics from the starting sector
 
 --- 
 
