@@ -24,4 +24,4 @@ minGameVersion: 140
 #this is a java mod
 java: true
 
-dependencies:[mineable-alloys]
+dependencies:[mineable-alloys] 
