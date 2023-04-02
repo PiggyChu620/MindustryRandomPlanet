@@ -80,12 +80,15 @@ public class EC620BaseGenerator extends BaseGenerator
                 if(!tile.block().alwaysReplace) return;
 
                 if(((tile.overlay().asFloor().itemDrop != null || (tile.drop() != null && Mathf.chance(nonResourceChance)))
-                        || (tile.floor().liquidDrop != null && Mathf.chance(nonResourceChance * 2))) && Mathf.chance(resourceChance)){
+                        || (tile.floor().liquidDrop != null && Mathf.chance(nonResourceChance * 2))) && Mathf.chance(resourceChance))
+                {
                     Seq<BasePart> parts = bases.forResource(tile.drop() != null ? tile.drop() : tile.floor().liquidDrop);
-                    if(!parts.isEmpty()){
+                    if(!parts.isEmpty())
+                    {
                         tryPlace(parts.getFrac(difficulty + Mathf.range(bracketRange)), tile.x, tile.y, team);
                     }
-                }else if(Mathf.chance(nonResourceChance)){
+                }else if(Mathf.chance(nonResourceChance) && sector.id!=0)
+                {
                     tryPlace(bases.parts.getFrac(difficulty + Mathf.range(bracketRange)), tile.x, tile.y, team);
                 }
             });
