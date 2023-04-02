@@ -26,5 +26,4 @@ java: true
 
 dependencies: [
         mineable-alloys
-        
     ]
