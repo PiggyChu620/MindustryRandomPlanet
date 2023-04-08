@@ -1,4 +1,4 @@
-# Mindustry Java Mod - Random Planet v0.2.5
+# Mindustry Java Mod - Random Planet v0.2.7
 A Java Mindustry mod.
 
 Randomly generate a planet and its sectors, including the starting sector.
@@ -27,7 +27,7 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 1. Liquids other than slag appear in the volcanic environment while they obviously will be vaporized or set on fire (in the case of oil).
 2. Chained factories (to produce higher-tier units) sometimes get stuck and are unable to finish production.
 
-## Change Logs
+## Changelog
 
 *v0.1.0322.1*
 - Fix many sector generator abnormalities
@@ -74,6 +74,14 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 *v0.2.5*
 - Remove factory schematics from the starting sector
 
+*v0.2.6*
+- Save sector threats so it won't change any time you load the game
+
+*v0.2.7*
+- Change sector available ores to according to the *Build Cost* of the item to be mined<sup>4</sup>
+- Fix the sector naming and threat generating problem
+- Fix enemy ground units getting trapped in the air, hopefully
+
 --- 
 
 **1.** [Schematic Instruction](SchematicInstruction.md)
@@ -81,3 +89,5 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 **2.** [Discord Server](https://discord.gg/WSmUApPfpj)
 
 **3.** Caution: There is a reason why Anuke hide these blocks/items, most likely it's still WIP and not fully tested and might not be balanced, use it at your own risk
+
+**4.** The formula for calculating the chance of appearance for each ore is **Max(0.01,(2-*Build Cost*)/2)** (except Copper and Lead, which is always 100%). For example, the *Build Cost* of Thorium is 110%, so the chance for Thorium to appear in a new sector is (2-1.1)/2 = 0.45 (45%), please visit the *Items* section on [Mindustry Wiki](https://mindustrygame.github.io/wiki/) for reference

@@ -142,7 +142,8 @@ public class EC620PlanetGenerator extends PlanetGenerator
         //else sector.generateEnemyBase=rand.chance(.5);
         if(Core.settings.getBool("ec620.randomName"))
         {
-            if(Objects.equals(sector.name(), sector.id + "")) sector.setName(EC620NameGenerator.generate(sector.id));
+            //if(Objects.equals(sector.name(), sector.id + ""))
+            sector.setName(EC620NameGenerator.generate(sector.id));
         }
         else sector.setName(sector.id+"");
         PlanetGrid.Ptile tile = sector.tile;
@@ -288,8 +289,8 @@ public class EC620PlanetGenerator extends PlanetGenerator
             sporeMoss,
 
             ));*/
-    Seq<Floor> availableBlocks=null;
-    Seq<SteamVent> availableVents=null;   //new ArrayList<>(List.of(rhyoliteVent,carbonVent,arkyicVent,yellowStoneVent,redStoneVent,crystallineVent,));
+    Seq<Block> availableBlocks=content.blocks().select(b->b instanceof Floor && !(b instanceof SteamVent) && b!=air && b!=empty && b!=coreZone && b!=spawn && b!=space);
+    Seq<Block> availableVents=content.blocks().select(b->b instanceof SteamVent);
     Seq<String> generatedFloors=new Seq<>();
     Block getBlock(Vec3 position)
     {
@@ -311,7 +312,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
 
         //do not touch tnoise here, tweak the riverNoise() instead
         //Block res = (tnoise > 0.52f) ? (tnoise > 0.53f ? (tnoise > 0.57f ? (tnoise > 0.58f ? milksand : starrySandWater) : starryWater) : starryBorudaliteWater) : borudalite;
-        if(availableBlocks==null)
+        /*if(availableBlocks==null)
         {
             Seq<Floor> tempBlocks=new Seq();
             availableBlocks = new Seq<>();
@@ -354,15 +355,15 @@ public class EC620PlanetGenerator extends PlanetGenerator
                 availableBlocks.add(tempBlocks.get(c));
                 tempBlocks.remove(c);
             }
-        }
+        }*/
         if(pgRand.chance(.01)) return availableVents.getFrac(pgRand.nextFloat());
         Block res;
         if(sector.id==0)
         {
             Seq<Block> sands=Seq.with( sand, darksand);
-            return sands.get((int)(tnoise*sands.size)%sands.size);
+            return sands.getFrac(tnoise);
         }
-        else res= availableBlocks.get((int)(tnoise*availableBlocks.size)%availableBlocks.size);
+        else res= availableBlocks.getFrac(tnoise);
         //res=Blocks.sand;
         float moss = Ridged.noise3d(seed, position.x, position.y, position.z, 8, 0.29f);//freq = 1 / scl?
         if(cnoise < 0f || cnoise > 0.4f) return res; //inside of crater is safe from moss
@@ -558,7 +559,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
         //clear radius around each room
         for(Room room : roomseq)
         {
-            erase(room.x, room.y, room.radius);
+            pgErase(room.x, room.y, room.radius);
         }
 
         //randomly connect rooms together
@@ -780,14 +781,18 @@ public class EC620PlanetGenerator extends PlanetGenerator
         {
             for(int i=0;i<l;i++)
             {
-                if(Simplex.noise3d(seed, 2, 0.5, scl, sector.tile.v.x+i, sector.tile.v.y, sector.tile.v.z)*nmag + poles > (i+1)*addscl/(l+1))
-                {
-                    ores.add(availableOres.get(i));
-                }
+                Block b=availableOres.get(i);
+                if(pgRand.chance(0.01d) || pgRand.nextDouble()*2>=b.itemDrop.cost) ores.add(b);
+//                if(Simplex.noise3d(seed, 2, 0.5, scl, sector.tile.v.x+i, sector.tile.v.y, sector.tile.v.z)*nmag + poles > (i+1)*addscl/(l+1))
+//                {
+//                    ores.add(availableOres.get(i));
+//                }
             }
-            while(ores.size<Math.max(pgRand.nextInt(l),5))
+            while(ores.size<5)
             {
-                ores.addUnique(availableOres.getFrac(pgRand.nextFloat()));
+                Block b=availableOres.getFrac(pgRand.nextFloat());
+
+                if((pgRand.chance(0.01d) || pgRand.nextDouble()*2>=b.itemDrop.cost) && !ores.contains(b)) ores.add(b);
             }
 
         }
@@ -1411,4 +1416,23 @@ public class EC620PlanetGenerator extends PlanetGenerator
         return null;
     }
 
+    public void pgErase(int cx, int cy, int rad)
+    {
+        Block block= content.blocks().select(b->b instanceof Floor && b.asFloor().hasSurface()).getFrac(pgRand.nextFloat());
+        for(int x = -rad; x <= rad; x++)
+        {
+            for(int y = -rad; y <= rad; y++)
+            {
+                int wx = cx + x, wy = cy + y;
+                if(Structs.inBounds(wx, wy, width, height) && Mathf.within(x, y, rad))
+                {
+                    Tile other = tiles.getn(wx, wy);
+                    if(!other.floor().hasSurface())
+                    {
+                        other.setBlock(block);
+                    }
+                }
+            }
+        }
+    }
 }

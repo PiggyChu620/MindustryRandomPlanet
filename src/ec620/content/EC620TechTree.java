@@ -8,8 +8,10 @@ package ec620.content;
 import arc.Core;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
+import mindustry.Vars;
 import mindustry.content.*;
 import mindustry.ctype.UnlockableContent;
+import mindustry.entities.Units;
 import mindustry.game.Objectives;
 import mindustry.type.ItemStack;
 import mindustry.type.Liquid;
@@ -1656,7 +1658,6 @@ public class EC620TechTree {
                     nodeProduce(Items.beryllium, () -> {
 
                         nodeProduce(Items.oxide, () -> {
-                            nodeProduce(Items.fissileMatter, () -> {});
                         });
 
 
@@ -1664,12 +1665,14 @@ public class EC620TechTree {
                         {
                             nodeProduce(Liquids.arkycite, () ->
                             {
-
+                                nodeProduce(Liquids.gallium, () -> {});
                             });
 
                             nodeProduce(Items.carbide, () ->
                             {
-                                nodeProduce(Liquids.gallium, () -> {});
+                                nodeProduce(Items.fissileMatter, () -> {});
+                                nodeProduce(Items.dormantCyst, () -> {});
+
                             });
 
                         });

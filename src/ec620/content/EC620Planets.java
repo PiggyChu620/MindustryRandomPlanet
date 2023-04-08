@@ -67,6 +67,7 @@ public class EC620Planets {
 					}
 				}
 				else planetName="EC-620";
+
 				localizedName=planetName;
 				generator = new EC620PlanetGenerator();
 				bloom = false;
@@ -191,10 +192,24 @@ public class EC620Planets {
 					if(sector.hasEnemyBase()){
 						sum += 0.88f;
 					}
+					boolean infoNull=EC620Vars.SectorInfos==null;
+					boolean infoCK=EC620Vars.SectorInfos.containsKey(sector.id);
+					boolean infoThreat=EC620Vars.SectorInfos.get(sector.id).threat>=0;
 
 					//if(sector.id==0) sector.threat=.9f;
 					if(sector.id==0) sector.threat=0;
-					else sector.threat = rand.nextFloat();
+					else if(!infoNull && infoCK && infoThreat)
+					{
+						sector.threat=EC620Vars.SectorInfos.get(sector.id).threat;
+					}
+					else
+					{
+						sector.threat = rand.nextFloat();
+						if(infoNull) EC620Vars.SectorInfos=new ObjectMap<>();
+						if(!infoCK) EC620Vars.SectorInfos.put(sector.id,new EC620Classes.SectorData(null,sector.threat));
+						else EC620Vars.SectorInfos.get(sector.id).threat=sector.threat;
+						Core.settings.putJson("ec620.threats", EC620Classes.SectorData.class,EC620Vars.SectorInfos);
+					}
 
 				}
 			}

@@ -13,6 +13,7 @@ import ec620.EC620JavaMod;
 import mindustry.Vars;
 import mindustry.game.Schematic;
 import mindustry.game.Schematics;
+import mindustry.game.SectorInfo;
 import mindustry.io.JsonIO;
 import mindustry.mod.Mods;
 
@@ -56,7 +57,7 @@ public class EC620NameGenerator
 
         file = mod.root.child("NameMarkovChain.json");
         nameMap = json.readValue(ObjectMap.class, CharMap.class, new JsonReader().parse(file));
-
+        if(Core.settings.has("ec620.sectorInfos")) EC620Vars.SectorInfos= Core.settings.getJson("ec620.sectorInfos", ObjectMap.class,EC620Classes.SectorData.class,ObjectMap::new);
     }
     public static String generate(int index)
     {
@@ -86,7 +87,17 @@ public class EC620NameGenerator
         }
         else
         {
-            return generateName()+"-"+index;
+            if(EC620Vars.SectorInfos!=null && EC620Vars.SectorInfos.containsKey(index) && !Objects.equals(EC620Vars.SectorInfos.get(index).name, "")) return EC620Vars.SectorInfos.get(index).name;
+            else
+            {
+                String name=generateName()+"-"+index;
+                if(EC620Vars.SectorInfos==null) EC620Vars.SectorInfos=new ObjectMap<>();
+                if(EC620Vars.SectorInfos.containsKey(index) && EC620Vars.SectorInfos.get(index).name==null) EC620Vars.SectorInfos.get(index).name=name;
+                else EC620Vars.SectorInfos.put(index,new EC620Classes.SectorData(name,-1));
+                Core.settings.putJson("ec620.sectorInfos", EC620Classes.SectorData.class,EC620Vars.SectorInfos);
+
+                return name;
+            }
         }
     }
     private static String generateName()

@@ -67,4 +67,14 @@ public class EC620Classes
             sectorNames.put(i,s);
         }
     }*/
+    public static class SectorData
+    {
+        public String name;
+        public float threat;
+        public SectorData(String n, float t)
+        {
+            name=n;
+            threat=t;
+        }
+    }
 }
