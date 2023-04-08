@@ -3,9 +3,7 @@ package ec620.content;
 import arc.Core;
 import arc.scene.actions.RunnableAction;
 import arc.scene.style.TextureRegionDrawable;
-import arc.scene.ui.Button;
-import arc.scene.ui.CheckBox;
-import arc.scene.ui.Dialog;
+import arc.scene.ui.*;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
@@ -26,13 +24,16 @@ public class EC620Setting
 	public static Seq<SettingKey<?>> all = new Seq<>();
 
 	private static ObjectMap<String,SettingInfo> settingInfos=new ObjectMap<>();
-	public static void load(){
+	public static void load()
+	{
 		all.addAll(
 			new BoolSetting("ec620.randomName","Random Names","Whether to let my mod randomly name the planet and sectors","Disabling this option will name the planet EC-620 and only the ID number for the sectors",true,true),
 			new BoolSetting("ec620.clear","Clear on sector lost","The sector you're playing will be regenerated if you lose or abandon the sector",null, true, true),
 			new BoolSetting("ec620.launch","Allow launch loadout","Every sector is a new start if you disable this option, hence increasing the difficulty tremendously",null, true, true),
 			new BoolSetting("ec620.bypass","Bypass techtree requirements","Whether to bypass Serpulo and Erekir techtree requirements", "Please do note that this might result in decreased game experience for the original 2 campaigns.",false,true),
-			new BoolSetting("ec620.schematics","Build-in defensive schematics","Whether to include schematics I made for the enemies to use as defenses",null,true,true)
+			new BoolSetting("ec620.schematics","Build-in defensive schematics","Whether to include schematics I made for the enemies to use as defenses",null,true,true),
+			new IntSetting("ec620.sectorSize","Planet Size","The size of the planet (1~4), determines how many sectors in total on the planet","Erekir is 2, Serpulo is 3",2,true),
+			new FloatSetting("ec620.radius","Map Size", "The dimension of the map, works with Planet Size","Larger planets generate smaller maps in general, a size 2 planet with Map Size of 1 will give you huge maps with sides over 600,\na size 4 planet with Map Size of 1, on the other hand, will place you right next to the enemy defenses and got you killed instantly.",.5f,true)
 		);
 		
 		all.each(SettingKey::setDefault);
@@ -144,7 +145,8 @@ public class EC620Setting
 		}
 		
 		@Override
-		public void buildTable(Table table){
+		public void buildTable(Table table)
+		{
 			table.table(Tex.pane, t -> {
 				CheckBox box;
 				t.add(box = new CheckBox(name())).padRight(6f).left();
@@ -186,7 +188,170 @@ public class EC620Setting
 			}).tooltip(desc()).growX().wrap().fillY().margin(8f).left().row();
 		}
 	}
-	
+	public static class FloatSetting extends SettingKey<Float>
+	{
+		public float def = 0;
+
+		public FloatSetting(String key){
+			super(key);
+		}
+
+		public FloatSetting(String key, float def){
+			super(key);
+			this.def = def;
+		}
+
+		public FloatSetting(String key,String name,String des,String warn, float def, boolean requireReload)
+		{
+			super(key);
+			settingInfos.put(key,new SettingInfo(name,des,warn));
+			this.def = def;
+			this.requireReload = requireReload;
+
+		}
+
+		@Override
+		public Float getValue(){
+			return Core.settings.getFloat(key);
+		}
+
+		@Override
+		public void setDefault(){
+			if(!Core.settings.has(key)) Core.settings.put(key, def);
+		}
+
+		@Override
+		public void buildTable(Table table){
+			table.table(Tex.pane, t -> {
+				TextField field;
+				t.add(field = new TextField()).left();
+				t.add(new Label(name())).left();
+				Button b = t.button(Icon.info, Styles.cleari, () -> {}).right().get();
+
+				t.row().collapser(i -> {
+					i.left();
+					i.defaults().left();
+					i.add("@info.title").row();
+					i.add(desc()).row();
+
+					if(hasWarn()){
+						i.add("@warning").color(Pal.redderDust).row();
+						i.add(warn());
+					}
+				}, true, b::isChecked).growX();
+
+				field.changed(() -> {
+					try
+					{
+						float f = Float.parseFloat(field.getText());
+						settings.put(key, f);
+						if(requireReload){
+							if(!changed){
+								Dialog.setHideAction(() -> new RunnableAction(){{
+									setRunnable(() -> {
+										Vars.ui.showConfirm("Reload required", () -> {
+											Core.app.exit();
+										});
+									});
+								}});
+							}
+							changed = true;
+						}
+					}
+					catch (Exception e)
+					{
+
+					}
+				});
+
+				//field.left();
+
+				field.update(() -> field.setText(String.valueOf(settings.getFloat(key))));
+			}).tooltip(desc()).growX().wrap().fillY().margin(8f).left().row();
+		}
+	}
+	public static class IntSetting extends SettingKey<Integer>
+	{
+		public int def = 0;
+
+		public IntSetting(String key){
+			super(key);
+		}
+
+		public IntSetting(String key, int def){
+			super(key);
+			this.def = def;
+		}
+
+		public IntSetting(String key,String name,String des,String warn, int def, boolean requireReload)
+		{
+			super(key);
+			settingInfos.put(key,new SettingInfo(name,des,warn));
+			this.def = def;
+			this.requireReload = requireReload;
+
+		}
+
+		@Override
+		public Integer getValue(){
+			return Core.settings.getInt(key);
+		}
+
+		@Override
+		public void setDefault(){
+			if(!Core.settings.has(key)) Core.settings.put(key, def);
+		}
+
+		@Override
+		public void buildTable(Table table){
+			table.table(Tex.pane, t -> {
+				TextField field;
+				t.add(field = new TextField()).left();
+				t.add(new Label(name())).left();
+				Button b = t.button(Icon.info, Styles.cleari, () -> {}).right().get();
+
+				t.row().collapser(i -> {
+					i.left();
+					i.defaults().left();
+					i.add("@info.title").row();
+					i.add(desc()).row();
+
+					if(hasWarn()){
+						i.add("@warning").color(Pal.redderDust).row();
+						i.add(warn());
+					}
+				}, true, b::isChecked).growX();
+
+				field.changed(() -> {
+					try
+					{
+						int f = Integer.parseInt(field.getText());
+						settings.put(key, f);
+						if(requireReload){
+							if(!changed){
+								Dialog.setHideAction(() -> new RunnableAction(){{
+									setRunnable(() -> {
+										Vars.ui.showConfirm("Reload required", () -> {
+											Core.app.exit();
+										});
+									});
+								}});
+							}
+							changed = true;
+						}
+					}
+					catch (Exception e)
+					{
+
+					}
+				});
+
+				//field.left();
+
+				field.update(() -> field.setText(String.valueOf(settings.getInt(key))));
+			}).tooltip(desc()).growX().wrap().fillY().margin(8f).left().row();
+		}
+	}
 	public static boolean enableDetails(){
 		return true;
 	}

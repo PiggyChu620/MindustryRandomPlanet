@@ -54,7 +54,7 @@ public class EC620Planets {
 	static Rand rand=new Rand(seed);
 	public static void load()
 	{
-		ec620 = new EC620Planet("ec620", Planets.sun, 1, 3)
+		ec620 = new EC620Planet("ec620", Planets.sun, Core.settings.getFloat("ec620.radius"), Core.settings.getInt("ec620.sectorSize"))
 		{
 			{
 				if(Core.settings.getBool("ec620.randomName"))
