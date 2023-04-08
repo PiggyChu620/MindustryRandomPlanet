@@ -81,6 +81,7 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 - Change sector available ores to according to the *Build Cost* of the item to be mined<sup>4</sup>
 - Fix the sector naming and threat generating problem
 - Fix enemy ground units getting trapped in the air, hopefully
+- Add Planet Size and Map Size to settings
 
 --- 
 
