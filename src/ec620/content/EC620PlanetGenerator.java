@@ -289,7 +289,14 @@ public class EC620PlanetGenerator extends PlanetGenerator
             sporeMoss,
 
             ));*/
-    Seq<Block> availableBlocks=content.blocks().select(b->b instanceof Floor && !(b instanceof SteamVent) && b!=air && b!=empty && b!=coreZone && b!=spawn && b!=space);
+    Seq<Block> availableBlocks=content.blocks().select(
+            b->b instanceof Floor &&
+            !(b instanceof SteamVent) &&
+            b!=air && b!=empty &&
+            b!=coreZone && b!=spawn &&
+            b!=space && !b.name.contains("panel") &&
+            !(b instanceof OreBlock) && !(b instanceof OverlayFloor) &&
+            !b.asFloor().isLiquid);
     Seq<Block> availableVents=content.blocks().select(b->b instanceof SteamVent);
     Seq<String> generatedFloors=new Seq<>();
     Block getBlock(Vec3 position)

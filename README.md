@@ -1,4 +1,4 @@
-# Mindustry Java Mod - Random Planet v0.2.7
+# Mindustry Java Mod - Random Planet v0.2.7.1
 A Java Mindustry mod.
 
 Randomly generate a planet and its sectors, including the starting sector.
@@ -82,6 +82,9 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 - Fix the sector naming and threat generating problem
 - Fix enemy ground units getting trapped in the air, hopefully
 - Add Planet Size and Map Size to settings
+- 
+*v0.2.7.1*
+- When I change the random map generation algorithm, I forgot to add the banned blocks back, sorry
 
 --- 
 
