@@ -299,6 +299,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
             !b.asFloor().isLiquid);
     Seq<Block> availableVents=content.blocks().select(b->b instanceof SteamVent);
     Seq<String> generatedFloors=new Seq<>();
+    boolean hasSand=false;
     Block getBlock(Vec3 position)
     {
         //todo refill poles with milksand, try reviving the arr usage
@@ -368,6 +369,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
         if(sector.id==0)
         {
             Seq<Block> sands=Seq.with( sand, darksand);
+            hasSand=true;
             return sands.getFrac(tnoise);
         }
         else res= availableBlocks.getFrac(tnoise);
@@ -383,6 +385,8 @@ public class EC620PlanetGenerator extends PlanetGenerator
             //return toShallowMoss.get(res, res);
             return Blocks.moss;
         }
+        if(!hasSand && res.itemDrop== Items.sand) hasSand=true;
+
         return res;
     }
     private int s=0;
@@ -803,7 +807,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
             }
 
         }
-
+        if(!hasSand && !ores.contains(oreScrap) && !ores.contains(b->b.itemDrop == Items.sand)) ores.add(oreScrap);
 
 
         FloatSeq frequencies = new FloatSeq();
