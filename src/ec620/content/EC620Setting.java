@@ -33,7 +33,7 @@ public class EC620Setting
 			new BoolSetting("ec620.bypass","Bypass techtree requirements","Whether to bypass Serpulo and Erekir techtree requirements", "Please do note that this might result in decreased game experience for the original 2 campaigns.",false,true),
 			new BoolSetting("ec620.schematics","Build-in defensive schematics","Whether to include schematics I made for the enemies to use as defenses",null,true,true),
 			new IntSetting("ec620.sectorSize","Planet Size","The size of the planet (1~4), determines how many sectors in total on the planet","Erekir is 2, Serpulo is 3",2,true),
-			new FloatSetting("ec620.radius","Map Size", "The dimension of the map, works with Planet Size","Larger planets generate smaller maps in general, a size 2 planet with Map Size of 1 will give you huge maps with sides over 600,\na size 4 planet with Map Size of 1, on the other hand, will place you right next to the enemy defenses and got you killed instantly.",.5f,true)
+			new IntSetting("ec620.mapSize","Map Size", "The approximate edge length of the map (100~1000)","The max edge length is set to 1000, but it's ABSOLUTELY not recommended to set it that high! Use it at your own risk!",300,true)
 		);
 		
 		all.each(SettingKey::setDefault);

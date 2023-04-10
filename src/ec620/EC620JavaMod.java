@@ -43,7 +43,7 @@ public class EC620JavaMod extends Mod
                     dd.titleFont= Fonts.def;
                     dd.titleFontColor=new Color(1,0,0);
                     BaseDialog dialog = new BaseDialog("Random Planet", dd);
-                    dialog.cont.add("Welcome to Random Planet v0.2.7.1",Color.green,1.2f).row();
+                    dialog.cont.add("Welcome to Random Planet v0.2.7.2",Color.green,1.2f).row();
                     dialog.cont.add("You need to turn the phone to landscape",Color.cyan).row();
                     dialog.cont.add("in order to see the setting info,",Color.cyan).row();
                     dialog.cont.add("I can not figure out how to make it wrap,",Color.cyan).row();

@@ -44,6 +44,7 @@ import org.w3c.dom.ranges.Range;
 //import java.util.random.RandomGenerator;
 
 
+import static mindustry.Vars.maps;
 import static mindustry.Vars.state;
 
 public class EC620Planets {
@@ -54,7 +55,11 @@ public class EC620Planets {
 	static Rand rand=new Rand(seed);
 	public static void load()
 	{
-		ec620 = new EC620Planet("ec620", Planets.sun, Core.settings.getFloat("ec620.radius"), Core.settings.getInt("ec620.sectorSize"))
+		int mapSize= Mathf.clamp(Core.settings.has("ec620.mapSize")?Core.settings.getInt("ec620.mapSize"):300,100,1000);
+		int sectorSize= Mathf.clamp(Core.settings.has("ec620.sectorSize")?Core.settings.getInt("ec620.sectorSize"):2,1,4);
+
+		float radius=0.000475950722976f*(float)mapSize*Mathf.pow(1.84752243049f,(float)sectorSize);
+		ec620 = new EC620Planet("ec620", Planets.sun, radius, sectorSize)
 		{
 			{
 				if(Core.settings.getBool("ec620.randomName"))
