@@ -1311,7 +1311,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
         state.rules.enemyCoreBuildRadius = 600f;
 
         //spawn air only when spawn is blocked
-        state.rules.spawns = Waves.generate(difficulty, pgRand, state.rules.attackMode, state.rules.attackMode && spawner.countGroundSpawns() == 0);
+        state.rules.spawns = EC620Waves.generate(difficulty, pgRand, state.rules.attackMode, state.rules.attackMode && spawner.countGroundSpawns() == 0);
         //state.rules.spawns = Waves.generate(difficulty, new Rand(sector.id), state.rules.attackMode, state.rules.attackMode && spawner.countGroundSpawns() == 0, naval);
 
     }

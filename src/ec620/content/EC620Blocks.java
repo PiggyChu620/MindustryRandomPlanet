@@ -96,6 +96,7 @@ public class EC620Blocks {
 		//region Unlock hidden items
 		Blocks.slagCentrifuge.requirements(Category.crafting, with(Items.carbide, 70, Items.graphite, 60, Items.silicon, 40, Items.oxide, 40));
 		Blocks.heatReactor.requirements(Category.crafting, with(Items.oxide, 70, Items.graphite, 20, Items.carbide, 10, Items.thorium, 80));
+		//content.blocks().forEach(b->b.buildVisibility=BuildVisibility.shown);
 		//endregion
 		//region Ores
 //		oreIron = new OreBlock("iron-ore")
@@ -414,8 +415,8 @@ public class EC620Blocks {
 			//endregion
 			drawer = new DrawMulti(new DrawDefault(), new DrawFlame());
 		}};
-		magneticSeparator=new GenericCrafter("magnetic-separator")	//Todo
-		{{	//Slag → Iron, Copper, Nickel, Zinc, Lead, Calcium, Magnesium, Potassium, Silicon, Ozone, Phosphorus
+		/*magneticSeparator=new GenericCrafter("magnetic-separator")	//Todo
+		{{	//Slag -> Iron, Copper, Nickel, Zinc, Lead, Calcium, Magnesium, Potassium, Silicon, Ozone, Phosphorus
 			localizedName="Magnetic Separator";
 			size=3;	//or 4
 		}};
@@ -425,7 +426,7 @@ public class EC620Blocks {
 			alwaysUnlocked = true;
 			config(Item.class,(ItemSourceBuild tile,Item item)->tile.heal());
 			configClear((ItemSourceBuild tile) -> tile.outputItem = null);
-		}};
+		}};*/
 
 		//endregion
 	}

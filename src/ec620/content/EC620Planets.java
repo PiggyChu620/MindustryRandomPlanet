@@ -152,7 +152,7 @@ public class EC620Planets {
 					}));*/
 
 					Rules.TeamRule teamRule = r.teams.get(r.defaultTeam);
-					teamRule.rtsAi = false;
+					teamRule.rtsAi = true;
 					teamRule.unitBuildSpeedMultiplier = 5f;
 					teamRule.blockDamageMultiplier = 1.25f;
 					teamRule.buildSpeedMultiplier = 3f;

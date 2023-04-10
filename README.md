@@ -1,4 +1,4 @@
-# Mindustry Java Mod - Random Planet v0.2.8
+# Mindustry Java Mod - Random Planet v0.3
 A Java Mindustry mod.
 
 Randomly generate a planet and its sectors, including the starting sector.
@@ -15,13 +15,15 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 5. Custom blocks and items that add a little spice to the game, it'll be constantly added.
 6. Unlock hidden items<sup>3</sup> and enable all environments for all units
 7. Load all activated ores for ore placements.
+8. Combine both Serpulo and Erekir units into wave generations.
 
+<!--
 ## Future Plans
 
 1. Make some new resources that utilize existing resources from both planets, such as copper-beryllium alloy, I'll try to restrain it to real-life alloys/intermetallic for the simplest reason that fictional stuff is literally limitless, I could just make up an alloy and call it "A" and be done with it, that's not how I do things. I'll also restrain from making new mineable resources as they'll inevitably occupy the space and prevent you from mining the resource "you really need".
 2. Make some units and defenses that use the new resources, hopefully they could act as a "bridge" between the 2 highly unbalanced planets.
 3. Make a custom wave generator that combines both Serpulo and Erekir units, yeah, you'll die!
-
+-->
 ## Known Issues (Not bugs, it's just something that "make no sense")
 
 1. Liquids other than slag appear in the volcanic environment while they obviously will be vaporized or set on fire (in the case of oil).
@@ -91,6 +93,9 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 
 *v0.2.8*
 - Make every map contains either sand tiles or scrap since Sand is needed in literally every production
+
+*v0.3*
+- Wave generations that combine units of both planets is finally done! You think you are OP because you got access to both technologies!? Well, think again!
 
 --- 
 
