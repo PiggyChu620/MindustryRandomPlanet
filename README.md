@@ -7,7 +7,7 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 
 ## Features
 
-1. 272 randomly generated sectors, no presets at all.
+1. Randomly generated sectors, no presets at all.
 2. Merge both Serpulo and Erekir techtrees and environments.
 3. Load *all* defensive schematics<sup>1</sup> for enemy defenses. 
 4. 95 custom defensive schematics for the enemies to use as defenses (2 cores, 43 turrets, 50 factories)
