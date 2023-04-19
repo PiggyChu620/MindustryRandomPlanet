@@ -7,6 +7,7 @@ import arc.scene.ui.*;
 import arc.scene.ui.layout.Table;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
+import arc.util.Log;
 import mindustry.Vars;
 import mindustry.gen.Icon;
 import mindustry.gen.Tex;
@@ -24,6 +25,7 @@ public class EC620Setting
 	public static Seq<SettingKey<?>> all = new Seq<>();
 
 	private static ObjectMap<String,SettingInfo> settingInfos=new ObjectMap<>();
+	private static boolean reset=false;
 	public static void load()
 	{
 		all.addAll(
@@ -52,9 +54,17 @@ public class EC620Setting
 		table.pane(t -> {
 			all.each(s -> s.buildTable(t));
 		}).margin(60).get().setForceScroll(false, true);
+		table.row();
+		table.row();
+		table.button("Reset",()->{
+			settings.put("ec620.dontShowAgain",false);
+			reset=true;
+			all.each(s->s.setDefault());
+			reset=false;
+			}).size(100f, 50f);
 	}
 	
-	public static void showDialog(){
+	/*public static void showDialog(){
 		new BaseDialog("Random Planet Settings"){{
 			buildTable(cont);
 			addCloseButton();
@@ -71,7 +81,7 @@ public class EC620Setting
 				}
 			}
 		}.show();
-	}
+	}*/
 	private static class SettingInfo
 	{
 		public String name;
@@ -141,7 +151,7 @@ public class EC620Setting
 		
 		@Override
 		public void setDefault(){
-			if(!Core.settings.has(key))Core.settings.put(key, def);
+			if(!Core.settings.has(key) || reset) Core.settings.put(key, def);
 		}
 		
 		@Override
@@ -181,7 +191,6 @@ public class EC620Setting
 						changed = true;
 					}
 				});
-				
 				box.left();
 				
 				box.update(() -> box.setChecked(settings.getBool(key)));
@@ -217,7 +226,7 @@ public class EC620Setting
 
 		@Override
 		public void setDefault(){
-			if(!Core.settings.has(key)) Core.settings.put(key, def);
+			if(!Core.settings.has(key) || reset) Core.settings.put(key, def);
 		}
 
 		@Override
@@ -298,12 +307,14 @@ public class EC620Setting
 		}
 
 		@Override
-		public void setDefault(){
-			if(!Core.settings.has(key)) Core.settings.put(key, def);
+		public void setDefault()
+		{
+			if(!Core.settings.has(key) || reset) Core.settings.put(key, def);
 		}
 
 		@Override
-		public void buildTable(Table table){
+		public void buildTable(Table table)
+		{
 			table.table(Tex.pane, t -> {
 				TextField field;
 				t.add(field = new TextField()).left();

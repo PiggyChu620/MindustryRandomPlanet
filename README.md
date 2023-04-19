@@ -1,4 +1,4 @@
-# Mindustry Java Mod - Random Planet v0.3
+# Mindustry Java Mod - Random Planet v0.3.1
 A Java Mindustry mod.
 
 Randomly generate a planet and its sectors, including the starting sector.
@@ -11,8 +11,7 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 2. Merge both Serpulo and Erekir techtrees and environments.
 3. Load *all* defensive schematics<sup>1</sup> for enemy defenses. 
 4. 95 custom defensive schematics for the enemies to use as defenses (2 cores, 43 turrets, 50 factories)
-4. Custom settings under *Settings* menu.
-5. Custom blocks and items that add a little spice to the game, it'll be constantly added.
+5. Custom settings under *Settings* menu.
 6. Unlock hidden items<sup>3</sup> and enable all environments for all units
 7. Load all activated ores for ore placements.
 8. Combine both Serpulo and Erekir units into wave generations.
@@ -96,6 +95,9 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 
 *v0.3*
 - Wave generations that combine units of both planets is finally done! You think you are OP because you got access to both technologies!? Well, think again!
+
+*v0.3.1*
+- Move custom items to [Realistic Productions](https://github.com/PiggyChu620/MindustryRealisticProductions)
 
 --- 
 

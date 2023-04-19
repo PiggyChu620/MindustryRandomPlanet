@@ -8,14 +8,22 @@ package ec620.content;
 import arc.Core;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
+import arc.util.Log;
 import mindustry.Vars;
 import mindustry.content.*;
 import mindustry.ctype.UnlockableContent;
 import mindustry.entities.Units;
 import mindustry.game.Objectives;
+import mindustry.type.Item;
 import mindustry.type.ItemStack;
 import mindustry.type.Liquid;
 import mindustry.type.UnitType;
+import mindustry.world.Block;
+
+import javax.xml.crypto.dsig.keyinfo.KeyValue;
+import java.util.Objects;
+
+import static mindustry.Vars.*;
 
 import static mindustry.content.Blocks.*;
 import static mindustry.content.Blocks.swarmer;
@@ -25,17 +33,15 @@ import static mindustry.content.TechTree.*;
 import static mindustry.content.UnitTypes.*;
 import static mindustry.content.UnitTypes.minke;
 
-public class EC620TechTree {
-    static TechTree.TechNode context = null;
-
-    public EC620TechTree() {
-    }
+public class EC620TechTree extends TechTree
+{
+    static TechNode root = null;
+    static TechNode context=null;
 
     public static void load()
     {
-        TechNode root;
+        //TechNode root;
         boolean bypass=Core.settings.getBool("ec620.bypass");
-
         /*if(Core.settings.getBool("ec620.bypass"))
         {
             //No requirements
@@ -1063,7 +1069,9 @@ public class EC620TechTree {
                             node(blastMixer, () -> {
 
                             });
-                            node(EC620Blocks.pyratiteSmelter,()->{});
+                            /*node(EC620Blocks.pyratiteSmelter,()->{
+
+                            });*/
                         });
 
                         node(siliconSmelter, () -> {
@@ -1182,10 +1190,10 @@ public class EC620TechTree {
                                 });
                             });
                         });
-                        node(EC620Blocks.cryogenicFreezer,()->
+                        /*node(EC620Blocks.cryogenicFreezer,()->
                         {
                             node(EC620Blocks.hyperThawer,()->{});
-                        });
+                        });*/
                     });
 
 
@@ -1645,7 +1653,6 @@ public class EC620TechTree {
                             });
 
                             nodeProduce(Items.sporePod, () -> {
-
                             });
 
                             nodeProduce(Liquids.oil, () -> {
@@ -1677,14 +1684,15 @@ public class EC620TechTree {
 
                         });
                     });
-                    nodeProduce(EC620Items.ice,()->
+                    /*nodeProduce(EC620Items.ice,()->
                     {
                         nodeProduce(EC620Items.cryocube,()->{});
                         nodeProduce(EC620Items.wax,()->{});
                         nodeProduce(EC620Items.sludge,()->{});
                         nodeProduce(EC620Items.arkyciteIce,()->{});
                         nodeProduce(EC620Items.neoplasmIce,()->{});
-                    });
+
+                    });*/
                 });
                 //endregion
 
@@ -1704,6 +1712,100 @@ public class EC620TechTree {
                 });
             });
         });*/
+    }
+    /*public static void postProcess()
+    {
+        Seq<Item> rp620Items=content.items().select(i-> i.minfo.mod!=null && Objects.equals(i.minfo.mod.name, "rp620"));
+        Seq<Liquid> rp620Liquids=content.liquids().select(l-> l.minfo.mod!=null && Objects.equals(l.minfo.mod.name, "rp620"));
+        Seq<Block> rp620Blocks=content.blocks().select(b-> b.minfo.mod!=null && Objects.equals(b.minfo.mod.name, "rp620"));
+        ObjectMap<String,Item> rp620ItemMap=new ObjectMap<>();
+        ObjectMap<String,Liquid> rp620LiquidMap=new ObjectMap<>();
+        ObjectMap<String,Block> rp620BlockMap=new ObjectMap<>();
+
+        for(Item item:rp620Items)
+        {
+            rp620ItemMap.put(item.name,item);
+        }
+        for(Liquid l:rp620Liquids)
+        {
+            rp620LiquidMap.put(l.name,l);
+        }
+        for(Block b:rp620Blocks)
+        {
+            rp620BlockMap.put(b.name,b);
+        }
+        if(rp620BlockMap.size>0)
+        {
+            mergeNode(EC620Blocks.pyratiteSmelter,()->
+            {
+                node(rp620BlockMap.get("rp620-chemical-plant"),()->{});
+            });
+
+        }
+        if(rp620LiquidMap.size>0)
+        {
+            mergeNode(Liquids.nitrogen,()->{
+                nodeProduce(rp620LiquidMap.get("rp620-nitrogen-oxide"),()->{
+                    nodeProduce(rp620LiquidMap.get("rp620-nitrogen-dioxide"),()->{
+                        nodeProduce(rp620LiquidMap.get("rp620-nitric-acid"),()->{
+
+                        });
+                    });
+                    nodeProduce(rp620LiquidMap.get("rp620-ammonia"),()->{
+                        nodeProduce(rp620LiquidMap.get("rp620-hydrazine"),()->{
+
+                        });
+                    });
+                    nodeProduce(rp620LiquidMap.get("rp620-glycerin"),()->{
+                        nodeProduce(rp620LiquidMap.get("rp620-nitroglycerin"),()->{
+
+                        });
+                    });
+                });
+            });
+        }
+        if(rp620ItemMap.size>0)
+        {
+            mergeNode(EC620Items.ice,()->{
+                nodeProduce(rp620ItemMap.get("rp620-sulfur"),()->{
+                    nodeProduce(rp620ItemMap.get("rp620-salt"),()->{
+                        nodeProduce(rp620ItemMap.get("rp620-lye"),()->{
+                            nodeProduce(rp620ItemMap.get("rp620-soap"),()->{
+
+                            });
+                        });
+                    });
+                    nodeProduce(rp620ItemMap.get("rp620-cellulose-fiber"),()->{
+                        nodeProduce(rp620ItemMap.get("rp620-dynamite"),()->{
+                            nodeProduce(rp620ItemMap.get("rp620-onc"),()->{
+
+                            });
+                            nodeProduce(rp620ItemMap.get("rp620-azidoazide-azide"),()->{
+
+                                nodeProduce(rp620ItemMap.get("rp620-oac"),()->{
+
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+
+        }
+
+        root.children.each(c -> c.planet =EC620Planets.ec620);
+        //root.each(t-> Log.info(t.depth+": "+t.content.name));
+    }*/
+    private static void mergeNode(UnlockableContent parent, Runnable children)
+    {
+        for(TechNode tn : all.select(t -> t.content == parent))
+        {
+            context=tn;
+            Log.info(context.content.name+" found");
+            //Log.info(context().content.name);
+            children.run();
+        }
+
     }
     /*private static void mergeNode(UnlockableContent parent, Runnable children)
     {
@@ -1740,4 +1842,53 @@ public class EC620TechTree {
         node(block, () -> {
         });
     }*/
+    public static TechNode nodeRoot(String name, UnlockableContent content, Runnable children){
+        return nodeRoot(name, content, false, children);
+    }
+
+    public static TechNode nodeRoot(String name, UnlockableContent content, boolean requireUnlock, Runnable children){
+        var root = node(content, content.researchRequirements(), children);
+        root.name = name;
+        root.requiresUnlock = requireUnlock;
+        roots.add(root);
+        return root;
+    }
+
+    public static TechNode node(UnlockableContent content, Runnable children){
+        return node(content, content.researchRequirements(), children);
+    }
+
+    public static TechNode node(UnlockableContent content, ItemStack[] requirements, Runnable children){
+        return node(content, requirements, null, children);
+    }
+
+    public static TechNode node(UnlockableContent content, ItemStack[] requirements, Seq<Objectives.Objective> objectives, Runnable children){
+        TechNode node = new TechNode(context, content, requirements);
+        if(objectives != null){
+            node.objectives.addAll(objectives);
+        }
+
+        TechNode prev = context;
+        context = node;
+        children.run();
+        context = prev;
+
+        return node;
+    }
+
+    public static TechNode node(UnlockableContent content, Seq<Objectives.Objective> objectives, Runnable children){
+        return node(content, content.researchRequirements(), objectives, children);
+    }
+
+    public static TechNode node(UnlockableContent block){
+        return node(block, () -> {});
+    }
+
+    public static TechNode nodeProduce(UnlockableContent content, Seq<Objectives.Objective> objectives, Runnable children){
+        return node(content, content.researchRequirements(), objectives.add(new Objectives.Produce(content)), children);
+    }
+
+    public static TechNode nodeProduce(UnlockableContent content, Runnable children){
+        return nodeProduce(content, new Seq<>(), children);
+    }
 }
