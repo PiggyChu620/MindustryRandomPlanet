@@ -1,4 +1,4 @@
-# Mindustry Java Mod - Random Planet v0.3.1
+# Mindustry Java Mod - Random Planet v0.4
 A Java Mindustry mod.
 
 Randomly generate a planet and its sectors, including the starting sector.
@@ -98,6 +98,9 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 
 *v0.3.1*
 - Move custom items to [Realistic Productions](https://github.com/PiggyChu620/MindustryRealisticProductions)
+
+*v0.4*
+- Fix: Liquids are replaced by air
 
 --- 
 

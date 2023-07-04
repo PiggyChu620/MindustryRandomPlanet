@@ -205,9 +205,9 @@ public class EC620PlanetGenerator extends PlanetGenerator
         {
             tile.block = tile.floor.asFloor().wall;
 
-            if (Ridged.noise3d(1, position.x, position.y, position.z, 2, 22) > 0.31) {
-                tile.block = Blocks.air;
-            }
+//            if (Ridged.noise3d(1, position.x, position.y, position.z, 2, 22) > 0.31) {
+//                tile.block = Blocks.air;
+//            }
         }
         catch(Exception e)
         {
@@ -471,7 +471,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
                             if(Structs.inBounds(wx, wy, width, height) && Mathf.within(x, y, rad))
                             {
                                 Tile other = tiles.getn(wx, wy);
-                                other.setBlock(Blocks.air);
+                                //other.setBlock(Blocks.air);
                                 if(Mathf.within(x, y, rad - 1) && !other.floor().isLiquid)
                                 {
                                     Floor floor = other.floor();
@@ -713,7 +713,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
             for(Vec2 v:lh.pos)
             {
 
-                tiles.getn((int) v.x, (int) v.y).setBlock(lh.block);
+                tiles.getn((int) v.x, (int) v.y).setFloor(lh.block.asFloor());
             }
         }
         //shoreline setup
@@ -1043,13 +1043,13 @@ public class EC620PlanetGenerator extends PlanetGenerator
 
 
         //remove invalid ores
-        for(Tile tile : tiles)
-        {
-            if(tile.overlay().needsSurface && !tile.floor().hasSurface())
-            {
-                tile.setOverlay(Blocks.air);
-            }
-        }
+//        for(Tile tile : tiles)
+//        {
+//            if(tile.overlay().needsSurface && !tile.floor().hasSurface())
+//            {
+//                tile.setOverlay(Blocks.air);
+//            }
+//        }
 
         Schematics.placeLaunchLoadout(spawn.x, spawn.y);
 
