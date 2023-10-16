@@ -1,4 +1,4 @@
-# Mindustry Java Mod - Random Planet v0.4
+# Mindustry Java Mod - Random Planet v0.4.1
 A Java Mindustry mod.
 
 Randomly generate a planet and its sectors, including the starting sector.
@@ -102,6 +102,11 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 *v0.4*
 - Fix: Liquids are replaced by air
 
+*v0.4.1*
+- Change the chance for Titanium to 100%
+- Rework ore placement algorithm so the map won't literally cover by ores, this unfortunately, slow down the section generation time.
+- Add an Expand Room option in the Settings, please read the setting description.
+
 --- 
 
 **1.** [Schematic Instruction](SchematicInstruction.md)
@@ -110,4 +115,4 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 
 **3.** Caution: There is a reason why Anuke hide these blocks/items, most likely it's still WIP and not fully tested and might not be balanced, use it at your own risk
 
-**4.** The formula for calculating the chance of appearance for each ore is **Max(0.01,(2-*Build Cost*)/2)** (except Copper and Lead, which is always 100%). For example, the *Build Cost* of Thorium is 110%, so the chance for Thorium to appear in a new sector is (2-1.1)/2 = 0.45 (45%), please visit the *Items* section on [Mindustry Wiki](https://mindustrygame.github.io/wiki/) for reference
+**4.** The formula for calculating the chance of appearance for each ore is **Max(0.01,(2-*Build Cost*)/2)** (except Copper, Lead and Titanium, which is always 100%). For example, the *Build Cost* of Thorium is 110%, so the chance for Thorium to appear in a new sector is (2-1.1)/2 = 0.45 (45%), please visit the *Items* section on [Mindustry Wiki](https://mindustrygame.github.io/wiki/) for reference

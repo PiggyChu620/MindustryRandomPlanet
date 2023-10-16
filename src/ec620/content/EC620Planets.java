@@ -49,16 +49,16 @@ import static mindustry.Vars.state;
 
 public class EC620Planets {
 	public static Planet ec620;
-
+	public static int MapSize;
 	public static String planetName;
 	static final int seed = (int)(System.currentTimeMillis()%Integer.MAX_VALUE);
 	static Rand rand=new Rand(seed);
 	public static void load()
 	{
-		int mapSize= Mathf.clamp(Core.settings.has("ec620.mapSize")?Core.settings.getInt("ec620.mapSize"):300,100,1000);
+		MapSize= Mathf.clamp(Core.settings.has("ec620.mapSize")?Core.settings.getInt("ec620.mapSize"):300,100,1000);
 		int sectorSize= Mathf.clamp(Core.settings.has("ec620.sectorSize")?Core.settings.getInt("ec620.sectorSize"):2,1,4);
 
-		float radius=0.000475950722976f*(float)mapSize*Mathf.pow(1.84752243049f,(float)sectorSize);
+		float radius=0.000475950722976f*(float)MapSize*Mathf.pow(1.84752243049f,(float)sectorSize);
 		ec620 = new EC620Planet("ec620", Planets.sun, radius, sectorSize)
 		{
 			{

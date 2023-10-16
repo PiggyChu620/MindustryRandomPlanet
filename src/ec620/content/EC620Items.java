@@ -23,7 +23,6 @@ public class EC620Items {
 	{
 		//region Unlock hidden items
 		Items.fissileMatter.hidden=false;
-		Items.dormantCyst.hidden=false;
 		Liquids.gallium.hidden=false;
 		//endregion
 		iron = new Item("iron",Color.valueOf("A19D94"))

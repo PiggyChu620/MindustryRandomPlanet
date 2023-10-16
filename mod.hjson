@@ -1,5 +1,5 @@
 #the mod name as displayed in-game
-displayName: "Random Planet v0.4"
+displayName: "Random Planet v0.4.1"
 
 repo: "PiggyChu620/MindustryRandomPlanet"
 
@@ -16,7 +16,7 @@ main: "ec620.EC620JavaMod"
 description: "Randomly generate a planet and its sectors.\nIt's a mixtech mod, I myself don't like the idea of \"Oh, you can only use these things here, and you can only use those things there, bruh, bruh, bruh!\", so I make one myself, if you don't like mixtech and think it's \"unbalanced\" and \"boring\", then please go away, much appreciated!"
 
 #the mod version
-version: 0.4
+version: 0.4.1
 
 #the minimum game build required to run this mod
 minGameVersion: 140

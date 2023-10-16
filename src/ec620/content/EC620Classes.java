@@ -19,13 +19,18 @@ public class EC620Classes
     public static class LakeHandler
     {
         public Seq<Vec2> pos;
+        public Vec2 center;
+        public float radius;
         public Block block;
 
         public LakeHandler(Seq<Vec2> v,Block b)
         {
             pos=v.copy();
+            center=new Vec2(pos.sumf(a->a.x)/ pos.size,pos.sumf(a->a.y)/pos.size);
+            radius=pos.max(p->Mathf.dst2(p.x,p.y,center.x,center.y)).len()+5;
             block=b;
         }
+
     }
     public static class LakeGroup
     {
