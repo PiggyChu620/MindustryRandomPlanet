@@ -427,7 +427,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
 
             void connect(Room to)
             {
-                if(!connected.add(to) || to == this) return;
+                if(!connected.add(to) || !to.connected.add(this) || to == this) return;
 
                 Vec2 midpoint = Tmp.v1.set(to.x, to.y).add(x, y).scl(0.5f);
                 pgRand.nextFloat();
@@ -500,6 +500,62 @@ public class EC620PlanetGenerator extends PlanetGenerator
                 joinLiquid(x, y, mx, my);
                 joinLiquid(mx, my, to.x, to.y);
             }
+
+            void setFloor(Floor floor)
+            {
+                float a=pgRand.random(-2f,2f);
+                float b=pgRand.random(-5f,5f);
+                float c=pgRand.random(-2f,2f);
+                float d=pgRand.random(-5f,5f);
+                float p=pgRand.random(1f,10f);
+
+                for(int ix=-radius-5;ix<radius+5;ix++)
+                {
+                    for(int iy=-radius-5;iy<radius+5;iy++)
+                    {
+                        int wx=x+ix;
+                        int wy=y+iy;
+                        float theta=Mathf.atan2(ix,iy);
+                        float r=p*Math.abs(a*Mathf.sin(b*theta)+c*Mathf.cos(d*theta))+2.5f;
+                        float avg=(p*(a+c)+5f)/2f;
+
+                        r=(r+avg)/2f;
+
+                        if(Structs.inBounds(wx, wy, width, height) && Mathf.pow(ix,2)+Mathf.pow(iy,2)<=r*r) //Mathf.within(x, y,wx,wy, radius+pgRand.random(-5,5)))
+                        {
+                            tiles.getn(wx, wy).setFloor(floor);
+                        }
+                    }
+                }
+            }
+
+            void setOre(Block block)
+            {
+                float a=pgRand.random(-2f,2f);
+                float b=pgRand.random(-5f,5f);
+                float c=pgRand.random(-2f,2f);
+                float d=pgRand.random(-5f,5f);
+                float p=pgRand.random(1f,10f);
+
+                for(int ix=-radius-5;ix<radius+5;ix++)
+                {
+                    for(int iy=-radius-5;iy<radius+5;iy++)
+                    {
+                        int wx=x+ix;
+                        int wy=y+iy;
+                        float theta=Mathf.atan2(ix,iy);
+                        float r=p*Math.abs(a*Mathf.sin(b*theta)+c*Mathf.cos(d*theta))+2.5f;
+                        float avg=(p*(a+c)+5f)/2f;
+
+                        r=(r+avg)/2f;
+                        if(Structs.inBounds(wx, wy, width, height) && Mathf.pow(ix,2)+Mathf.pow(iy,2)<=r*r) //Mathf.within(x, y,wx,wy, radius+pgRand.random(-5,5)))
+                        {
+                            tiles.getn(wx, wy).setOverlay(block);
+
+                        }
+                    }
+                }
+            }
         }
 
         cells(4);
@@ -507,18 +563,87 @@ public class EC620PlanetGenerator extends PlanetGenerator
 
         float constraint = 1.3f;
         float radius = width / 2f / Mathf.sqrt3;
-        int rooms = pgRand.random(2, 5);
+        int mapSize=Core.settings.getInt("ec620.mapSize");
+        int rooms = pgRand.random((int)Mathf.sqrt(mapSize),mapSize/10);
         Seq<Room> roomseq = new Seq<>();
+        Seq<Room> oreRooms=new Seq<>();
+        Seq<Room> waterRooms=new Seq<>();
+        Seq<Room> slagRooms=new Seq<>();
+        Seq<Room> oilRooms=new Seq<>();
+        Seq<Room> cryoRooms=new Seq<>();
+        Seq<Room> arkyciteRooms=new Seq<>();
+        Seq<Block> ores = Seq.with(oreCopper,oreLead,oreTitanium);
+        Seq<Block> availableOres= content.blocks().select(b->b instanceof OreBlock && !ores.contains(b) && !b.itemDrop.hidden);
+        int l= availableOres.size;
 
-
-        for(int i = 0; i < rooms; i++)
+        if(sector.id==0)
         {
-            Tmp.v1.trns(pgRand.random(360f), pgRand.random(radius / constraint));
-            float rx = (width/2f + Tmp.v1.x);
-            float ry = (height/2f + Tmp.v1.y);
-            float maxrad = radius - Tmp.v1.len();
-            float rrad = Math.min(pgRand.random(9f, maxrad / 2f), 30f);
-            roomseq.add(new Room((int)rx, (int)ry, (int)rrad));
+            ores.add(oreCoal);
+            ores.add(oreThorium);
+            ores.add(oreBeryllium);
+            ores.add(oreTungsten);
+        }
+        else
+        {
+            for(int i=0;i<l;i++)
+            {
+                Block b=availableOres.get(i);
+                if(pgRand.chance(0.01d) || pgRand.nextDouble()*2>=b.itemDrop.cost) ores.add(b);
+//                if(Simplex.noise3d(seed, 2, 0.5, scl, sector.tile.v.x+i, sector.tile.v.y, sector.tile.v.z)*nmag + poles > (i+1)*addscl/(l+1))
+//                {
+//                    ores.add(availableOres.get(i));
+//                }
+            }
+            while(ores.size<5)
+            {
+                Block b=availableOres.getFrac(pgRand.nextFloat());
+
+                if(pgRand.chance(0.01d) || pgRand.nextDouble()*2>=b.itemDrop.cost) ores.add(b);
+            }
+
+        }
+        if(!hasSand && !ores.contains(oreScrap) && !ores.contains(b->b.itemDrop == Items.sand)) ores.add(oreScrap);
+
+        for(int i = 0; i < rooms/2; i++)
+        {
+//            Tmp.v1.trns(pgRand.random(360f), pgRand.random(radius / constraint));
+//            float rx = (width/2f + Tmp.v1.x);
+//            float ry = (height/2f + Tmp.v1.y);
+//            float maxrad = radius - Tmp.v1.len();
+//            float rrad = Math.min(pgRand.random(9f, maxrad / 2f), 30f);
+            Room r=new Room(pgRand.random(10,width-10), pgRand.random(10,height-10), pgRand.random(2,(int)Mathf.sqrt(mapSize)));
+            roomseq.add(r);
+
+        }
+        for(int i=0;i<rooms/2;i++)
+        {
+            Room r=new Room(pgRand.random(10,width-10), pgRand.random(10,height-10), pgRand.random(2,(int)Mathf.sqrt(mapSize)));
+            switch(pgRand.random(5))
+            {
+                case 0:
+                    waterRooms.add(r);
+                    break;
+                case 1:
+                    slagRooms.add(r);
+                    break;
+                case 2:
+                    oilRooms.add(r);
+                    break;
+                case 3:
+                    cryoRooms.add(r);
+                    break;
+                case 4:
+                    arkyciteRooms.add(r);
+                    break;
+            }
+            roomseq.add(r);
+        }
+        for(int i=0;i<rooms*2;i++)
+        {
+            Room r=new Room(pgRand.random(10,width-10), pgRand.random(10,height-10), pgRand.random(2,(int)Mathf.sqrt(mapSize)));
+
+            oreRooms.add(r);
+            roomseq.add(r);
         }
 
         //check positions on the map to place the player spawn. this needs to be in the corner of the map
@@ -573,16 +698,26 @@ public class EC620PlanetGenerator extends PlanetGenerator
             pgErase(room.x, room.y, room.radius);
         }
 
-        //randomly connect rooms together
-        int connections = pgRand.random(Math.max(rooms - 1, 1), rooms + 3);
-        for(int i = 0; i < connections; i++)
-        {
-            roomseq.random(pgRand).connect(roomseq.random(pgRand));
-        }
+//        //randomly connect rooms together
+//        int connections = pgRand.random(Math.max(rooms - 1, 1), rooms + 3);
+//        for(int i = 0; i < connections; i++)
+//        {
+//            roomseq.random(pgRand).connect(roomseq.random(pgRand));
+//        }
+//
+//        for(Room room : roomseq)
+//        {
+//            spawn.connect(room);
+//        }
+        Room tRoom=spawn;
+        Seq<Room> tSeq=roomseq.copy();
 
-        for(Room room : roomseq)
+        while(tSeq.size>0)
         {
-            spawn.connect(room);
+            Room t=tSeq.getFrac(pgRand.nextFloat());
+            tSeq.remove(t);
+            tRoom.connect(t);
+            tRoom=t;
         }
 
         Room fspawn = spawn;
@@ -616,7 +751,27 @@ public class EC620PlanetGenerator extends PlanetGenerator
         }
 
         distort(10f, 6f);
-
+        for(Room r:waterRooms)
+        {
+            r.setFloor(Blocks.water.asFloor());
+        }
+        for(Room r:slagRooms)
+        {
+            r.setFloor(slag.asFloor());
+        }
+        for(Room r:oilRooms)
+        {
+            r.setFloor(tar.asFloor());
+        }
+        for(Room r:cryoRooms)
+        {
+            r.setFloor(cryofluid.asFloor());
+        }
+        for(Room r:arkyciteRooms)
+        {
+            r.setFloor(arkyciteFloor.asFloor());
+        }
+/*
         boolean isWater=pgRand.chance(.5f) || sector.id==0;
         Seq<LakeHandler> lakeSeq=new Seq<>();
         Seq<Vec2> lakeVec=new Seq<>();
@@ -718,7 +873,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
 
                 tiles.getn((int) v.x, (int) v.y).setFloor(lh.block.asFloor());
             }
-        }
+        }*/
         //shoreline setup
         pass((x, y) ->
         {
@@ -775,111 +930,93 @@ public class EC620PlanetGenerator extends PlanetGenerator
             });
         }*/
 
-        Seq<Block> ores = Seq.with(oreCopper,oreLead,oreTitanium);
-        Seq<Block> availableOres= content.blocks().select(b->b instanceof OreBlock && !ores.contains(b) && !b.itemDrop.hidden);
+
         //Seq<Block> availableOres=Seq.with(oreCoal,oreTitanium,oreBeryllium,oreTungsten,oreThorium,oreCrystalThorium,oreScrap,wallOreBeryllium, wallOreTungsten);
         float poles = Math.abs(sector.tile.v.y);
         float nmag = 0.5f;
         float scl = 1f;
         float addscl = 1.3f;
-        int l= availableOres.size;
         Seq<Vec2> oreVec=new Seq<>();
         Seq<LakeHandler> oreSeq=new Seq<>();
 
-        if(sector.id==0)
-        {
-            ores.add(oreCoal);
-        }
-        else
-        {
-            for(int i=0;i<l;i++)
-            {
-                Block b=availableOres.get(i);
-                if(pgRand.chance(0.01d) || pgRand.nextDouble()*2>=b.itemDrop.cost) ores.add(b);
-//                if(Simplex.noise3d(seed, 2, 0.5, scl, sector.tile.v.x+i, sector.tile.v.y, sector.tile.v.z)*nmag + poles > (i+1)*addscl/(l+1))
-//                {
-//                    ores.add(availableOres.get(i));
-//                }
-            }
-            while(ores.size<5)
-            {
-                Block b=availableOres.getFrac(pgRand.nextFloat());
 
-                if(pgRand.chance(0.01d) || pgRand.nextDouble()*2>=b.itemDrop.cost) ores.add(b);
-            }
-
-        }
-        if(!hasSand && !ores.contains(oreScrap) && !ores.contains(b->b.itemDrop == Items.sand)) ores.add(oreScrap);
         Seq<Block> fores=ores.sort(x->x.itemDrop.cost);
 //        FloatSeq frequencies = new FloatSeq();
 //        for(int i = 0; i < ores.size; i++){
 //            frequencies.add(pgRand.random(-0.1f, 0.01f) - i * 0.01f + poles * 0.04f);
 //            //Log.info(frequencies.get(i));
 //        }
-
-        pass((x, y) -> {
-            if(!floor.asFloor().hasSurface()) return;
-
-            int offsetX = x - 4, offsetY = y + 23;
-            //for(int i = 0;i<fores.size; i++)
-            //{
-                //Block entry = fores.get(i);
-                //float freq = frequencies.get(i);
-                float freq = 10 * sector.rect.radius;
-                if(Math.abs(0.5f - noise(offsetX, offsetY, 2, 0.7, 40*freq)) > 0.22f &&
-                        Math.abs(0.5f - noise(offsetX, offsetY, 1, 1, 30*freq)) > 0.37f-freq/2)
-                {
-                    //ore = entry;
-                    oreVec.add(new Vec2(x,y));
-                    //break;
-                }
-            //}
-
-            if(ore == Blocks.oreScrap && pgRand.chance(0.33)){
-                floor = Blocks.metalFloorDamaged; //todo
-            }
-        });
-
-        while(oreVec.size>0)
+//
+//        pass((x, y) -> {
+//            if(!floor.asFloor().hasSurface()) return;
+//
+//            int offsetX = x - 4, offsetY = y + 23;
+//            //for(int i = 0;i<fores.size; i++)
+//            //{
+//                //Block entry = fores.get(i);
+//                //float freq = frequencies.get(i);
+//                float freq = 10 * sector.rect.radius;
+//                if(Math.abs(0.5f - noise(offsetX, offsetY, 2, 0.7, 40*freq)) > 0.22f &&
+//                        Math.abs(0.5f - noise(offsetX, offsetY, 1, 1, 30*freq)) > 0.37f-freq/2)
+//                {
+//                    //ore = entry;
+//                    oreVec.add(new Vec2(x,y));
+//                    //break;
+//                }
+//            //}
+//
+//            if(ore == Blocks.oreScrap && pgRand.chance(0.33)){
+//                floor = Blocks.metalFloorDamaged; //todo
+//            }
+//        });
+//
+//        while(oreVec.size>0)
+//        {
+//            Vec2 vec=oreVec.get(0);
+//            Seq<Vec2> seq=oreVec.select(a->Mathf.within(a.x,a.y,vec.x,vec.y,10));
+//            oreVec.removeAll(seq);
+//            for(int i=0;i<seq.size;i++)
+//            {
+//                Vec2 v=seq.get(i);
+//                Seq<Vec2> s=oreVec.select(a->Mathf.within(a.x,a.y,v.x,v.y,10));
+//                oreVec.removeAll(s);
+//                seq.addAll(s);
+//            }
+//            float f=2.5f*pgRand.nextFloat()*Mathf.dst(vec.x,vec.y,spawn.x,spawn.y)/EC620Planets.MapSize;
+//            Block b;
+//
+//            if(f>1) b = fores.getFrac(pgRand.nextFloat());
+//            else b=fores.getFrac(f);
+//            oreSeq.add(new LakeHandler(seq,b));
+//        }
+//        Seq<LakeHandler> tSeq=oreSeq.sort(p->Mathf.dst2(p.center.x,p.center.y,fspawn.x,fspawn.y));
+//        for(int i=0;i<tSeq.size;i++)
+//        {
+//            LakeHandler lh=tSeq.get(i);
+//            if(Core.settings.getBool("ec620.room")) newRooms.add(new Room((int)lh.center.x,(int)lh.center.y,(int)lh.radius));
+//            int m=fores.size*i/tSeq.size;
+//            m=Mathf.clamp(m+pgRand.random(-2,2),0,fores.size-1);
+//            for(Vec2 v:lh.pos)
+//            {
+//                tiles.getn((int)v.x,(int)v.y).setOverlay(fores.get(m));
+//            }
+//        }
+        Seq<Room> fRooms=oreRooms.sort(r->Mathf.dst2(r.x,r.y,fspawn.x,fspawn.y));
+        for(int i=0;i<fRooms.size;i++)
         {
-            Vec2 vec=oreVec.get(0);
-            Seq<Vec2> seq=oreVec.select(a->Mathf.within(a.x,a.y,vec.x,vec.y,10));
-            oreVec.removeAll(seq);
-            for(int i=0;i<seq.size;i++)
-            {
-                Vec2 v=seq.get(i);
-                Seq<Vec2> s=oreVec.select(a->Mathf.within(a.x,a.y,v.x,v.y,10));
-                oreVec.removeAll(s);
-                seq.addAll(s);
-            }
-            float f=2.5f*pgRand.nextFloat()*Mathf.dst(vec.x,vec.y,spawn.x,spawn.y)/EC620Planets.MapSize;
-            Block b;
-
-            if(f>1) b = fores.getFrac(pgRand.nextFloat());
-            else b=fores.getFrac(f);
-            oreSeq.add(new LakeHandler(seq,b));
-        }
-        Seq<LakeHandler> tSeq=oreSeq.sort(p->Mathf.dst2(p.center.x,p.center.y,fspawn.x,fspawn.y));
-        for(int i=0;i<tSeq.size;i++)
-        {
-            LakeHandler lh=tSeq.get(i);
-            if(Core.settings.getBool("ec620.room")) newRooms.add(new Room((int)lh.center.x,(int)lh.center.y,(int)lh.radius));
-            int m=fores.size*i/tSeq.size;
+            int m=fores.size*i/fRooms.size;
             m=Mathf.clamp(m+pgRand.random(-2,2),0,fores.size-1);
-            for(Vec2 v:lh.pos)
-            {
-                tiles.getn((int)v.x,(int)v.y).setOverlay(fores.get(m));
-            }
+            fRooms.get(i).setOre(fores.get(m));
         }
-        if(Core.settings.getBool("ec620.room"))
-        {
-            for(int i=0;i<newRooms.size;i++)
-            {
-                Room r=newRooms.get(i);
-                Room s=newRooms.getFrac(pgRand.nextFloat());
-                if(r!=s) r.connect(s);
-            }
-        }
+//        if(Core.settings.getBool("ec620.room"))
+//        {
+//            for(int i=0;i<newRooms.size;i++)
+//            {
+//                Room r=newRooms.get(i);
+//                Room s=newRooms.getFrac(pgRand.nextFloat());
+//                r.connect(s);
+//            }
+//        }
 
 //        for(LakeHandler lh:oreSeq)
 //        {
