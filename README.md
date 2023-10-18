@@ -107,10 +107,13 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 - Rework ore placement algorithm so the map won't literally cover by ores, this unfortunately, slow down the section generation time.
 - Add an Expand Room option in the Settings, please read the setting description.
 
-
 *v0.4.2*
 - Add Thorium, Beryllium, Tungsten to the starting sector, this is a mix-tech mod, it makes no sense that the starting sector is NOT mix-tech!
 - Remove Expand Room option in the Settings, I found a better way to place the ores and the liquids, there is no need for this option anymore.
+
+*v0.4.3*
+- Change the ore and liquid placement back to the old algorithm, I don't like the new one, not only did it take too long, the ore/liquid shapes are ugly too.
+- Change every sector to have either Titanium or Beryllium, after all, Erekir sectors don't have Titanium and yet it could be played just fine.
 
 --- 
 

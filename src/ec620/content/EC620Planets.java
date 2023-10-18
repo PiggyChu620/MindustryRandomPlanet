@@ -55,7 +55,7 @@ public class EC620Planets {
 	static Rand rand=new Rand(seed);
 	public static void load()
 	{
-		MapSize= Mathf.clamp(Core.settings.has("ec620.mapSize")?Core.settings.getInt("ec620.mapSize"):300,100,1000);
+		MapSize= Mathf.clamp(Core.settings.has("ec620.mapSize")?Core.settings.getInt("ec620.mapSize"):300,300,1000);
 		int sectorSize= Mathf.clamp(Core.settings.has("ec620.sectorSize")?Core.settings.getInt("ec620.sectorSize"):2,1,4);
 
 		float radius=0.000475950722976f*(float)MapSize*Mathf.pow(1.84752243049f,(float)sectorSize);

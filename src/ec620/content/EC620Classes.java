@@ -82,4 +82,31 @@ public class EC620Classes
             threat=t;
         }
     }
+    public static class DVec
+    {
+        public double x,y;
+        public DVec()
+        {
+
+        }
+        public DVec(double x,double y)
+        {
+            this.x=x;
+            this.y=y;
+        }
+        public void Add(DVec v)
+        {
+            x+=v.x;
+            y+=v.y;
+        }
+        public void Add(double s,DVec v)
+        {
+            x+=s*v.x;
+            y+=s*v.y;
+        }
+        public double DistanceFrom(DVec v)
+        {
+            return Math.sqrt(Math.pow(x-v.x,2)+Math.pow(y-v.y,2));
+        }
+    }
 }

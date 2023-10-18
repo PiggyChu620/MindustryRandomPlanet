@@ -35,7 +35,8 @@ public class EC620Setting
 			new BoolSetting("ec620.bypass","Bypass techtree requirements","Whether to bypass Serpulo and Erekir techtree requirements", "Please do note that this might result in decreased game experience for the original 2 campaigns.",false,true),
 			new BoolSetting("ec620.schematics","Build-in defensive schematics","Whether to include schematics I made for the enemies to use as defenses",null,true,true),
 			new IntSetting("ec620.sectorSize","Planet Size","The size of the planet (1~4), determines how many sectors in total on the planet","Erekir is 2, Serpulo is 3",2,true),
-			new IntSetting("ec620.mapSize","Map Size", "The approximate edge length of the map (100~1000)","The max edge length is set to 1000, but it's ABSOLUTELY not recommended to set it that high! Use it at your own risk!",300,true)
+			new IntSetting("ec620.mapSize","Map Size", "The approximate edge length of the map (500~1000)","The max edge length is set to 1000, but it's ABSOLUTELY not recommended to set it that high! Use it at your own risk!",300,true)
+			//new IntSetting("ec620.fdl","Force-Directed Layout algorithm iteration","How many FDL iterations does the generator uses to arrange the rooms, set it to 0 to disable it.","Please do note that the higher the iteration is, the more time it's going to take to generate the sector",2,true)
 		);
 		
 		all.each(SettingKey::setDefault);
