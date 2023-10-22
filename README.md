@@ -1,4 +1,4 @@
-# Mindustry Java Mod - Random Planet v0.4.3
+# Mindustry Java Mod - Random Planet v0.4.4
 A Java Mindustry mod.
 
 Randomly generate a planet and its sectors, including the starting sector.
@@ -114,6 +114,10 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 *v0.4.3*
 - Change the ore and liquid placement back to the old algorithm, I don't like the new one, not only did it take too long, the ore/liquid shapes are ugly too.
 - Change every sector to have either Titanium or Beryllium, after all, Erekir sectors don't have Titanium and yet it could be played just fine.
+
+*v0.4.4*
+- Increase the size of the pathways, so it doesn't look like "tunnels/canals".
+- Increase the range of ore selection.
 
 --- 
 

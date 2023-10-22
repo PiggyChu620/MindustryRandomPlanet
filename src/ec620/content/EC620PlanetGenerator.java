@@ -422,13 +422,13 @@ public class EC620PlanetGenerator extends PlanetGenerator
             void join(int x1, int y1, int x2, int y2)
             {
                 float nscl = pgRand.random(100f, 140f) * 6f;
-                int stroke = pgRand.random(3, 9);
-                brush(pathfind(x1, y1, x2, y2, tile -> (tile.solid() ? 50f : 0f) + noise(tile.x, tile.y, 2, 0.4f, 1f / nscl) * mapSize/10, Astar.manhattan), stroke);
+                int stroke = (int)pgRand.random(5, Mathf.sqrt(mapSize));
+                brush(pathfind(x1, y1, x2, y2, tile -> (tile.solid() ? 50f : 0f) + noise(tile.x, tile.y, 2, 0.4f, 1f / nscl) * mapSize/2, Astar.manhattan), stroke);
             }
 
-            void connect(Room to)
+            boolean connect(Room to)
             {
-                if(!connected.add(to) || !to.connected.add(this) || to == this) return;
+                if(!connected.add(to) || !to.connected.add(this) || to == this) return false;
 
                 Vec2 midpoint = Tmp.v1.set(to.x, to.y).add(x, y).scl(0.5f);
                 pgRand.nextFloat();
@@ -449,6 +449,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
 
                 join(x, y, mx, my);
                 join(mx, my, to.x, to.y);
+                return true;
             }
 
             void joinLiquid(int x1, int y1, int x2, int y2)
@@ -618,7 +619,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
 //            float ry = (height/2f + Tmp.v1.y);
 //            float maxrad = radius - Tmp.v1.len();
 //            float rrad = Math.min(pgRand.random(9f, maxrad / 2f), 30f);
-            Room r=new Room(pgRand.random(10,width-10), pgRand.random(10,height-10), pgRand.random(2,(int)Mathf.sqrt(mapSize)));
+            Room r=new Room(pgRand.random(10,width-10), pgRand.random(10,height-10), pgRand.random((int)Mathf.sqrt(mapSize),mapSize/10));
             roomseq.add(r);
 
         }
@@ -725,21 +726,27 @@ public class EC620PlanetGenerator extends PlanetGenerator
 //        }
 //        else
 //        {
-            for(Room room : roomseq)
+        Room tr;
+        for(Room room : roomseq)
+        {
+            pgErase(room.x, room.y, room.radius);
+            do
             {
-                pgErase(room.x, room.y, room.radius);
+                tr=roomseq.getFrac(pgRand.nextFloat());
             }
+            while(!room.connect(tr));
+        }
 
-            Room tRoom=spawn;
-            Seq<Room> tSeq=roomseq.copy();
-
-            while(tSeq.size>0)
-            {
-                Room t=tSeq.getFrac(pgRand.nextFloat());
-                tSeq.remove(t);
-                tRoom.connect(t);
-                tRoom=t;
-            }
+//            Room tRoom=spawn;
+//            Seq<Room> tSeq=roomseq.copy();
+//
+//            while(tSeq.size>0)
+//            {
+//                Room t=tSeq.getFrac(pgRand.nextFloat());
+//                tSeq.remove(t);
+//                tRoom.connect(t);
+//                tRoom=t;
+//            }
         //}
 
         //clear radius around each room
@@ -1033,7 +1040,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
             LakeHandler lh=oSeq.get(i);
             //if(Core.settings.getBool("ec620.room")) newRooms.add(new Room((int)lh.center.x,(int)lh.center.y,(int)lh.radius));
             int m=fores.size*i/oSeq.size;
-            m=Mathf.clamp(m+pgRand.random(-2,2),0,fores.size-1);
+            m=Mathf.clamp(m+pgRand.random(-3,3),0,fores.size-1);
             for(Vec2 v:lh.pos)
             {
                 Tile t=tiles.getn((int)v.x,(int)v.y);
