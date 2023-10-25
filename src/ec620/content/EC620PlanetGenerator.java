@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.Map;
 
 import static ec620.EC620JavaMod.*;
 import static mindustry.Vars.*;
@@ -386,7 +387,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
             //return toShallowMoss.get(res, res);
             return Blocks.moss;
         }
-        if(!hasSand && res.itemDrop== Items.sand) hasSand=true;
+        if(!hasSand && res.itemDrop == Items.sand) hasSand=true;
 
         return res;
     }
@@ -596,7 +597,9 @@ public class EC620PlanetGenerator extends PlanetGenerator
             for(int i=0;i<l;i++)
             {
                 Block b=availableOres.get(i);
-                if(pgRand.chance(0.01d) || pgRand.nextDouble()*2>=b.itemDrop.cost) ores.add(b);
+                String name="ma620."+b.name;
+                if(Core.settings.has(name)) if(pgRand.chance(Core.settings.getFloat(name)/100f)) ores.add(b);
+                else if(pgRand.nextDouble()*2>=b.itemDrop.cost) ores.add(b);
 //                if(Simplex.noise3d(seed, 2, 0.5, scl, sector.tile.v.x+i, sector.tile.v.y, sector.tile.v.z)*nmag + poles > (i+1)*addscl/(l+1))
 //                {
 //                    ores.add(availableOres.get(i));
@@ -605,8 +608,10 @@ public class EC620PlanetGenerator extends PlanetGenerator
             while(ores.size<5)
             {
                 Block b=availableOres.getFrac(pgRand.nextFloat());
+                String n="ma620."+b.name;
 
-                if(pgRand.chance(0.01d) || pgRand.nextDouble()*2>=b.itemDrop.cost) ores.add(b);
+                if(Core.settings.has(n)) if(pgRand.chance(Core.settings.getFloat(n)/100f)) ores.add(b);
+                else if(pgRand.nextDouble()*2>=b.itemDrop.cost) ores.add(b);
             }
 
         }
@@ -817,14 +822,14 @@ public class EC620PlanetGenerator extends PlanetGenerator
 //            r.setFloor(arkyciteFloor.asFloor());
 //        }
 
-        boolean isWater=pgRand.chance(.5f) || sector.id==0;
+        //boolean isWater=pgRand.chance(.5f) || sector.id==0;
         Seq<LakeHandler> lakeSeq=new Seq<>();
         Seq<Vec2> lakeVec=new Seq<>();
         Seq<Room> newRooms=new Seq<>();
         //rivers
         pass((x, y) ->
         {
-            //if(block.solid) return;
+            if(block.solid) return;
 
             Vec3 v = sector.rect.project(x, y);
 
@@ -841,19 +846,19 @@ public class EC620PlanetGenerator extends PlanetGenerator
                 //do not place rivers on ice, they're frozen
                 //ignore pre-existing liquids
 
-                if(!(floor == Blocks.ice || floor == Blocks.iceSnow || floor == Blocks.snow || floor.asFloor().isLiquid))
+                if(!floor.asFloor().isLiquid)
                 {
-                    if(isWater)
-                    {
-                        floor = spore ?
-                                (deep ? Blocks.taintedWater : Blocks.darksandTaintedWater) :
-                                (deep ? Blocks.water :
-                                        (floor == Blocks.sand || floor == Blocks.salt ? Blocks.sandWater : Blocks.darksandWater));
-                    }
-                    else
-                    {
+//                    if(isWater)
+//                    {
+//                        floor = spore ?
+//                                (deep ? Blocks.taintedWater : Blocks.darksandTaintedWater) :
+//                                (deep ? Blocks.water :
+//                                        (floor == Blocks.sand || floor == Blocks.salt ? Blocks.sandWater : Blocks.darksandWater));
+//                    }
+//                    else
+//                    {
                         lakeVec.add(new Vec2(x,y));
-                    }
+                    //}
 //                    {
 //                        if(lakeSeq.size==0)
 //                        {
@@ -884,9 +889,40 @@ public class EC620PlanetGenerator extends PlanetGenerator
                 }
             }
         });
-        Seq<Block> availableLiquids=Seq.with(Blocks.water, cryofluid, slag, tar, arkyciteFloor);
-        int n=pgRand.nextInt(5)+1;
+        Seq<Block> availableLiquids=content.blocks().select(x->x instanceof Floor && x.asFloor().liquidDrop!=null);
+//        ObjectMap<Liquid,Seq<Block>> availableLiquids=new ObjectMap<>();
+//        Seq<Liquid> keys=new Seq<>();
+//        for(Liquid li: content.liquids().select(x->!x.hidden))
+//        {
+//            Seq<Block> bs=content.blocks().select(x->x instanceof Floor && x.asFloor().liquidDrop==li);
+//            if(bs.size>0)
+//            {
+//                keys.add(li);
+//                availableLiquids.put(li, bs);
+//            }
+//        }
+        int n=pgRand.nextInt(availableLiquids.size)+1;
+
         Seq<Block> liquids=new Seq<>();
+        while(liquids.size<n)
+        {
+            Block li = availableLiquids.getFrac(pgRand.nextFloat());
+            String name="ma620."+li.name;
+            if(Core.settings.has(name))
+            {
+                if(pgRand.chance(Core.settings.getFloat(name)/100f))
+                {
+                    liquids.add(li);
+                    availableLiquids.remove(li);
+                }
+            }
+            else
+            {
+                liquids.add(li);
+                availableLiquids.remove(li);
+            }
+        }
+        if(!liquids.contains(x->x.asFloor().liquidDrop==Liquids.water) && (sector.id==0 || pgRand.chance(.5f))) liquids.add(Blocks.water);
         while(lakeVec.size>0)
         {
             Vec2 vec=lakeVec.get(0);
@@ -899,18 +935,13 @@ public class EC620PlanetGenerator extends PlanetGenerator
                 lakeVec.removeAll(s);
                 seq.addAll(s);
             }
-            Block b;
-            if(liquids.size<n)
-            {
-                b=availableLiquids.getFrac(pgRand.nextFloat());
-                liquids.addUnique(b);
-            }
-            else b=liquids.getFrac(pgRand.nextFloat());
-            LakeHandler lh=new LakeHandler(seq,b);
+
+            //Liquid li = liquids.getFrac(pgRand.nextFloat());
+            //LakeHandler lh=new LakeHandler(seq,availableLiquids.get(li).getFrac(pgRand.nextFloat()));
+            LakeHandler lh=new LakeHandler(seq,liquids.getFrac(pgRand.nextFloat()));
             lakeSeq.add(lh);
             //newRooms.add(new Room((int)lh.center.x,(int)lh.center.y,(int)lh.radius));
         }
-
         for(LakeHandler lh:lakeSeq)
         {
             for(Vec2 v:lh.pos)
