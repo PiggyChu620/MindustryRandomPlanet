@@ -81,6 +81,12 @@ public class EC620Classes
             name=n;
             threat=t;
         }
+
+        @Override
+        public String toString()
+        {
+            return name+": "+threat;
+        }
     }
     public static class DVec
     {

@@ -145,7 +145,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
         if(Core.settings.getBool("ec620.randomName"))
         {
             //if(Objects.equals(sector.name(), sector.id + ""))
-            sector.setName(EC620NameGenerator.generate(sector.id));
+            sector.setName(EC620NameGenerator.generate(sector.id,false));
         }
         else sector.setName(sector.id+"");
         PlanetGrid.Ptile tile = sector.tile;

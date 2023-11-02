@@ -29,7 +29,7 @@ public class EC620Setting
 	public static void load()
 	{
 		all.addAll(
-			new BoolSetting("ec620.randomName","Random Names","Whether to let my mod randomly name the planet and sectors","Disabling this option will name the planet EC-620 and only the ID number for the sectors",true,true),
+			new RandomNameSetting("ec620.randomName","Random Names","Whether to let my mod randomly name the planet and sectors","Disabling this option will name the planet EC-620 and only the ID number for the sectors",true,true),
 			new BoolSetting("ec620.clear","Clear on sector lost","The sector you're playing will be regenerated if you lose or abandon the sector",null, true, true),
 			new BoolSetting("ec620.launch","Allow launch loadout","Every sector is a new start if you disable this option, hence increasing the difficulty tremendously",null, true, true),
 			new BoolSetting("ec620.bypass","Bypass techtree requirements","Whether to bypass Serpulo and Erekir techtree requirements", "Please do note that this might result in decreased game experience for the original 2 campaigns.",false,true),
@@ -196,6 +196,42 @@ public class EC620Setting
 				
 				box.update(() -> box.setChecked(settings.getBool(key)));
 			}).tooltip(desc()).growX().wrap().fillY().margin(8f).left().row();
+		}
+	}
+	public static class RandomNameSetting extends BoolSetting
+	{
+
+		public RandomNameSetting(String key, String name, String des, String warn, boolean def, boolean requireReload)
+		{
+			super(key, name, des, warn, def, requireReload);
+		}
+		@Override
+		public void setDefault()
+		{
+			if(!Core.settings.has(key) || reset)
+			{
+				Core.settings.put(key, def);
+				int n=0;
+				switch(settings.getInt("ec620.sectorSize"))
+				{
+					case 1:
+						n=32;
+						break;
+					case 2:
+						n=92;
+						break;
+					case 3:
+						n=272;
+						break;
+					case 4:
+						n=812;
+						break;
+				}
+				for(int i=-1;i<n;i++)
+				{
+					EC620NameGenerator.generate(i,true);
+				}
+			}
 		}
 	}
 	public static class FloatSetting extends SettingKey<Float>

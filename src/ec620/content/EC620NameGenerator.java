@@ -57,9 +57,14 @@ public class EC620NameGenerator
 
         file = mod.root.child("NameMarkovChain.json");
         nameMap = json.readValue(ObjectMap.class, CharMap.class, new JsonReader().parse(file));
-        if(Core.settings.has("ec620.sectorInfos")) EC620Vars.SectorInfos= Core.settings.getJson("ec620.sectorInfos", ObjectMap.class,EC620Classes.SectorData.class,ObjectMap::new);
+//        if(Core.settings.has("ec620.sectorInfos"))
+//        {
+//            EC620Vars.SectorInfos= Core.settings.getJson("ec620.sectorInfos", ObjectMap.class,EC620Classes.SectorData.class,ObjectMap::new);
+////            Log.info("Sector Infos Loaded");
+////            Log.info(EC620Vars.SectorInfos.toString("\n"));
+//        }
     }
-    public static String generate(int index)
+    public static String generate(int index,boolean reset)
     {
         //Gson gson = new Gson();
 
@@ -81,24 +86,25 @@ public class EC620NameGenerator
 
         //Log.info(String.join("",name));
         //}
-        if(index<0)
+        String sectorName="ec620.sectorNames."+index;
+        if(reset || !Core.settings.has(sectorName))
         {
-            return generateName();
-        }
-        else
-        {
-            if(EC620Vars.SectorInfos!=null && EC620Vars.SectorInfos.containsKey(index) && !Objects.equals(EC620Vars.SectorInfos.get(index).name, "")) return EC620Vars.SectorInfos.get(index).name;
+            String name;
+            if(index<0)
+            {
+                name = generateName();
+                Core.settings.put(sectorName,name);
+                return name;
+            }
             else
             {
-                String name=generateName()+"-"+index;
-                if(EC620Vars.SectorInfos==null) EC620Vars.SectorInfos=new ObjectMap<>();
-                if(EC620Vars.SectorInfos.containsKey(index) && EC620Vars.SectorInfos.get(index).name==null) EC620Vars.SectorInfos.get(index).name=name;
-                else EC620Vars.SectorInfos.put(index,new EC620Classes.SectorData(name,-1));
-                Core.settings.putJson("ec620.sectorInfos", EC620Classes.SectorData.class,EC620Vars.SectorInfos);
-
+                name = generateName()+"-"+index;
+                Core.settings.put(sectorName,name);
+                Core.settings.put("ec620.sectorThreats."+index,index>0?rand.nextFloat():0);
                 return name;
             }
         }
+        else return Core.settings.getString(sectorName);
     }
     private static String generateName()
     {

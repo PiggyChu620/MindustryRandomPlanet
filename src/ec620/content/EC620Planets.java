@@ -64,12 +64,7 @@ public class EC620Planets {
 			{
 				if(Core.settings.getBool("ec620.randomName"))
 				{
-					planetName=Core.settings.getString("ec620.planetName");
-					if(planetName==null)
-					{
-						planetName= EC620NameGenerator.generate(-1);
-						Core.settings.put("ec620.planetName",planetName);
-					}
+					planetName= EC620NameGenerator.generate(-1,false);
 				}
 				else planetName="EC-620";
 
@@ -197,15 +192,16 @@ public class EC620Planets {
 					if(sector.hasEnemyBase()){
 						sum += 0.88f;
 					}
-					boolean infoNull=EC620Vars.SectorInfos==null;
+					/*boolean infoNull=EC620Vars.SectorInfos==null;
 					boolean infoCK=EC620Vars.SectorInfos.containsKey(sector.id);
 					boolean infoThreat=EC620Vars.SectorInfos.get(sector.id).threat>=0;
-
++
 					//if(sector.id==0) sector.threat=.9f;
 					if(sector.id==0) sector.threat=0;
 					else if(!infoNull && infoCK && infoThreat)
 					{
 						sector.threat=EC620Vars.SectorInfos.get(sector.id).threat;
+						//Log.info("0");
 					}
 					else
 					{
@@ -213,9 +209,11 @@ public class EC620Planets {
 						if(infoNull) EC620Vars.SectorInfos=new ObjectMap<>();
 						if(!infoCK) EC620Vars.SectorInfos.put(sector.id,new EC620Classes.SectorData(null,sector.threat));
 						else EC620Vars.SectorInfos.get(sector.id).threat=sector.threat;
-						Core.settings.putJson("ec620.threats", EC620Classes.SectorData.class,EC620Vars.SectorInfos);
-					}
-
+						Core.settings.putJson("ec620.sectorInfos", EC620Classes.SectorData.class,EC620Vars.SectorInfos);
+						//Log.info("1");
+					}*/
+					sector.threat=Core.settings.getFloat("ec620.sectorThreats."+sector.id);
+					//Log.info("Sector "+sector.id+" Threat: "+sector.threat);
 				}
 			}
 		};
