@@ -1,4 +1,4 @@
-# Mindustry Java Mod - Random Planet v0.4.5.1
+# Mindustry Java Mod - Random Planet v0.4.5.2
 A Java Mindustry mod.
 
 Randomly generate a planet and its sectors, including the starting sector.
