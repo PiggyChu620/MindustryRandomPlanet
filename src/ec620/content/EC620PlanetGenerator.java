@@ -1016,7 +1016,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
         Seq<LakeHandler> oreSeq=new Seq<>();
 
 
-        Seq<Block> fores=ores.sort(x->x.itemDrop.cost);
+        Seq<Block> fores=ores.sort(x->x.itemDrop.hardness);
 //        FloatSeq frequencies = new FloatSeq();
 //        for(int i = 0; i < ores.size; i++){
 //            frequencies.add(pgRand.random(-0.1f, 0.01f) - i * 0.01f + poles * 0.04f);
@@ -1071,7 +1071,9 @@ public class EC620PlanetGenerator extends PlanetGenerator
             LakeHandler lh=oSeq.get(i);
             //if(Core.settings.getBool("ec620.room")) newRooms.add(new Room((int)lh.center.x,(int)lh.center.y,(int)lh.radius));
             int m=fores.size*i/oSeq.size;
-            m=Mathf.clamp(m+pgRand.random(-3,3),0,fores.size-1);
+            m+=pgRand.random(-3,3);
+            if(m<0) m=pgRand.random(0,2);
+            else if(m>= fores.size) m= pgRand.random(0,fores.size-1);
             for(Vec2 v:lh.pos)
             {
                 Tile t=tiles.getn((int)v.x,(int)v.y);
