@@ -581,6 +581,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
         Seq<Block> ores = Seq.with(oreCopper,oreLead);
         Seq<Block> availableOres= content.blocks().select(b->b instanceof OreBlock && !ores.contains(b) && !b.itemDrop.hidden);
         int l= availableOres.size;
+        if(l<5) l=5;
 
         if(sector.id==0)
         {
@@ -605,14 +606,14 @@ public class EC620PlanetGenerator extends PlanetGenerator
 //                    ores.add(availableOres.get(i));
 //                }
             }
-            while(ores.size<5)
-            {
-                Block b=availableOres.getFrac(pgRand.nextFloat());
-                String n="ma620."+b.name;
-
-                if(Core.settings.has(n)) if(pgRand.chance(Core.settings.getFloat(n)/100f)) ores.add(b);
-                else if(pgRand.nextDouble()*2>=b.itemDrop.cost) ores.add(b);
-            }
+//            while(ores.size<5)
+//            {
+//                Block b=availableOres.getFrac(pgRand.nextFloat());
+//                String n="ma620."+b.name;
+//
+//                if(Core.settings.has(n)) if(pgRand.chance(Core.settings.getFloat(n)/100f)) ores.add(b);
+//                else if(pgRand.nextDouble()*2>=b.itemDrop.cost) ores.add(b);
+//            }
 
         }
         if(!hasSand && !ores.contains(oreScrap) && !ores.contains(b->b.itemDrop == Items.sand)) ores.add(oreScrap);
@@ -1072,7 +1073,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
             //if(Core.settings.getBool("ec620.room")) newRooms.add(new Room((int)lh.center.x,(int)lh.center.y,(int)lh.radius));
             int m=fores.size*i/oSeq.size;
             m+=pgRand.random(-3,3);
-            if(m<0) m=pgRand.random(0,2);
+            if(m<0) m=pgRand.random(0,1);
             else if(m>= fores.size) m= pgRand.random(0,fores.size-1);
             for(Vec2 v:lh.pos)
             {
