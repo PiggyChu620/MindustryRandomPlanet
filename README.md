@@ -134,8 +134,14 @@ I combined both technologies from Serpulo and Erekir as best as I could, includi
 
 **2.** [Contact Me](http://discord.com/users/788334433391607848)
 
-**3.** Caution: There is a reason why Anuke hide these blocks/items, most likely it's still WIP and not fully tested and might not be balanced, use it at your own risk
+**3.** [Support Me](https://www.buymeacoffee.com/piggychu620)
 
+<<<<<<< HEAD
 **4.** The formula for calculating the chance of appearance for each ore is **Max(0.01,(2-*Build Cost*)/2)** (except Copper, Lead and Titanium, which is always 100%). For example, the *Build Cost* of Thorium is 110%, so the chance for Thorium to appear in a new sector is (2-1.1)/2 = 0.45 (45%), please visit the *Items* section on [Mindustry Wiki](https://mindustrygame.github.io/wiki/) for reference
 
 **5.** [Support Me](https://www.buymeacoffee.com/piggychu620)
+=======
+**4.** Caution: There is a reason why Anuke hide these blocks/items, most likely it's still WIP and not fully tested and might not be balanced, use it at your own risk
+
+**5.** The formula for calculating the chance of appearance for each ore is **Max(0.01,(2-*Build Cost*)/2)** (except Copper, Lead and Titanium, which is always 100%). For example, the *Build Cost* of Thorium is 110%, so the chance for Thorium to appear in a new sector is (2-1.1)/2 = 0.45 (45%), please visit the *Items* section on [Mindustry Wiki](https://mindustrygame.github.io/wiki/) for reference
+>>>>>>> 1c3816895e21b451f41165683d577ff749937eaf
