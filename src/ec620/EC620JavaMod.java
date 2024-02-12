@@ -47,7 +47,7 @@ public class EC620JavaMod extends Mod
                         dd.titleFont= Fonts.def;
                         dd.titleFontColor=new Color(1,0,0);
                         BaseDialog dialog = new BaseDialog("Random Planet", dd);
-                        dialog.cont.add("Welcome to Random Planet v0.4.6",Color.green,1.2f).center().row();
+                        dialog.cont.add("Welcome to Random Planet v0.4.7",Color.green,1.2f).center().row();
                         dialog.cont.add("Please see Settings for customization",Color.cyan).center().row();
                         //dialog.cont.add("in order to see the setting info,",Color.cyan).row();
                         //dialog.cont.add("I can not figure out how to make it wrap,",Color.cyan).row();

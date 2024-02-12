@@ -581,7 +581,6 @@ public class EC620PlanetGenerator extends PlanetGenerator
         Seq<Block> ores = Seq.with(oreCopper,oreLead);
         Seq<Block> availableOres= content.blocks().select(b->b instanceof OreBlock && !ores.contains(b) && !b.itemDrop.hidden);
         int l= availableOres.size;
-        if(l<5) l=5;
 
         if(sector.id==0)
         {
@@ -599,12 +598,24 @@ public class EC620PlanetGenerator extends PlanetGenerator
             {
                 Block b=availableOres.get(i);
                 String name="ma620."+b.name;
-                if(Core.settings.has(name)) if(pgRand.chance(Core.settings.getFloat(name)/100f)) ores.add(b);
-                else if(pgRand.nextDouble()*2>=b.itemDrop.cost) ores.add(b);
+                if(Core.settings.has(name))
+                {
+                    if(!ores.contains(b) && pgRand.chance(Core.settings.getFloat(name)/100f)) ores.add(b);
+                }
+                else if(!ores.contains(b) && pgRand.nextDouble()*2>=b.itemDrop.cost) ores.add(b);
 //                if(Simplex.noise3d(seed, 2, 0.5, scl, sector.tile.v.x+i, sector.tile.v.y, sector.tile.v.z)*nmag + poles > (i+1)*addscl/(l+1))
 //                {
 //                    ores.add(availableOres.get(i));
 //                }
+            }
+            if(ores.size<5)
+            {
+                for(int i=0;i<l;i++)
+                {
+                    Block b=availableOres.get(i);
+                    if(!ores.contains(b)) ores.add(b);
+                    if(ores.size>=5) break;
+                }
             }
 //            while(ores.size<5)
 //            {
