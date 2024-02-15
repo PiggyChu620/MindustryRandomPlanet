@@ -173,7 +173,10 @@ public class EC620Classes
                         {
                             if (Vars.state.isCampaign() && other.planet == Vars.state.rules.sector.planet)
                             {
-                                other.planet.sectors.select(s->s!=null && s.info.hasCore).forEach(s->s.info.destination=other);
+                                for(Sector sector:other.planet.sectors.select(s->s!=null && s.info.hasCore))
+                                {
+                                    sector.info.destination=other;
+                                }
                                 //Vars.state.rules.sector.info.destination = other;
                             }
 
