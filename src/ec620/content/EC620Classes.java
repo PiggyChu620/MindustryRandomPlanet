@@ -142,31 +142,27 @@ public class EC620Classes
         }
     }
 
-    public static class LauchPadController extends Block
+    public static class LauchPadController extends LaunchPad
     {
         public LauchPadController(String name)
         {
             super(name);
             size=7;
             localizedName="Launch Pad Controller";
+            itemCapacity=2147483647;
+            launchTime=60;
 			requirements(Category.crafting, with(Items.copper, 100));
-            solid = true;
-            configurable = true;
-            flags = EnumSet.of(new BlockFlag[]{BlockFlag.launchPad});
         }
-        public class LaunchPadControllerBuild extends Building
+        public class LaunchPadControllerBuild extends LaunchPadBuild
         {
             public float launchCounter;
 
             public LaunchPadControllerBuild()
             {
-
+                super();
             }
 
-            public Graphics.Cursor getCursor() {
-                return (Graphics.Cursor)(Vars.state.isCampaign() && !Vars.net.client() ? super.getCursor() : Graphics.Cursor.SystemCursor.arrow);
-            }
-
+            @Override
             public void buildConfiguration(Table table)
             {
                 if (Vars.state.isCampaign() && !Vars.net.client())
@@ -191,6 +187,29 @@ public class EC620Classes
                 }
             }
 
+            @Override
+            public void updateTile() {
+                if (Vars.state.isCampaign()) {
+                    if ((this.launchCounter += this.edelta()) >= launchTime)
+                    {
+                        this.consume();
+                        launchSound.at(this.x, this.y);
+                        LaunchPayload entity = LaunchPayload.create();
+                        this.items.each((item, amount) -> {
+                            entity.stacks.add(new ItemStack(item, amount));
+                        });
+                        entity.set(this);
+                        entity.lifetime(120.0F);
+                        entity.team(this.team);
+                        entity.add();
+                        Fx.launchPod.at(this);
+                        this.items.clear();
+                        Effect.shake(3.0F, 3.0F, this);
+                        this.launchCounter = 0.0F;
+                    }
+
+                }
+            }
         }
     }
 }
