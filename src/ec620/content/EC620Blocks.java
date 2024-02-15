@@ -96,6 +96,8 @@ public class EC620Blocks {
 		//region Unlock hidden items
 		Blocks.slagCentrifuge.requirements(Category.crafting, with(Items.carbide, 70, Items.graphite, 60, Items.silicon, 40, Items.oxide, 40));
 		Blocks.heatReactor.requirements(Category.crafting, with(Items.oxide, 70, Items.graphite, 20, Items.carbide, 10, Items.thorium, 80));
+		Blocks.itemSource.requirements(Category.distribution, ItemStack.with(new Object[0]));
+		Blocks.liquidSource.requirements(Category.liquid, ItemStack.with(new Object[0]));
 		//content.blocks().forEach(b->b.buildVisibility=BuildVisibility.shown);
 		//endregion
 		//region Ores

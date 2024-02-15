@@ -149,9 +149,9 @@ public class EC620Classes
             super(name);
             size=7;
             localizedName="Launch Pad Controller";
-            itemCapacity=2147483647;
+            itemCapacity=10000;
             launchTime=60;
-			requirements(Category.crafting, with(Items.copper, 100));
+			requirements(Category.effect, with(Items.copper, 100));
         }
         public class LaunchPadControllerBuild extends LaunchPadBuild
         {
@@ -173,7 +173,7 @@ public class EC620Classes
                         {
                             if (Vars.state.isCampaign() && other.planet == Vars.state.rules.sector.planet)
                             {
-                                EC620Planets.ec620.sectors.select(s->s.info.wasCaptured).forEach(s->s.info.destination=other);
+                                EC620Planets.ec620.sectors.select(s->s.info.hasCore).forEach(s->s.info.destination=other);
                                 //Vars.state.rules.sector.info.destination = other;
                             }
 
@@ -187,7 +187,7 @@ public class EC620Classes
                 }
             }
 
-            @Override
+            /*@Override
             public void updateTile() {
                 if (Vars.state.isCampaign()) {
                     if ((this.launchCounter += this.edelta()) >= launchTime)
@@ -209,7 +209,7 @@ public class EC620Classes
                     }
 
                 }
-            }
+            }*/
         }
     }
 }
