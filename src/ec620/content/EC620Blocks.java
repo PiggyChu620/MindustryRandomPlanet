@@ -89,7 +89,7 @@ public class EC620Blocks {
 	//Craftings
 
 	//Sandbox
-	public static Block sourceIn,sourceOut;
+	public static Block sourceIn,sourceOut,launchPadController;
 
 	public static void load()
 	{
@@ -129,6 +129,7 @@ public class EC620Blocks {
 //		//endregion
 //
 //		//region Factories
+		launchPadController=new EC620Classes.LauchPadController("launch-pad-controller");
 //		duraluminFactory = new GenericCrafter("duralumin-factory"){{
 //			requirements(Category.crafting, with(Items.copper, 5, EC620Items.aluminum,95));
 //			craftEffect = Fx.smeltsmoke;

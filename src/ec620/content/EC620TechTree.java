@@ -1700,6 +1700,11 @@ public class EC620TechTree extends TechTree
         //}
         root.planet= EC620Planets.ec620;
         root.children.each(c -> c.planet =EC620Planets.ec620);
+
+        mergeNode(launchPad,()->
+        {
+            node(EC620Blocks.launchPadController);
+        });
         /*mergeNode(Liquids.water, () -> {
             node(Liquids.ozone,()->{
                 node(Liquids.hydrogen);
@@ -1801,7 +1806,7 @@ public class EC620TechTree extends TechTree
         for(TechNode tn : all.select(t -> t.content == parent))
         {
             context=tn;
-            Log.info(context.content.name+" found");
+            //Log.info(context.content.name+" found");
             //Log.info(context().content.name);
             children.run();
         }

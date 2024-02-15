@@ -1,18 +1,44 @@
 package ec620.content;
 
+import arc.Core;
+import arc.Graphics;
+import arc.graphics.g2d.Draw;
 import arc.math.Mathf;
+import arc.math.geom.Geometry;
 import arc.math.geom.Vec2;
+import arc.scene.ui.layout.Table;
+import arc.struct.EnumSet;
 import arc.struct.ObjectMap;
 import arc.struct.Seq;
 import arc.struct.StringMap;
 import arc.util.Log;
+import arc.util.io.Reads;
+import arc.util.io.Writes;
+import mindustry.Vars;
 import mindustry.content.Blocks;
+import mindustry.content.Fx;
+import mindustry.content.Items;
+import mindustry.entities.Effect;
 import mindustry.game.Schematic;
+import mindustry.gen.Building;
+import mindustry.gen.Icon;
+import mindustry.gen.LaunchPayload;
+import mindustry.graphics.Pal;
+import mindustry.logic.LAccess;
+import mindustry.type.Category;
+import mindustry.type.Item;
+import mindustry.type.ItemStack;
+import mindustry.type.Sector;
+import mindustry.ui.Styles;
 import mindustry.world.Block;
+import mindustry.world.blocks.campaign.LaunchPad;
 import mindustry.world.blocks.defense.turrets.Turret;
 import mindustry.world.blocks.storage.CoreBlock;
+import mindustry.world.meta.BlockFlag;
 
 import java.util.ArrayList;
+
+import static mindustry.type.ItemStack.with;
 
 public class EC620Classes
 {
@@ -113,6 +139,58 @@ public class EC620Classes
         public double DistanceFrom(DVec v)
         {
             return Math.sqrt(Math.pow(x-v.x,2)+Math.pow(y-v.y,2));
+        }
+    }
+
+    public static class LauchPadController extends Block
+    {
+        public LauchPadController(String name)
+        {
+            super(name);
+            size=7;
+            localizedName="Launch Pad Controller";
+			requirements(Category.crafting, with(Items.copper, 100));
+            solid = true;
+            configurable = true;
+            flags = EnumSet.of(new BlockFlag[]{BlockFlag.launchPad});
+        }
+        public class LaunchPadControllerBuild extends Building
+        {
+            public float launchCounter;
+
+            public LaunchPadControllerBuild()
+            {
+
+            }
+
+            public Graphics.Cursor getCursor() {
+                return (Graphics.Cursor)(Vars.state.isCampaign() && !Vars.net.client() ? super.getCursor() : Graphics.Cursor.SystemCursor.arrow);
+            }
+
+            public void buildConfiguration(Table table)
+            {
+                if (Vars.state.isCampaign() && !Vars.net.client())
+                {
+                    table.button(Icon.upOpen, Styles.cleari, () ->
+                    {
+                        Vars.ui.planet.showSelect(Vars.state.rules.sector, (other) ->
+                        {
+                            if (Vars.state.isCampaign() && other.planet == Vars.state.rules.sector.planet)
+                            {
+                                EC620Planets.ec620.sectors.select(s->s.info.wasCaptured).forEach(s->s.info.destination=other);
+                                //Vars.state.rules.sector.info.destination = other;
+                            }
+
+                        });
+                        this.deselect();
+                    }).size(40.0F);
+                }
+                else
+                {
+                    this.deselect();
+                }
+            }
+
         }
     }
 }
