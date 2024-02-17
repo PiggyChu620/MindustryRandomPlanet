@@ -149,9 +149,10 @@ public class EC620Classes
             super(name);
             size=7;
             localizedName="Launch Pad Controller";
-            itemCapacity=10000;
-            launchTime=60;
-			requirements(Category.effect, with(Items.copper, 100));
+            itemCapacity=1000;
+            launchTime=120;
+            consumePower(40F);
+			requirements(Category.effect, with(Items.blastCompound, 100,Items.plastanium,100,Items.phaseFabric,100,Items.surgeAlloy,100));
         }
         public class LaunchPadControllerBuild extends LaunchPadBuild
         {
