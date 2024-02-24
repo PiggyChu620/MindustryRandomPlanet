@@ -96,8 +96,12 @@ public class EC620Blocks {
 		//region Unlock hidden items
 		Blocks.slagCentrifuge.requirements(Category.crafting, with(Items.carbide, 70, Items.graphite, 60, Items.silicon, 40, Items.oxide, 40));
 		Blocks.heatReactor.requirements(Category.crafting, with(Items.oxide, 70, Items.graphite, 20, Items.carbide, 10, Items.thorium, 80));
+		UnitTypes.renale.hidden=false;
+		UnitTypes.latum.hidden=false;
 		Blocks.itemSource.requirements(Category.distribution, ItemStack.with(new Object[0]));
 		Blocks.liquidSource.requirements(Category.liquid, ItemStack.with(new Object[0]));
+		Blocks.powerSource.requirements(Category.power, ItemStack.with(new Object[0]));
+
 		//content.blocks().forEach(b->b.buildVisibility=BuildVisibility.shown);
 		//endregion
 		//region Ores
@@ -131,7 +135,9 @@ public class EC620Blocks {
 //		//endregion
 //
 //		//region Factories
-		launchPadController=new EC620Classes.LauchPadController("launch-pad-controller");
+
+		//launchPadController=new EC620Classes.LauchPadController("launch-pad-controller");
+
 //		duraluminFactory = new GenericCrafter("duralumin-factory"){{
 //			requirements(Category.crafting, with(Items.copper, 5, EC620Items.aluminum,95));
 //			craftEffect = Fx.smeltsmoke;

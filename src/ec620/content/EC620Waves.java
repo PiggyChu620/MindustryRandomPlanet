@@ -305,17 +305,20 @@ public class EC620Waves
     }
 
     public static Seq<SpawnGroup> generate(float difficulty, Rand rand, boolean attack, boolean airOnly, boolean naval){
-        UnitType[][] species = {
+        UnitType[][] species =
+        {
                 {dagger, mace, fortress, scepter, reign},
                 {nova, pulsar, quasar, vela, corvus},
                 {crawler, atrax, spiroct, arkyid, toxopid},
                 {risso, minke, bryde, sei, omura},
                 {risso, oxynoe, cyerce, aegires, navanax}, //retusa intentionally left out as it cannot damage the core properly
-                {flare, horizon, zenith, rand.chance(0.5) ? quad : antumbra, rand.chance(0.1) ? quad : eclipse},
+                {flare, horizon, zenith, antumbra, eclipse},
                 {stell,locus, precept, vanquish,conquer},
                 { merui, cleroi, anthicus, tecta,collaris},
-                { elude, avert, obviate, quell,disrupt}
+                { elude, avert, obviate, quell,disrupt},
+                {renale,renale,renale,renale,latum} //Should ALWAYS be the last one!
         };
+        UnitType[] repairUnits={mono, poly, mega, quad, oct};
 
         if(airOnly)
         {
@@ -348,20 +351,28 @@ public class EC620Waves
             //main sequence
             UnitType[] curSpecies = Structs.random(fspec);
             int curTier = 0;
+            int curI;
+            UnitType curUnit;
 
             for(int i = start; i < cap;)
             {
                 int f = i;
-                int next = rand.random(8, 16) + (int)Mathf.lerp(5f, 0f, difficulty) + curTier * 4;
+                //int next = rand.random(8, 16) + (int)Mathf.lerp(5f, 0f, difficulty) + curTier * 4;
+                int next=rand.random(8,16) + (int)((1-difficulty)*Math.pow(3.5,curTier+1));
 
                 float shieldAmount = Math.max((i - shieldStart) * shieldsPerWave, 0);
                 int space = start == 0 ? 1 : rand.random(1, 2);
                 int ctier = curTier;
 
+                if(ctier>0 && ctier<4) curI=rand.random(fspec.length-2);
+                else curI=rand.random(fspec.length-1);
+                curUnit=fspec[curI][ctier];
+
                 //main progression
-                out.add(new SpawnGroup(curSpecies[Math.min(curTier, curSpecies.length - 1)])
+                //out.add(new SpawnGroup(curSpecies[Math.min(curTier, curSpecies.length - 1)])
+                out.add(new SpawnGroup(curUnit)
                 {{
-                    unitAmount = f == start ? 1 : 6 / (int)scaling[ctier];
+                    unitAmount = f == start ? 1 : Math.max(6 / (int)scaling[ctier],1);
                     begin = f;
                     end = f + next >= cap ? never : f + next;
                     max = 13;
@@ -372,9 +383,10 @@ public class EC620Waves
                 }});
 
                 //extra progression that tails out, blends in
-                out.add(new SpawnGroup(curSpecies[Math.min(curTier, curSpecies.length - 1)])
+                //out.add(new SpawnGroup(curSpecies[Math.min(curTier, curSpecies.length - 1)])
+                out.add(new SpawnGroup(curUnit)
                 {{
-                    unitAmount = 3 / (int)scaling[ctier];
+                    unitAmount = Math.max(1, 3 / (int)scaling[ctier]);
                     begin = f + next - 1;
                     end = f + next + rand.random(6, 10);
                     max = 6;
@@ -384,19 +396,20 @@ public class EC620Waves
                     shieldScaling = shieldsPerWave;
                 }});
 
-                i += next + 1;
-                if(curTier < 3 || (rand.chance(0.05) && difficulty > 0.8))
+                i = next + 1;
+                //if(curTier < 3 || (rand.chance(0.05) && difficulty > 0.8))
+                if(curTier<4)
                 {
                     curTier ++;
                 }
 
                 //do not spawn bosses
-                curTier = Math.min(curTier, 3);
+                //curTier = Math.min(curTier, 3);
 
                 //small chance to switch species
-                if(rand.chance(0.3)){
-                    curSpecies = Structs.random(fspec);
-                }
+//                if(rand.chance(0.3)){
+//                    curSpecies = Structs.random(fspec);
+//                }
             }
         };
 
@@ -415,8 +428,15 @@ public class EC620Waves
 
         int bossTier = difficulty < 0.6 ? 3 : 4;
 
+        int curI;
+        UnitType curBoss;
+
         //main boss progression
-        out.add(new SpawnGroup(Structs.random(species)[bossTier])
+        if(bossTier==4) curI=rand.random(species.length-1);
+        else curI=rand.random(species.length-2);
+        curBoss=species[curI][bossTier];
+        //out.add(new SpawnGroup(Structs.random(species)[bossTier])
+        out.add(new SpawnGroup(curBoss)
         {{
             unitAmount = 1;
             begin = bossWave;
@@ -429,7 +449,11 @@ public class EC620Waves
         }});
 
         //alt boss progression
-        out.add(new SpawnGroup(Structs.random(species)[bossTier])
+        if(bossTier==4) curI=rand.random(species.length-1);
+        else curI=rand.random(species.length-2);
+        curBoss=species[curI][bossTier];
+        //out.add(new SpawnGroup(Structs.random(species)[bossTier])
+        out.add(new SpawnGroup(curBoss)
         {{
             unitAmount = 1;
             begin = bossWave + rand.random(3, 5) * bossSpacing;
@@ -444,7 +468,11 @@ public class EC620Waves
         int finalBossStart = 120 + rand.random(30);
 
         //final boss waves
-        out.add(new SpawnGroup(Structs.random(species)[bossTier])
+        if(bossTier==4) curI=rand.random(species.length-1);
+        else curI=rand.random(species.length-2);
+        curBoss=species[curI][bossTier];
+        //out.add(new SpawnGroup(Structs.random(species)[bossTier])
+        out.add(new SpawnGroup(curBoss)
         {{
             unitAmount = 1;
             begin = finalBossStart;
@@ -457,7 +485,11 @@ public class EC620Waves
         }});
 
         //final boss waves (alt)
-        out.add(new SpawnGroup(Structs.random(species)[bossTier])
+        if(bossTier==4) curI=rand.random(species.length-1);
+        else curI=rand.random(species.length-2);
+        curBoss=species[curI][bossTier];
+        //out.add(new SpawnGroup(Structs.random(species)[bossTier])
+        out.add(new SpawnGroup(curBoss)
         {{
             unitAmount = 1;
             begin = finalBossStart + 15;
@@ -470,13 +502,16 @@ public class EC620Waves
         }});
 
         //add megas to heal the base.
-        if(attack && difficulty >= 0.5)
+        //if(attack && difficulty >= 0.5)
+        if(attack)
         {
             int amount = Mathf.random(1, 3 + (int)(difficulty*2));
 
-            for(int i = 0; i < amount; i++){
-                int wave = Mathf.random(3, 20);
-                out.add(new SpawnGroup(mega){{
+            for(int i = 0; i < amount; i++)
+            {
+                int wave = (int)(20*difficulty);   //Mathf.random(3, 20);
+                out.add(new SpawnGroup(repairUnits[(int)(5*difficulty)])
+                {{
                     unitAmount = 1;
                     begin = wave;
                     end = wave;
@@ -488,7 +523,8 @@ public class EC620Waves
         //shift back waves on higher difficulty for a harder start
         int shift = Math.max((int)(difficulty * 14 - 5), 0);
 
-        for(SpawnGroup group : out){
+        for(SpawnGroup group : out)
+        {
             group.begin -= shift;
             group.end -= shift;
         }

@@ -1701,10 +1701,11 @@ public class EC620TechTree extends TechTree
         root.planet= EC620Planets.ec620;
         root.children.each(c -> c.planet =EC620Planets.ec620);
 
-        mergeNode(launchPad,()->
+        /*mergeNode(launchPad,()->
         {
             node(EC620Blocks.launchPadController);
-        });
+        });*/
+
         /*mergeNode(Liquids.water, () -> {
             node(Liquids.ozone,()->{
                 node(Liquids.hydrogen);
