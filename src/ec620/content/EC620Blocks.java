@@ -98,9 +98,9 @@ public class EC620Blocks {
 		Blocks.heatReactor.requirements(Category.crafting, with(Items.oxide, 70, Items.graphite, 20, Items.carbide, 10, Items.thorium, 80));
 		UnitTypes.renale.hidden=false;
 		UnitTypes.latum.hidden=false;
-		Blocks.itemSource.requirements(Category.distribution, ItemStack.with(new Object[0]));
-		Blocks.liquidSource.requirements(Category.liquid, ItemStack.with(new Object[0]));
-		Blocks.powerSource.requirements(Category.power, ItemStack.with(new Object[0]));
+//		Blocks.itemSource.requirements(Category.distribution, ItemStack.with(new Object[0]));
+//		Blocks.liquidSource.requirements(Category.liquid, ItemStack.with(new Object[0]));
+//		Blocks.powerSource.requirements(Category.power, ItemStack.with(new Object[0]));
 
 		//content.blocks().forEach(b->b.buildVisibility=BuildVisibility.shown);
 		//endregion
