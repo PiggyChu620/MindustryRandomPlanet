@@ -83,9 +83,9 @@ public class EC620JavaMod extends Mod
                 }
                 if (Vars.state.isCampaign() && sector.planet == Vars.state.rules.sector.planet)
                 {
-                    for(Sector s:sector.planet.sectors.select(s->s!=null && s.info.hasCore))
+                    for(Sector sec:sector.planet.sectors.select(s->s!=null && s.info.hasCore))
                     {
-                        s.info.destination=sector;
+                        sec.info.destination=sector;
                     }
                     //Vars.state.rules.sector.info.destination = other;
                 }
