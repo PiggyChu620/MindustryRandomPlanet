@@ -70,22 +70,28 @@ public class EC620JavaMod extends Mod
             Log.info("Load dialog complete");
         });
 
-        Events.on(PlayEvent.class, event ->
+        Events.on(PlayEvent.class,event->
+        {
+            Sector sector = Vars.state.rules.sector;
+            if(sector.id == 0)
+            {
+                sector.planet.allowLaunchLoadout = false;
+                Vars.state.rules.loadout = ItemStack.list(Items.copper,100);
+            }
+        });
+
+        Events.on(WorldLoadEvent.class, event ->
         {
             Sector sector=Vars.state.rules.sector;
             //Log.info("Listening to PlayEvent: Sector "+Vars.state.rules.sector.id);
             if (sector != null)
             {
-                if(sector.id == 0)
-                {
-                    sector.planet.allowLaunchLoadout = false;
-                    Vars.state.rules.loadout = ItemStack.list(Items.copper,100);
-                }
                 if (Vars.state.isCampaign() && sector.planet == Vars.state.rules.sector.planet)
                 {
                     for(Sector sec:sector.planet.sectors.select(s->s!=null && s.info.hasCore))
                     {
                         sec.info.destination=sector;
+                        //Log.info("Setting "+sec.name()+" to "+sector.name());
                     }
                     //Vars.state.rules.sector.info.destination = other;
                 }
