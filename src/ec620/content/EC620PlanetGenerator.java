@@ -1242,35 +1242,40 @@ public class EC620PlanetGenerator extends PlanetGenerator
         });
 
         float difficulty = sector.threat;
-        ints.clear();
-        ints.ensureCapacity(width * height / 4);
+        IntSeq positions = new IntSeq(width * height / 4);
 
         int ruinCount = pgRand.random(-2, -1); //disabled ruins
 
-        if(ruinCount > 0){
+        if(ruinCount > 0)
+        {
             int padding = 25;
 
             //create list of potential positions
-            for(int x = padding; x < width - padding; x++){
-                for(int y = padding; y < height - padding; y++){
+            for(int x = padding; x < width - padding; x++)
+            {
+                for(int y = padding; y < height - padding; y++)
+                {
                     Tile tile = tiles.getn(x, y);
-                    if(!tile.solid() && (tile.drop() != null || tile.floor().liquidDrop != null)){
-                        ints.add(tile.pos());
+                    if(!tile.solid() && (tile.drop() != null || tile.floor().liquidDrop != null))
+                    {
+                        positions.add(tile.pos());
                     }
                 }
             }
 
-            ints.shuffle(rand);
+            positions.shuffle(rand);
 
             int placed = 0;
             float diffRange = 0.4f;
             //try each position
-            for(int i = 0; i < ints.size && placed < ruinCount; i++){
-                int val = ints.items[i];
+            for(int i = 0; i < positions.size && placed < ruinCount; i++)
+            {
+                int val = positions.get(i);
                 int x = Point2.x(val), y = Point2.y(val);
 
                 //do not overwrite player spawn
-                if(Mathf.within(x, y, spawn.x, spawn.y, 18f)){
+                if(Mathf.within(x, y, spawn.x, spawn.y, 18f))
+                {
                     continue;
                 }
 
@@ -1278,41 +1283,57 @@ public class EC620PlanetGenerator extends PlanetGenerator
 
                 Tile tile = tiles.getn(x, y);
                 BaseRegistry.BasePart part = null;
-                if(tile.overlay().itemDrop != null){
+                if(tile.overlay().itemDrop != null)
+                {
                     part = bases.forResource(tile.drop()).getFrac(range);
-                }else if(tile.floor().liquidDrop != null && rand.chance(0.05)){
+                }
+                else if(tile.floor().liquidDrop != null && rand.chance(0.05))
+                {
                     part = bases.forResource(tile.floor().liquidDrop).getFrac(range);
-                }else if(rand.chance(0.05)){ //ore-less parts are less likely to occur.
+                }
+                else if(rand.chance(0.05))
+                { //ore-less parts are less likely to occur.
                     part = bases.parts.getFrac(range);
                 }
 
                 //actually place the part
-                if(part != null && BaseGenerator.tryPlace(part, x, y, Team.derelict, (cx, cy) -> {
-                    Tile other = tiles.getn(cx, cy);
-                    if(other.floor().hasSurface()){
-                        other.setOverlay(Blocks.oreScrap);
-                        for(int j = 1; j <= 2; j++){
-                            for(Point2 p : Geometry.d8){
-                                Tile t = tiles.get(cx + p.x*j, cy + p.y*j);
-                                if(t != null && t.floor().hasSurface() && rand.chance(j == 1 ? 0.4 : 0.2)){
-                                    t.setOverlay(Blocks.oreScrap);
+                if(part != null && BaseGenerator.tryPlace(part, x, y, Team.derelict, pgRand, (cx, cy) ->
+                    {
+                        Tile other = tiles.getn(cx, cy);
+                        if(other.floor().hasSurface())
+                        {
+                            other.setOverlay(Blocks.oreScrap);
+                            for(int j = 1; j <= 2; j++)
+                            {
+                                for(Point2 p : Geometry.d8)
+                                {
+                                    Tile t = tiles.get(cx + p.x*j, cy + p.y*j);
+                                    if(t != null && t.floor().hasSurface() && rand.chance(j == 1 ? 0.4 : 0.2))
+                                    {
+                                        t.setOverlay(Blocks.oreScrap);
+                                    }
                                 }
                             }
                         }
-                    }
-                })){
+                    }))
+                {
                     placed ++;
 
                     int debrisRadius = Math.max(part.schematic.width, part.schematic.height)/2 + 3;
-                    Geometry.circle(x, y, tiles.width, tiles.height, debrisRadius, (cx, cy) -> {
+                    Geometry.circle(x, y, tiles.width, tiles.height, debrisRadius, (cx, cy) ->
+                    {
                         float dst = Mathf.dst(cx, cy, x, y);
                         float removeChance = Mathf.lerp(0.05f, 0.5f, dst / debrisRadius);
 
                         Tile other = tiles.getn(cx, cy);
-                        if(other.build != null && other.isCenter()){
-                            if(other.team() == Team.derelict && rand.chance(removeChance)){
+                        if(other.build != null && other.isCenter())
+                        {
+                            if(other.team() == Team.derelict && rand.chance(removeChance))
+                            {
                                 other.remove();
-                            }else if(rand.chance(0.5)){
+                            }
+                            else if(rand.chance(0.5))
+                            {
                                 other.build.health = other.build.health - rand.random(other.build.health * 0.9f);
                             }
                         }
@@ -1602,7 +1623,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
         //Schematic schem=Schematics.readBase64(schematic);
         BaseRegistry.BasePart part=new BaseRegistry.BasePart(schem);
 
-        part.tier = schem.tiles.sumf(s -> Mathf.pow(s.block.buildCost / s.block.buildCostMultiplier, 1.4f));
+        part.tier = schem.tiles.sumf(s -> Mathf.pow(ItemCostResolver.getBlockCost(s.block) / s.block.buildCostMultiplier, 1.4f));
 
         bases.parts.add(part);
     }
@@ -1668,7 +1689,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
         for(Content c: requiredItems)
         {
             part=new BaseRegistry.BasePart(schem);
-            part.tier = schem.tiles.sumf(s -> Mathf.pow(s.block.buildCost / s.block.buildCostMultiplier, 1.4f));
+            part.tier = schem.tiles.sumf(s -> Mathf.pow(ItemCostResolver.getBlockCost(s.block) / s.block.buildCostMultiplier, 1.4f));
             part.required=c;
             bases.reqParts.get(c,Seq::new).add(part);
         }
@@ -1688,7 +1709,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
             }
         }
         if(part.core==null) throw new IllegalArgumentException("There is no core in the schematic!");
-        part.tier = schem.tiles.sumf(s -> Mathf.pow(s.block.buildCost / s.block.buildCostMultiplier, 1.4f));
+        part.tier = schem.tiles.sumf(s -> Mathf.pow(ItemCostResolver.getBlockCost(s.block) / s.block.buildCostMultiplier, 1.4f));
         bases.cores.add(part);
         //else bases.cores.insert(index,part);
     }

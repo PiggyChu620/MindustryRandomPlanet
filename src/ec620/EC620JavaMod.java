@@ -19,6 +19,7 @@ import mindustry.gen.*;
 import mindustry.mod.*;
 import mindustry.type.Item;
 import mindustry.type.ItemStack;
+import mindustry.type.Sector;
 import mindustry.ui.Fonts;
 import mindustry.ui.dialogs.*;
 import mindustry.world.blocks.defense.turrets.Turret;
@@ -47,7 +48,7 @@ public class EC620JavaMod extends Mod
                         dd.titleFont= Fonts.def;
                         dd.titleFontColor=new Color(1,0,0);
                         BaseDialog dialog = new BaseDialog("Random Planet", dd);
-                        dialog.cont.add("Welcome to Random Planet v0.4.7",Color.green,1.2f).center().row();
+                        dialog.cont.add("Welcome to Random Planet v0.4.8",Color.green,1.2f).center().row();
                         dialog.cont.add("Please see Settings for customization",Color.cyan).center().row();
                         //dialog.cont.add("in order to see the setting info,",Color.cyan).row();
                         //dialog.cont.add("I can not figure out how to make it wrap,",Color.cyan).row();
@@ -69,12 +70,25 @@ public class EC620JavaMod extends Mod
             Log.info("Load dialog complete");
         });
 
-        Events.on(PlayEvent.class, event -> {
+        Events.on(PlayEvent.class, event ->
+        {
+            Sector sector=Vars.state.rules.sector;
             //Log.info("Listening to PlayEvent: Sector "+Vars.state.rules.sector.id);
-            if (Vars.state.rules.sector != null && Vars.state.rules.sector.id == 0)
+            if (sector != null)
             {
-                Vars.state.rules.sector.planet.allowLaunchLoadout = false;
-                Vars.state.rules.loadout = ItemStack.list(Items.copper,100);
+                if(sector.id == 0)
+                {
+                    sector.planet.allowLaunchLoadout = false;
+                    Vars.state.rules.loadout = ItemStack.list(Items.copper,100);
+                }
+                if (Vars.state.isCampaign() && sector.planet == Vars.state.rules.sector.planet)
+                {
+                    for(Sector s:sector.planet.sectors.select(s->s!=null && s.info.hasCore))
+                    {
+                        s.info.destination=sector;
+                    }
+                    //Vars.state.rules.sector.info.destination = other;
+                }
             }
 
         });
@@ -108,6 +122,9 @@ public class EC620JavaMod extends Mod
 
         EC620TechTree.load();
         EC620Setting.load();
+
+        ItemCostResolver.init();
+
         Log.info("Random Planet loaded successfully.");
     }
 }

@@ -37,8 +37,8 @@ public class EC620BaseGenerator extends BaseGenerator
         Seq<Block> wallsSmall = content.blocks().select(b -> b instanceof Wall && b.size == size
                 && !b.insulated && b.buildVisibility == BuildVisibility.shown
                 && !(b instanceof Door)
-                && !(Structs.contains(b.requirements, i -> state.rules.hiddenBuildItems.contains(i.item))));
-        wallsSmall.sort(b -> b.buildCost);
+                && !Structs.contains(b.requirements, i -> state.rules.blockWhitelist == state.rules.bannedBlocks.contains(b)));
+        wallsSmall.sort(ItemCostResolver::getBlockCost);
         return wallsSmall.getFrac(difficulty);
     }
 
@@ -146,7 +146,6 @@ public class EC620BaseGenerator extends BaseGenerator
                     }
                 }
             });
-
             //large walls
             pass(curr -> {
                 int walls = 0;
@@ -205,8 +204,9 @@ public class EC620BaseGenerator extends BaseGenerator
      * Tries to place a base part at a certain location with a certain team.
      * @return success state
      * */
-    public static boolean tryPlace(BasePart part, int x, int y, Team team){
-        return tryPlace(part, x, y, team, null);
+    public static boolean tryPlace(BasePart part, int x, int y, Team team)
+    {
+        return tryPlace(part, x, y, team, (Intc2) null);
     }
 
     /**
