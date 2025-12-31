@@ -7,7 +7,7 @@ apply plugin: "java"
 version '1.0'
 
 targetCompatibility = 8
-sourceCompatibility = JavaVersion.VERSION_16
+sourceCompatibility = JavaVersion.VERSION_17
 
 sourceSets.main.java.srcDirs = ["src"]
 
@@ -21,8 +21,9 @@ repositories{
 
 ext{
     //the build number that this mod is made for
-    mindustryVersion = 'v149'
+    mindustryVersion = 'v154.2'
     jabelVersion = "93fde537c7"
+    isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
     sdkRoot = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
 }
 

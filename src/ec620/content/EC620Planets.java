@@ -92,7 +92,7 @@ public class EC620Planets {
 				);
 
 				clearSectorOnLose = Core.settings.getBool("ec620.clear");
-				allowWaveSimulation = true;
+				//allowWaveSimulation = true;	2025/12/31 Deprecated
 				allowLaunchSchematics = true;
 				allowLaunchLoadout = Core.settings.getBool("ec620.launch");
 				allowSectorInvasion=true;
@@ -262,11 +262,14 @@ public class EC620Planets {
 					return Math.max(height, 0.05f);
 				}
 
+				/*	2025/12/31 Deprecated
 				@Override
 				public Color getColor(Vec3 position){
 					double height = Math.pow(Simplex.noise3d(seed, octaves, persistence, scl, position.x, position.y, position.z), pow) * mag;
 					return Tmp.c1.set(colors[Mathf.clamp((int)(height * colors.length), 0, colors.length - 1)]).mul(colorScale);
 				}
+				*/
+
 
 			}, divisions, Shaders.unlit);
 		}

@@ -183,6 +183,7 @@ public class EC620PlanetGenerator extends PlanetGenerator
         //return waterOffset / (1f + waterOffset); //eh fuck it
     }
 
+    /* 2025/12/31
     @Override
     public Color getColor(Vec3 position){
         Block block = getBlock(position);
@@ -193,6 +194,8 @@ public class EC620PlanetGenerator extends PlanetGenerator
         //if(block == mossyBorudalite) return Tmp.c1.set(borudaMidColor.set(borudalite.mapColor).lerp(twilightMoss.mapColor, 0.5f)).mul(tnoise).a(1f);
         return Tmp.c1.set(block.mapColor).mul(tnoise).a(1f - block.albedo);
     }
+    */
+
 
     //@Override
     //public boolean skip(Vec3 position){
